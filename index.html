@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102e2a">
+  <meta name="description" content="Explorez les transformations urbaines des Docks de Saint-Ouen et de Seine-Liberté à Clichy.">
+  <meta property="og:title" content="Observatoire Docks & Seine-Liberté">
+  <meta property="og:description" content="128 fiches pour suivre les Docks de Saint-Ouen et Seine-Liberté, dont 112 opérations et 16 repères ou ensembles.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/social-card.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Observatoire Docks & Seine-Liberté</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Aller au contenu</a>
+
+  <header class="site-header" id="site-header">
+    <a class="brand" href="#accueil" data-route="home" aria-label="Accueil de l’Observatoire">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span><strong>Observatoire</strong><small>Docks & Seine-Liberté</small></span>
+    </a>
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    <nav class="main-nav" id="main-nav" aria-label="Navigation principale">
+      <button type="button" data-route="home">Accueil</button>
+      <button type="button" data-route="explore">Carte & projets</button>
+      <button type="button" data-territory="Docks de Saint-Ouen">Les Docks</button>
+      <button type="button" data-territory="Seine-Liberté">Seine-Liberté</button>
+      <button type="button" data-route="updates">Actualités & évolutions</button>
+      <button type="button" data-route="timeline">Chronologie</button>
+      <button type="button" data-route="method">À propos</button>
+    </nav>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="view home-view" id="view-home" data-view="home">
+      <div class="home-hero">
+        <div class="home-hero-media" id="home-hero-media" aria-hidden="true"></div>
+        <div class="home-hero-overlay"></div>
+        <div class="home-hero-content">
+          <p class="eyebrow">Saint-Ouen-sur-Seine · Clichy</p>
+          <h1>Suivre les transformations<br>des<em> Docks </em>et de<br><em>Seine-Liberté</em></h1>
+          <p class="hero-intro">Chantiers, projets futurs, espaces publics et quartiers livrés : explorez ce qui change autour des Docks et de Seine-Liberté.</p>
+          <div class="hero-actions">
+            <button class="button button-primary" type="button" data-route="explore">Explorer la carte</button>
+            <button class="button button-ghost" type="button" data-route="explore" data-focus-search>Rechercher un projet</button>
+          </div>
+          <dl class="hero-stats">
+            <div><dt id="stat-territories">2</dt><dd>territoires</dd></div>
+            <div><dt id="stat-public">—</dt><dd>opérations suivies</dd></div>
+            <div><dt id="stat-active">—</dt><dd>en cours / à venir</dd></div>
+            <div><dt id="stat-delivered">—</dt><dd>opérations livrées</dd></div>
+          </dl>
+        </div>
+        <div class="hero-caption" id="home-hero-caption"></div>
+      </div>
+
+      <section class="home-section now-section" aria-labelledby="now-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">En ce moment</p><h2 id="now-title">Les transformations à suivre</h2></div>
+          <button class="text-link" type="button" data-route="explore">Voir la carte interactive et les projets <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="feature-grid" id="featured-projects"></div>
+      </section>
+
+      <section class="territory-doors" aria-label="Explorer par territoire">
+        <article class="territory-door territory-docks">
+          <div class="territory-door-media" id="docks-door-media" aria-hidden="true"></div>
+          <div class="territory-door-shade"></div>
+          <div class="territory-door-copy">
+            <p class="eyebrow">Saint-Ouen-sur-Seine</p>
+            <h2>Les Docks</h2>
+            <p>Un quartier déjà habité qui poursuit sa transformation autour du secteur 6, des infrastructures et des grands espaces publics.</p>
+            <button class="button button-light" type="button" data-territory="Docks de Saint-Ouen">Découvrir le territoire</button>
+            <div class="door-slide-controls" aria-label="Images des Docks"><button type="button" data-carousel-target="#docks-door-media" data-carousel-step="-1" aria-label="Image précédente des Docks">←</button><span data-carousel-count="#docks-door-media">1 / 4</span><button type="button" data-carousel-target="#docks-door-media" data-carousel-step="1" aria-label="Image suivante des Docks">→</button></div>
+          </div>
+        </article>
+        <article class="territory-door territory-seine" id="seine-door">
+          <div class="territory-door-media" id="seine-door-media" aria-hidden="true"></div>
+          <div class="territory-door-shade"></div>
+          <div class="territory-door-copy">
+            <p class="eyebrow">Clichy · lisière de Saint-Ouen</p>
+            <h2>Seine-Liberté</h2>
+            <p>Une nouvelle séquence urbaine entre logements, groupe scolaire, parcs, berges et voiries.</p>
+            <button class="button button-light" type="button" data-territory="Seine-Liberté">Explorer la ZAC</button>
+            <div class="door-slide-controls" aria-label="Images de Seine-Liberté"><button type="button" data-carousel-target="#seine-door-media" data-carousel-step="-1" aria-label="Image précédente de Seine-Liberté">←</button><span data-carousel-count="#seine-door-media">1 / 4</span><button type="button" data-carousel-target="#seine-door-media" data-carousel-step="1" aria-label="Image suivante de Seine-Liberté">→</button></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="home-section updates-preview" aria-labelledby="updates-preview-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">Le territoire bouge</p><h2 id="updates-preview-title">Actualités du territoire</h2></div>
+          <button class="text-link" type="button" data-route="updates">Toutes les actualités <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="update-list" id="home-updates"></div>
+      </section>
+    </section>
+
+    <section class="view explorer-view" id="view-explore" data-view="explore" hidden>
+      <header class="page-intro compact-intro">
+        <p class="eyebrow">Carte & projets</p>
+        <h1>Explorer les transformations</h1>
+        <p>Repérez les projets sur la carte, puis ouvrez leurs fiches pour consulter leur avancement, leurs images, les documents et les sources. Utilisez la recherche et les filtres pour parcourir les Docks, Seine-Liberté et leurs abords.</p>
+      </header>
+      <div class="explorer-shell">
+        <aside class="explorer-panel" aria-label="Recherche et résultats">
+          <div class="search-box">
+            <label for="project-search">Rechercher</label>
+            <div><input id="project-search" type="search" placeholder="Nom, lot, secteur…" autocomplete="off"><button id="clear-search" type="button" aria-label="Effacer la recherche" hidden>×</button></div>
+          </div>
+          <div class="filters" aria-label="Filtres des projets">
+            <select id="filter-status" aria-label="Filtrer par statut"><option value="">Tous les statuts</option></select>
+            <select id="filter-territory" aria-label="Filtrer par territoire"><option value="">Tous les territoires</option></select>
+            <select id="filter-category" aria-label="Filtrer par catégorie"><option value="">Toutes les catégories</option></select>
+          </div>
+          <label class="check-row"><input type="checkbox" id="include-context" checked><span>Afficher les 2 repères territoriaux</span></label>
+          <div class="results-meta"><strong><span id="result-count">—</span> résultats</strong><span id="point-count">— sur la carte</span></div>
+          <div class="project-list" id="project-list"></div>
+          <div class="empty-state" id="empty-state" hidden><strong>Aucun projet trouvé</strong><p>Modifiez les filtres ou essayez un autre terme.</p></div>
+        </aside>
+        <section class="map-column" aria-label="Carte des projets">
+          <div class="map-toolbar"><span id="map-context">Tous les territoires</span><div class="map-toolbar-actions"><label for="map-base">Fond de carte</label><select id="map-base" aria-label="Choisir le fond de carte"><option value="plan">Plan</option><option value="aerial">Vue aérienne</option></select><button type="button" id="fit-map">Recentrer</button></div></div>
+          <div id="map" class="map" role="application" aria-label="Carte interactive des projets géolocalisés"></div>
+          <details class="map-legend" id="map-legend" open>
+            <summary>Légende des statuts</summary>
+            <div class="map-legend-items" id="map-legend-items"></div>
+            <span class="map-legend-territory"><i aria-hidden="true">⌖</i> Grand repère territorial</span>
+          </details>
+          <div class="map-footnote"><span class="precision-dot"></span><span>Chaque point situe un projet sans délimiter précisément son terrain.</span></div>
+        </section>
+      </div>
+      <aside class="external-map-resource" aria-labelledby="grand-paris-map-title">
+        <div><p class="eyebrow">Pour élargir la vue</p><h2 id="grand-paris-map-title">Les projets à l’échelle du Grand Paris</h2><p>Cette carte externe permet de replacer les Docks et Seine-Liberté parmi les projets métropolitains. Elle offre une vue plus large, tandis que l’Observatoire reste plus détaillé sur les deux quartiers suivis ici.</p></div>
+        <a class="button" href="https://www.google.com/maps/d/u/0/viewer?hl=fr&amp;mid=1pUlqBVdtkNM2qK3LBph3M5Oyscq-XfGq&amp;ll=48.89859835023018%2C2.351735271479316&amp;z=12" target="_blank" rel="noopener">Ouvrir la carte du Grand Paris ↗</a>
+      </aside>
+    </section>
+
+    <section class="view territory-view" id="view-territory" data-view="territory" hidden>
+      <div id="territory-content"></div>
+    </section>
+
+    <section class="view updates-view" id="view-updates" data-view="updates" hidden>
+      <header class="page-intro">
+        <p class="eyebrow">Deux temporalités distinctes</p>
+        <h1>Actualités & évolutions</h1>
+        <p>Suivez ce qui se passe sur le territoire et les informations que nous ajoutons aux fiches. La date d’un événement peut être différente de la date de mise à jour du site.</p>
+      </header>
+      <div class="updates-layout">
+        <nav class="updates-tabs" aria-label="Sections de la page"><button type="button" data-scroll-target="territory-news">Actualités du territoire</button><button type="button" data-scroll-target="observatory-journal">Journal de l’Observatoire</button></nav>
+        <section id="territory-news" class="updates-block" aria-labelledby="territory-news-title"><p class="eyebrow">Événements et annonces</p><h2 id="territory-news-title">Actualités du territoire</h2><p>Travaux, ouvertures, décisions et publications sourcées. La légende de chaque date précise s’il s’agit d’un événement, d’une période ou d’une publication.</p><div class="timeline-page" id="territory-news-list"></div></section>
+        <section id="observatory-journal" class="updates-block" aria-labelledby="journal-title"><p class="eyebrow">Mises à jour des fiches</p><h2 id="journal-title">Journal de l’Observatoire</h2><p>Retrouvez les fiches actualisées, les nouvelles sources et les plans ajoutés. Ces dates indiquent la mise à jour du site, pas nécessairement un changement sur le terrain.</p><div class="timeline-page" id="observatory-journal-list"></div></section>
+      </div>
+    </section>
+
+    <section class="view history-view" id="view-timeline" data-view="timeline" hidden>
+      <header class="page-intro">
+        <p class="eyebrow">Le territoire dans le temps</p>
+        <h1>Chronologie</h1>
+        <p>Une sélection d’étapes structurantes, de l’aménagement des Docks aux projets actuels. Les dates gardent leur précision réelle : année, mois, période ou jour.</p>
+      </header>
+      <div class="timeline-tools"><div class="timeline-filters"><label for="timeline-territory">Territoire</label><select id="timeline-territory"><option value="">Tous</option><option value="Docks">Docks</option><option value="Seine-Liberté">Seine-Liberté</option></select></div><div class="timeline-filters"><label for="timeline-order">Ordre</label><select id="timeline-order"><option value="oldest">Ancien d’abord</option><option value="newest">Plus récent d’abord</option></select></div><button type="button" class="button timeline-today" id="timeline-today">Aller à aujourd’hui</button></div>
+      <div class="timeline-rail" id="timeline-rail" aria-label="Frise des principales étapes"></div>
+      <div class="history-list" id="timeline-list"></div>
+    </section>
+
+    <section class="view method-view" id="view-method" data-view="method" hidden>
+      <header class="page-intro method-intro">
+        <p class="eyebrow">Un observatoire citoyen et indépendant</p>
+        <h1>À propos de l’Observatoire</h1>
+        <p><strong>Comprendre les Docks et Seine-Liberté, aujourd’hui et demain</strong></p>
+        <p>Que va-t-il se construire près de chez vous ? Quels projets sont en chantier, lesquels sont encore à l’étude et quelles sont les prochaines échéances ?</p>
+        <p>Les informations sur les Docks de Saint-Ouen et la ZAC Seine-Liberté à Clichy sont dispersées entre les collectivités, aménageurs, promoteurs, architectes et documents d’urbanisme.</p>
+        <p>L’Observatoire les rassemble au même endroit pour vous permettre de suivre les transformations de ces deux quartiers, de comprendre les projets qui les composent et de retrouver les informations disponibles, leurs sources et leurs évolutions.</p>
+      </header>
+      <div class="method-body">
+        <section>
+          <p class="eyebrow">L’origine du projet</p>
+          <h2>Pourquoi cet Observatoire ?</h2>
+          <p>Créé en 2026 par Thibault S., futur habitant du secteur 6 des Docks, l’Observatoire est né d’une démarche personnelle : comprendre ce qui allait réellement se construire autour de son futur logement.</p>
+          <p>Au fil des recherches, les informations se sont révélées nombreuses, parfois dispersées, anciennes ou contradictoires. Ce travail s’est progressivement élargi à l’ensemble des Docks, à Seine-Liberté et aux projets voisins qui relient les deux territoires.</p>
+          <p>L’objectif est aujourd’hui de mettre ces recherches à la disposition de tous, dans un outil accessible et régulièrement actualisé.</p>
+        </section>
+        <section>
+          <p class="eyebrow">Explorer le territoire</p>
+          <h2>Ce que vous pouvez découvrir</h2>
+          <h3>Une carte interactive</h3>
+          <p>Localisez les programmes immobiliers, équipements, espaces publics et grands projets d’aménagement, des opérations terminées aux projets futurs.</p>
+          <h3>Des fiches détaillées</h3>
+          <p>Retrouvez le programme de chaque projet, son avancement, ses principales échéances, ses photos, rendus, plans et documents disponibles.</p>
+          <h3>L’histoire des transformations</h3>
+          <p>Consultez les actualités, les étapes des projets et leurs évolutions pour comprendre ce qui a changé au fil du temps.</p>
+          <h3>Des informations sourcées</h3>
+          <p>Accédez aux publications et documents utilisés pour retrouver l’origine des informations et approfondir vos recherches.</p>
+        </section>
+        <section>
+          <p class="eyebrow">Méthode</p>
+          <h2>Comment les informations sont-elles vérifiées ?</h2>
+          <p>L’Observatoire s’appuie sur les publications des collectivités et aménageurs, les autorisations d’urbanisme, les documents publics et les informations diffusées par les porteurs de projet, promoteurs et architectes.</p>
+          <p>Ces éléments sont rapprochés afin de distinguer les informations actuelles des anciennes versions d’un projet. Les observations de terrain, contributions et sources spécialisées peuvent compléter ce travail après vérification.</p>
+          <p>Une annonce, un permis accordé ou une date prévisionnelle ne signifient pas nécessairement qu’un chantier a commencé ou qu’un projet est terminé.</p>
+          <p>Les fiches distinguent donc les projets en études, programmés, en travaux préparatoires, en chantier ou achevés. Lorsque certaines informations restent incertaines ou que plusieurs sources divergent, ces différences sont précisées plutôt que présentées comme des faits établis.</p>
+          <p>Les informations sont actualisées au fil des nouvelles publications, des corrections et de l’avancement des projets.</p>
+        </section>
+        <section>
+          <p class="eyebrow">L’Observatoire</p>
+          <h2>Un projet indépendant et participatif</h2>
+          <p>L’Observatoire est une initiative personnelle et citoyenne, réalisée et financée par Thibault S. Il ne représente aucune collectivité, aucun aménageur ni aucun promoteur.</p>
+          <p>Le site est librement accessible. Il ne bénéficie actuellement d’aucun partenaire, financement institutionnel ou revenu publicitaire. D’éventuels soutiens volontaires serviront aux frais de fonctionnement du projet.</p>
+          <p>Vous connaissez un chantier, disposez d’une source récente ou avez repéré une erreur ?</p>
+          <p>Vos contributions permettent d’améliorer l’Observatoire. Chaque information transmise est examinée avant son éventuelle intégration. Une photographie ou un document envoyé ne sera pas rendu public sans vérification des droits de publication.</p>
+          <button class="button button-primary" type="button" data-route="contribute">Signaler une information</button>
+        </section>
+        <section class="faq-section">
+          <p class="eyebrow">Questions fréquentes</p>
+          <h2>Comprendre les fiches et les chiffres</h2>
+          <div class="faq-list">
+            <details><summary>Pourquoi y a-t-il plus de fiches que d’opérations suivies ?</summary><p>L’Observatoire présente des opérations immobilières, des équipements, des espaces publics et quelques grands repères territoriaux. Ces repères aident à comprendre les quartiers mais ne sont pas comptés une seconde fois parmi les opérations suivies.</p></details>
+            <details><summary>Que signifient les différents statuts ?</summary><p>« En études » désigne un projet encore en définition ; « Programmé », une opération annoncée ou autorisée sans chantier principal documenté ; « Travaux préparatoires », les interventions préalables ; « En chantier », des travaux engagés ; et « Livré / terminé », une réalisation achevée ou mise en service. Un projet peut également avoir un statut à confirmer.</p></details>
+            <details><summary>Pourquoi certaines dates ou certains chiffres diffèrent-ils selon les sources ?</summary><p>Un projet peut évoluer entre sa conception, son autorisation et sa réalisation. L’Observatoire conserve l’historique des informations et privilégie les éléments les plus pertinents pour l’état actuel du projet, tout en signalant les divergences importantes.</p></details>
+            <details><summary>Pourquoi toutes les images et tous les documents ne sont-ils pas visibles immédiatement ?</summary><p>Les fiches présentent d’abord les éléments les plus utiles. Lorsque davantage de contenus sont disponibles, vous pouvez développer les galeries, les plans, les documents et les sources pour approfondir votre consultation.</p></details>
+            <details><summary>Puis-je réutiliser les textes, données ou images ?</summary><p>Les textes originaux de l’Observatoire sont proposés sous licence CC BY 4.0 et ses données structurées sous Licence Ouverte 2.0, selon les conditions précisées sur le site. Ces licences ne s’étendent pas automatiquement aux contenus provenant de tiers : photos, plans, rendus, documents et textes repris d’autres sources restent soumis à leurs droits respectifs.</p></details>
+            <details><summary>Comment signaler une erreur ou proposer une information ?</summary><p>Utilisez le lien « Signaler une information » pour préparer un e-mail à l’Observatoire, éventuellement lié à une fiche. Vous pouvez transmettre une source, une correction ou une photographie. L’adresse e-mail de l’expéditeur reste visible lors de l’envoi, mais vous n’avez pas besoin de fournir de pseudonyme. Les contributions sont vérifiées avant toute publication.</p></details>
+          </div>
+        </section>
+      </div>
+      <section class="community-cta method-community"><div><p class="eyebrow">Faire vivre l’observatoire</p><h2>Une information manque ou semble incorrecte ?</h2><p>Préparez un message sourcé ou transmettez une photographie. Chaque proposition est relue avant publication.</p></div><button class="button button-primary" type="button" data-route="contribute">Signaler une information</button></section>
+    </section>
+
+    <section class="view contribute-view" id="view-contribute" data-view="contribute" hidden>
+      <header class="page-intro">
+        <p class="eyebrow">Contribution</p>
+        <h1>Signaler une information</h1>
+        <p>Cet observatoire indépendant vérifie chaque proposition avant de modifier une fiche. Le formulaire prépare un e-mail à envoyer à Thibault S. ; aucune donnée n’est transmise automatiquement par cette version locale.</p>
+      </header>
+      <form class="contribution-form" id="contribution-form">
+        <label>Projet concerné<select id="contribution-project" name="project" required><option value="">Choisir un projet</option></select></label>
+        <label>Type de signalement<select name="type" required><option value="">Choisir un type</option><option>Info incorrecte</option><option>Info manquante</option><option>Actualité / travaux</option><option>Photo / visuel</option><option>Nouvelle source</option><option>Autre</option></select></label>
+        <label>Pseudonyme <span>facultatif</span><input name="pseudonym" type="text" autocomplete="nickname" placeholder="Nom à utiliser si la contribution est publiée"></label>
+        <label>Message<textarea name="message" rows="7" required placeholder="Décrivez l’information et, si possible, où vous l’avez trouvée."></textarea></label>
+        <label>URL ou source <span>facultatif</span><input name="source" type="url" placeholder="https://…"></label>
+        <label>Photo <span>facultatif · à joindre ensuite à l’e-mail</span><input name="photo" type="file" accept="image/*"></label>
+        <label>Situation des droits de la photo <span>facultatif</span><select name="image_rights"><option value="">Sans objet ou à préciser</option><option>Je suis l’auteur ou j’ai l’autorisation de publication</option><option>Je la transmets comme piste, sans autorisation de publication</option></select></label>
+        <label>Email de réponse <span>facultatif</span><input name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr"></label>
+        <label class="check-label"><input name="publish_pseudonym" type="checkbox"> <span>J’autorise la publication de mon pseudonyme avec cette contribution.</span></label>
+        <label class="check-label"><input name="privacy_consent" type="checkbox" required> <span>J’accepte que les informations envoyées soient utilisées pour vérifier et modérer ce signalement, conformément à la page <a class="inline-route" href="#confidentialite" data-route="privacy">Confidentialité</a>.</span></label>
+        <button class="button button-primary" type="submit">Préparer l’e-mail</button>
+        <p class="form-note">Les contributions non publiées, leurs coordonnées et leurs fichiers sont conservés au maximum un mois après réception. Vous pouvez contribuer anonymement. La photo choisie n’est pas jointe automatiquement : ajoutez-la manuellement à l’e-mail préparé.</p>
+        <div class="form-success" id="form-success" hidden role="status"><strong>Votre e-mail est prêt.</strong><p>Copiez le message ou ouvrez votre messagerie, puis joignez manuellement la photo si vous en avez sélectionné une.</p><textarea id="prepared-contribution" rows="12" readonly aria-label="Message préparé"></textarea><div class="form-actions"><button class="button" id="copy-contribution" type="button">Copier le message</button><a class="button button-primary" id="email-contribution" href="mailto:dock-seine.carpool658@passmail.net">Ouvrir ma messagerie</a></div><p class="copy-feedback" id="copy-feedback" hidden>Message copié.</p></div>
+      </form>
+    </section>
+
+    <section class="view information-view" id="view-legal" data-view="legal" hidden>
+      <header class="page-intro compact-intro">
+        <p class="eyebrow">Informations légales</p>
+        <h1>Mentions légales</h1>
+        <p>Identification de l’éditeur, responsabilité du site et informations à compléter avant la mise en ligne publique.</p>
+      </header>
+      <div class="information-body">
+        <section><h2>Édition et direction de la publication</h2><p><strong>Éditeur :</strong> Thibault S., personne physique agissant à titre non professionnel.</p><p><strong>Directeur de la publication :</strong> Thibault S.</p><p><strong>Contact :</strong> <a href="mailto:dock-seine.carpool658@passmail.net">dock-seine.carpool658@passmail.net</a>.</p><p>Les coordonnées d’identification complètes seront communiquées à l’hébergeur avant la publication. L’éditeur souhaite exercer la faculté prévue pour les éditeurs non professionnels de ne pas afficher publiquement son adresse personnelle et son numéro de téléphone.</p></section>
+        <section><h2>Hébergement et nom de domaine</h2><p><strong>À compléter avant publication :</strong> nom de domaine définitif, raison sociale, adresse et numéro de téléphone de l’hébergeur. Aucun hébergeur n’est encore arrêté dans cette version locale.</p></section>
+        <section><h2>Nature du site</h2><p>L’Observatoire Docks & Seine-Liberté est une initiative indépendante d’information sur les transformations urbaines. Il ne représente ni une collectivité, ni un aménageur, ni un promoteur. Les informations sont datées, révisables et renvoient autant que possible à leurs sources.</p></section>
+        <section><h2>Responsabilité</h2><p>Les fiches rapprochent des informations publiques dont le calendrier et le contenu peuvent évoluer. Malgré le soin apporté à leur vérification, elles ne remplacent pas un document administratif, contractuel ou foncier. Une erreur peut être signalée depuis la page de contribution.</p></section>
+        <section><h2>Financement et activité</h2><p>Le site est financé personnellement par son éditeur, sans partenaire, publicité ni financement institutionnel. Il ne vend actuellement aucun produit ou service et ne nécessite donc pas de conditions générales de vente. Si un dispositif de don est proposé ultérieurement, il servira uniquement aux frais de fonctionnement et fera l’objet d’une information dédiée.</p></section>
+      </div>
+    </section>
+
+    <section class="view information-view" id="view-privacy" data-view="privacy" hidden>
+      <header class="page-intro compact-intro">
+        <p class="eyebrow">Données personnelles</p>
+        <h1>Confidentialité & cookies</h1>
+        <p>Cette page décrit la version locale actuelle et le traitement prévu des futurs signalements.</p>
+      </header>
+      <div class="information-body">
+        <section><h2>Version locale actuelle</h2><p>Cette version ne crée pas de compte, ne comporte pas d’outil de mesure d’audience et n’envoie pas le formulaire de signalement. Le message préparé dans le formulaire reste dans le navigateur tant que vous ne le copiez pas vers un autre service.</p></section>
+        <section><h2>Services cartographiques et fichiers externes</h2><p>Le plan interactif charge actuellement la bibliothèque Leaflet depuis un service externe et, pour le fond « Plan », des tuiles OpenStreetMap. Ces services reçoivent les informations techniques nécessaires à la connexion, notamment l’adresse IP. La vue aérienne est un fichier local au projet.</p></section>
+        <section><h2>Responsable et finalités du traitement</h2><p>Le responsable du traitement est Thibault S., joignable à <a href="mailto:dock-seine.carpool658@passmail.net">dock-seine.carpool658@passmail.net</a>. Les informations transmises servent uniquement à recevoir, vérifier et modérer un signalement, à contacter son auteur s’il fournit une adresse, puis à corriger ou compléter l’Observatoire lorsque la proposition est retenue.</p></section>
+        <section><h2>Données demandées et base juridique</h2><p>Un signalement comprend le projet concerné, son type et un message. Le pseudonyme, l’adresse e-mail, l’URL de source et la photographie sont facultatifs ; une contribution anonyme est possible. Le traitement repose sur le consentement donné au moment de l’envoi. Le pseudonyme n’est rendu public qu’avec un accord explicite. Une image transmise comme piste n’est pas publiée tant que son droit de publication n’est pas établi.</p></section>
+        <section><h2>Destinataires et conservation</h2><p>Les contributions sont modérées par Thibault S. Elles ne sont pas vendues ni transmises à des partenaires. Les messages, coordonnées et fichiers qui ne sont pas publiés sont conservés au maximum un mois. Lorsqu’une information ou une image est retenue, seule la partie nécessaire à la publication et à sa traçabilité est conservée ; l’adresse e-mail n’est pas publiée.</p></section>
+        <section><h2>Vos droits</h2><p>Vous pouvez demander l’accès, la rectification ou l’effacement de vos données, limiter leur traitement ou retirer votre consentement en écrivant à <a href="mailto:dock-seine.carpool658@passmail.net">dock-seine.carpool658@passmail.net</a>. Une réponse est apportée, en principe, sous une semaine. Vous pouvez également introduire une réclamation auprès de la CNIL.</p></section>
+        <section><h2>Mesure d’audience et cookies</h2><p>Aucun outil de mesure d’audience, cookie publicitaire ou traceur facultatif n’est actif dans cette version. Un outil d’audience pourra être ajouté après le choix de l’hébergement ; cette page et, si nécessaire, le mécanisme de consentement seront alors mis à jour avant son activation.</p></section>
+      </div>
+    </section>
+
+    <section class="view information-view" id="view-credits" data-view="credits" hidden>
+      <header class="page-intro compact-intro">
+        <p class="eyebrow">Provenance des contenus</p>
+        <h1>Crédits & droits des images</h1>
+        <p>L’Observatoire rassemble des photos, plans, rendus et documents provenant de plusieurs auteurs. Leur présence sur le site ne transfère pas leurs droits.</p>
+      </header>
+      <div class="information-body">
+        <section><h2>Crédits par média</h2><p>Chaque image publiée doit, lorsque l’information est disponible, indiquer son auteur ou son organisme d’origine et proposer un lien vers la source. Un lien de provenance sert à vérifier le contexte ; il ne constitue pas à lui seul une licence de réutilisation.</p></section>
+        <section><h2>Réutilisation des contenus propres</h2><p>Les textes originaux de l’Observatoire sont mis à disposition sous <a href="https://creativecommons.org/licenses/by/4.0/deed.fr" target="_blank" rel="noreferrer">licence Creative Commons Attribution 4.0</a>. Les données structurées produites par l’Observatoire sont proposées sous <a href="https://www.etalab.gouv.fr/licence-ouverte-open-licence/" target="_blank" rel="noreferrer">Licence Ouverte 2.0</a>. Leur réutilisation doit mentionner l’Observatoire Docks & Seine-Liberté, la source et la date de mise à jour. Ces licences ne s’appliquent pas aux contenus de tiers.</p></section>
+        <section><h2>Images et documents de tiers</h2><p>Les photos, rendus, plans et documents de tiers restent soumis aux droits et conditions fixés par leurs titulaires. Avant toute réutilisation, consultez la source et demandez l’autorisation nécessaire. Une photographie reçue comme simple piste documentaire n’est pas publiée sans autorisation ou base de réutilisation établie.</p></section>
+        <section><h2>Demande de correction ou de retrait</h2><p>Un auteur ou titulaire de droits peut demander la correction d’un crédit, le remplacement d’un lien ou le retrait d’un média en écrivant à <a href="mailto:dock-seine.carpool658@passmail.net">dock-seine.carpool658@passmail.net</a>. Une réponse est apportée, en principe, sous une semaine.</p></section>
+        <section><h2>Principales familles de sources</h2><p>Les fiches s’appuient notamment sur les publications des collectivités, services de l’État, aménageurs, maîtres d’ouvrage, promoteurs, architectes, bureaux d’études et sites spécialisés, ainsi que sur des observations de terrain. Les crédits et liens précis figurent sur chaque fiche et chaque média lorsque l’information est disponible.</p></section>
+        <section><h2>Cartographie</h2><p>Le fond de plan interactif utilise des données © contributeurs OpenStreetMap. La vue aérienne archivée est attribuée à l’IGN ; sa date exacte et ses conditions d’affichage doivent être confirmées avant publication.</p></section>
+      </div>
+    </section>
+
+    <article class="view project-view" id="view-project" data-view="project" hidden>
+      <div id="project-content"></div>
+    </article>
+  </main>
+
+  <dialog class="lightbox" id="lightbox">
+    <button type="button" id="lightbox-close" aria-label="Fermer l’image">×</button>
+    <figure><img id="lightbox-image" alt=""><figcaption id="lightbox-caption"></figcaption></figure>
+  </dialog>
+
+  <div class="loading-screen" id="loading-screen" role="status"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><p>Ouverture du territoire…</p></div>
+  <div class="fatal-error" id="fatal-error" hidden><strong>Impossible de charger les fiches.</strong><p>Relancez le site avec START_V0_8_5.bat, puis actualisez cette page.</p></div>
+
+  <footer class="site-footer">
+    <div><strong>Observatoire Docks & Seine-Liberté</strong><span>Créé et édité par Thibault S. · Observatoire citoyen indépendant · V0.9 locale</span></div>
+    <nav class="footer-links" aria-label="Informations et contact">
+      <button type="button" data-route="method">À propos</button>
+      <button type="button" data-route="contribute">Signaler une information</button>
+      <button type="button" data-route="legal">Mentions légales</button>
+      <button type="button" data-route="privacy">Confidentialité</button>
+      <button type="button" data-route="credits">Crédits & droits</button>
+      <a href="mailto:dock-seine.carpool658@passmail.net">Contact</a>
+    </nav>
+    <span>Base mise à jour le <b id="footer-date">—</b></span>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

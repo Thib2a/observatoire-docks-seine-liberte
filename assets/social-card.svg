@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#102e2a"/>
+  <circle cx="1035" cy="100" r="260" fill="#1c4940"/>
+  <path d="M0 512c210-70 340-30 522-98 198-75 375-50 678-175v391H0z" fill="#174039"/>
+  <path d="M0 520c233-78 382-33 563-96 205-72 389-35 637-144" fill="none" stroke="#ed744f" stroke-width="8"/>
+  <g fill="#f3efe6"><rect x="85" y="96" width="24" height="62"/><rect x="121" y="68" width="24" height="90"/><rect x="157" y="113" width="24" height="45"/></g>
+  <text x="85" y="250" fill="#f3efe6" font-family="Georgia,serif" font-size="82">Observatoire</text>
+  <text x="85" y="337" fill="#f3efe6" font-family="Georgia,serif" font-size="82">Docks &amp; Seine-Liberté</text>
+  <text x="89" y="405" fill="#b9cbc4" font-family="Arial,sans-serif" font-size="28">136 fiches · 114 opérations · carte, sources et chronologie</text>
+  <text x="89" y="555" fill="#f3efe6" font-family="Arial,sans-serif" font-size="22" letter-spacing="4">SAINT-OUEN-SUR-SEINE · CLICHY</text>
+</svg>
