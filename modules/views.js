@@ -92,13 +92,13 @@ function territoryOverview(isSeine, items, territory, presentation = {}, present
   const fallback = ensemble?.visuals.find(visual => visual.role === "PLAN_MASSE" || visual.role === "PLAN_SITUATION");
   if (!plans.length && fallback) plans.push(fallback);
   const sourceUrl = isSeine
-    ? "https://www.ville-clichy.fr/cms_viewFile.php?idtf=71577&path=Zac-seine-liberte-annexe-2.pdf"
+    ? "https://www.ville-clichy.fr/170-les-projets-clichy.htm"
     : "https://www.docks-saintouen.fr/explorer-les-cartes-interactives/programmation-les-docks-de-saint-ouen/";
   const content = isSeine
     ? `<p>Située à Clichy, en continuité des Docks de Saint-Ouen, la ZAC Seine-Liberté prévoit la transformation d’anciens terrains d’activité en un nouveau quartier associant logements, équipements publics, espaces verts, nouvelles rues et berges aménagées.</p><p>Les plans d’ensemble permettent de visualiser l’organisation du futur quartier, de situer ses différents lots et de comprendre comment il prendra progressivement forme.</p>`
     : `<p>Les Docks de Saint-Ouen forment un quartier en pleine transformation, où se côtoient logements, équipements, espaces publics et Grand Parc. Si plusieurs secteurs sont déjà livrés et habités, l’aménagement se poursuit, notamment autour du secteur 6.</p><p>Cette carte d’ensemble permet de comprendre l’organisation du quartier, de situer les différents projets et de découvrir les transformations à venir.</p>`;
   return `<section class="reference-plan territory-overview" aria-labelledby="overview-title">
-    <div><p class="eyebrow">Vue d’ensemble</p><h2 id="overview-title">${isSeine ? "Découvrir le futur quartier Seine-Liberté" : "Découvrir les Docks et leurs différents secteurs"}</h2>${content}<a class="overview-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${isSeine ? "Consulter le dossier officiel" : "Consulter la carte officielle des Docks"} ↗</a></div>
+    <div><p class="eyebrow">Vue d’ensemble</p><h2 id="overview-title">${isSeine ? "Découvrir le futur quartier Seine-Liberté" : "Découvrir les Docks et leurs différents secteurs"}</h2>${content}<a class="overview-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${isSeine ? "Découvrir les projets urbains de Clichy" : "Consulter la carte officielle des Docks"} ↗</a></div>
     <div class="overview-visual">${plans.length ? `<button class="plan-preview" type="button" data-lightbox-src="${escapeHtml(plans[0].src)}" data-lightbox-alt="Plan d’ensemble de ${escapeHtml(territory)}" data-lightbox-caption="${escapeHtml(plans[0].caption || "Plan d’ensemble")}"><img src="${escapeHtml(plans[0].src)}" alt="Plan d’ensemble de ${escapeHtml(territory)}" loading="lazy"><span>Agrandir le plan d’ensemble</span></button>${plans.length > 1 ? `<div class="plan-pager"><button type="button" data-plan-step="-1">← Précédent</button><span data-plan-count>1 / ${plans.length}</span><button type="button" data-plan-step="1">Suivant →</button></div>` : ""}` : `<div class="overview-map">Plan d’ensemble à sélectionner</div>`}<a class="overview-source" href="#explorer">Voir les projets sur la carte interactive →</a></div>
   </section>`;
 }
@@ -193,8 +193,7 @@ export function renderProject(project) {
   const actors = actorItems(project);
   const timeline = timelineItems(project);
   const locationText = project.locationText || [project.map.address, project.map.sector, project.map.zone].filter(Boolean).join(" · ");
-  const locationQualifier = ({APPROX: "Localisation approximative", APPROXIMATIF: "Localisation approximative", SECTEUR: "Localisation de secteur", GLOBAL: "Repère territorial", EXACT: "Adresse documentée"})[project.map.quality]
-    || (project.map.mode === "ADRESSE" ? "Adresse documentée" : "Localisation par secteur");
+  const locationQualifier = "Emplacement vérifié";
   const mediaGroup = (title, kind, visuals) => !visuals.length ? "" : `<section class="detail-section gallery-section" data-progressive-gallery>
     <div class="detail-heading"><p class="eyebrow">Images et documents graphiques</p><h2>${title}</h2></div>
     <div class="gallery-grid">${visuals.map((visual, index) => `

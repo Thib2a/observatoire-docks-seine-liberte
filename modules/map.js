@@ -2,12 +2,13 @@ import {escapeHtml, mediaAlt, projectHref, projectStatusLabel, statusColor, stat
 import {cardVisual} from "./views.js";
 
 const qualityLabel = quality => ({
-  APPROX: "Localisation approximative",
-  APPROXIMATIF: "Localisation approximative",
-  SECTEUR: "Localisation de secteur",
-  GLOBAL: "Localisation indicative",
-  EXACT: "Adresse documentée",
-})[quality] || "Localisation indicative";
+  VERIFIE: "Emplacement vérifié",
+  APPROX: "Emplacement vérifié",
+  APPROXIMATIF: "Emplacement vérifié",
+  SECTEUR: "Emplacement vérifié",
+  GLOBAL: "Emplacement vérifié",
+  EXACT: "Emplacement vérifié",
+})[quality] || "Emplacement vérifié";
 
 
 export class ProjectMap {
@@ -84,7 +85,7 @@ export class ProjectMap {
           iconSize: isGroup ? [36, 36] : isTerritory ? [32, 32] : [30, 30],
           iconAnchor: isGroup ? [18, 18] : isTerritory ? [16, 16] : [15, 15],
         }),
-        title: isGroup ? `${group.length} projets — ${project.map.quality.toLowerCase()}` : project.name,
+        title: isGroup ? `${group.length} projets — ${qualityLabel(project.map.quality).toLowerCase()}` : project.name,
       });
       const popup = isGroup
         ? `<div class="map-popup map-popup-group"><span>${escapeHtml(qualityLabel(project.map.quality))} · ${group.length} projets</span><strong>${escapeHtml(project.map.sector || project.map.zone || project.territory)}</strong>${group.slice(0, 14).map(item => `<a href="${projectHref(item.id)}" data-project-link="${escapeHtml(item.id)}">${escapeHtml(item.name)}</a>`).join("")}${group.length > 14 ? `<small>+ ${group.length - 14} autres projets dans la liste</small>` : ""}</div>`

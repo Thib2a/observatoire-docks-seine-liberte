@@ -417,7 +417,7 @@ img { display: block; max-width: 100%; }
 .event-projects { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
 .event-projects a { padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--green); font-size: 11px; text-decoration: none; }
 .community-cta { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 40px; margin-top: 88px; padding: 38px; color: white; background: var(--green); }
-.community-cta h2 { margin: 4px 0 10px; font: 400 clamp(30px, 4vw, 50px)/1.04 var(--serif); }
+.community-cta h2 { margin: 4px 0 10px; font: 400 clamp(27px, 2.8vw, 38px)/1.08 var(--serif); }
 .community-cta p:last-child { color: rgba(255,255,255,.72); }
 .method-community { width: min(1180px, calc(100% - 40px)); margin: 0 auto 110px; }
 .contribution-form { width: min(760px, calc(100% - 40px)); margin: 65px auto 120px; display: grid; gap: 22px; }
@@ -552,7 +552,7 @@ img { display: block; max-width: 100%; }
   .method-body section > .eyebrow { grid-row: auto; padding-top: 0; }
 }
 
-/* V0.9 — lecture publique et médias progressifs */
+/* V0.9.5 — lecture publique et médias progressifs */
 .hero-stats { display:grid; grid-template-columns: repeat(6, minmax(90px, 1fr)); gap: 20px; }
 .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .feature-territory { min-width: 0; }
@@ -593,7 +593,7 @@ img { display: block; max-width: 100%; }
 .updates-tabs { justify-content: center; padding: 34px 0; }
 .updates-tabs button { min-height: 56px; padding: 14px 23px; font-size: 14px; }
 
-/* V0.9 — FAQ et informations de publication */
+/* V0.9.5 — FAQ et informations de publication */
 .faq-section .faq-list { grid-column: 2; display: grid; gap: 10px; }
 .faq-list details { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.58); }
 .faq-list summary { position: relative; padding: 18px 48px 18px 20px; font-weight: 750; cursor: pointer; list-style: none; }

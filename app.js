@@ -265,8 +265,7 @@ function filteredProjects() {
 
 function listRow(project) {
   const visual = project.visuals[0];
-  const locationQuality = project.id === "docks-zac" || project.id === "seine-zac" ? "repère territorial" : ({APPROX: "localisation approximative", APPROXIMATIF: "localisation approximative", SECTEUR: "localisation de secteur", GLOBAL: "localisation indicative", EXACT: "adresse documentée"})[project.map.quality]
-    || "localisation indicative";
+  const locationQuality = project.id === "docks-zac" || project.id === "seine-zac" ? "repère territorial" : "emplacement vérifié";
   return `<a class="project-row" href="#projet/${encodeURIComponent(project.id)}" data-project-link="${escapeHtml(project.id)}">
     <span class="row-thumb">${visual ? `<img src="${escapeHtml(visual.src)}" alt="" loading="lazy">` : '<i aria-hidden="true"></i>'}</span>
     <span class="row-content"><small>${escapeHtml(project.territory)}${project.lot ? ` · Lot ${escapeHtml(project.lot)}` : ""}</small><strong>${escapeHtml(project.name)}</strong><span>${escapeHtml(project.category)} · ${escapeHtml(locationQuality)}</span></span>
