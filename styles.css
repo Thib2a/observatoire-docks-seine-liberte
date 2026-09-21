@@ -625,3 +625,21 @@ img { display: block; max-width: 100%; }
 .documents-section.is-expanded .is-extra-document { display:grid; }
 .feature-rotator { position: relative; min-height: 510px; }
 .feature-territory .project-card { min-height: 495px; }
+
+/* V0.9.5 — lecture mobile des actualités */
+@media (max-width: 760px) {
+  .updates-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 22px 0; }
+  .updates-tabs button { min-height: 48px; padding: 10px 12px; font-size: 12px; }
+  .updates-block .timeline-page { margin-top: 26px; }
+  .update-item { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 7px; padding: 20px 8px; }
+  .update-item:hover { padding-inline: 8px; }
+  .update-item time, .update-item .update-kind, .update-item strong, .update-item p, .update-item .update-source { grid-column: 1; }
+  .update-item strong { font-size: 23px; line-height: 1.2; }
+  .update-item p { font-size: 14px; line-height: 1.5; }
+  .update-item .update-source { grid-row: auto; align-self: auto; justify-self: start; margin-top: 4px; }
+  .update-item > span:last-child { display: none; }
+}
+
+@media (max-width: 420px) {
+  .updates-tabs { grid-template-columns: 1fr; }
+}
