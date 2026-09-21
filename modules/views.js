@@ -137,7 +137,7 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
       <h1>${escapeHtml(territory)}</h1>
       <p>${escapeHtml(intro)}</p>
       <button class="button button-light" type="button" data-explore-territory="${escapeHtml(territory)}">Voir sur la carte</button>
-      <dl><div><dt>${items.length}</dt><dd>opérations suivies</dd></div><div><dt>${current.length}</dt><dd>en cours ou à venir</dd></div><div><dt>${delivered.length}</dt><dd>opérations livrées</dd></div></dl>
+      <dl><div><dt>${items.length}</dt><dd>fiches publiques</dd></div><div><dt>${current.length}</dt><dd>en cours ou à venir</dd></div><div><dt>${delivered.length}</dt><dd>opérations livrées</dd></div></dl>
     </div>
     ${isSeine ? (contextVisual ? `<div class="territory-hero-caption">Vue de contexte du site, non rendu du projet final · ${mediaCredit(contextVisual)}</div>` : "") : (visual ? `<div class="territory-hero-caption">${escapeHtml(visual.caption)} · ${mediaCredit(visual)}</div>` : "")}
   </header>
@@ -183,10 +183,9 @@ function timelineItems(project) {
 
 export function renderProject(project) {
   const hero = project.visuals.find(item => item.role === "HERO") || project.visuals[0];
-  const heroIsPlan = hero?.role?.startsWith("PLAN_");
-  const seenVisuals = new Set(hero && !heroIsPlan ? [hero.src] : []);
+  const seenVisuals = new Set();
   const gallery = project.visuals.filter(item => {
-    if ((item.id === hero?.id && !heroIsPlan) || seenVisuals.has(item.src)) return false;
+    if (seenVisuals.has(item.src)) return false;
     seenVisuals.add(item.src);
     return true;
   });
@@ -266,7 +265,7 @@ export function renderProject(project) {
     ${documentsSection}
     ${sourcesSection}
     ${componentsSection}
-    <section class="community-cta"><div><p class="eyebrow">Observatoire indépendant</p><h2>Une information manque ou semble incorrecte ?</h2><p>Préparez un e-mail lié à cette fiche. Chaque proposition sera vérifiée avant publication.</p></div><button class="button button-primary" type="button" data-route="contribute" data-contribution-project="${escapeHtml(project.id)}">Signaler une information</button></section>
+    <section class="community-cta"><div><p class="eyebrow">Observatoire indépendant</p><h2>Une information manque ou semble incorrecte ?</h2><p>Envoyez un signalement lié à cette fiche. Chaque proposition sera vérifiée avant publication.</p></div><button class="button button-primary" type="button" data-route="contribute" data-contribution-project="${escapeHtml(project.id)}">Signaler une information</button></section>
   </div>`;
 }
 

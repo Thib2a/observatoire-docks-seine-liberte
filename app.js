@@ -7,7 +7,6 @@ import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTer
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
-const CONTACT_EMAIL = "dock-seine.carpool658@passmail.net";
 const state = {
   data: null,
   byId: new Map(),
@@ -22,6 +21,7 @@ const state = {
   carouselTimers: [],
   slideControllers: {},
   planIndex: 0,
+  renderedHash: null,
 };
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,13 +50,18 @@ function routeHash(route) {
 
 
 function navigate(route, payload = {}) {
-  if (route === "territory") location.hash = `#territoire/${encodeURIComponent(payload.territory)}`;
-  else if (route === "project") location.hash = `#projet/${encodeURIComponent(payload.id)}`;
-  else location.hash = routeHash(route);
+  const nextHash = route === "territory"
+    ? `#territoire/${encodeURIComponent(payload.territory)}`
+    : route === "project"
+      ? `#projet/${encodeURIComponent(payload.id)}`
+      : routeHash(route);
+  if (location.hash !== nextHash) history.pushState(null, "", nextHash);
+  showRoute(parseRoute());
 }
 
 
 function showRoute(parsed, options = {}) {
+  state.renderedHash = location.hash || "#accueil";
   state.carouselTimers.forEach(clearInterval);
   state.carouselTimers = [];
   state.slideControllers = {};
@@ -393,50 +398,49 @@ function bindEvents() {
     $("#menu-toggle").setAttribute("aria-expanded", String(!open));
     $("#main-nav").classList.toggle("is-open", !open);
   });
-  $("#contribution-form").addEventListener("submit", event => {
+  $("#contribution-form").addEventListener("submit", async event => {
     event.preventDefault();
     const form = event.currentTarget;
+    if (!form.reportValidity()) return;
     const values = new FormData(form);
     const projectSelect = $("#contribution-project");
     const selectedProject = projectSelect.options[projectSelect.selectedIndex]?.textContent || values.get("project") || "Non précisé";
-    const photo = values.get("photo");
-    const pseudonym = String(values.get("pseudonym") || "").trim();
-    const email = String(values.get("email") || "").trim();
-    const source = String(values.get("source") || "").trim();
-    const imageRights = String(values.get("image_rights") || "").trim();
-    const lines = [
-      `Projet : ${selectedProject}`,
-      `Type de signalement : ${values.get("type") || "Non précisé"}`,
-      `Pseudonyme : ${pseudonym || "Contribution anonyme"}`,
-      `Publication du pseudonyme autorisée : ${values.get("publish_pseudonym") ? "Oui" : "Non"}`,
-      `Adresse de réponse : ${email || "Non fournie"}`,
-      `Source : ${source || "Non fournie"}`,
-      `Photo à joindre : ${photo instanceof File && photo.name ? photo.name : "Aucune"}`,
-      `Droits de la photo : ${imageRights || "Sans objet ou à préciser"}`,
-      "",
-      "Message :",
-      String(values.get("message") || "").trim(),
-    ];
-    const preparedMessage = lines.join("\n");
-    const subject = `Signalement Observatoire — ${selectedProject}`;
-    $("#prepared-contribution").value = preparedMessage;
-    $("#email-contribution").href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(preparedMessage)}`;
-    $("#copy-feedback").hidden = true;
-    $("#form-success").hidden = false;
-    $("#form-success").scrollIntoView({behavior: "smooth", block: "nearest"});
-  });
-  $("#copy-contribution").addEventListener("click", async () => {
-    const field = $("#prepared-contribution");
+    const submit = $("#contribution-submit");
+    const success = $("#form-success");
+    const failure = $("#form-error");
+    values.set("project_name", selectedProject);
+    values.set("publish_pseudonym", values.get("publish_pseudonym") ? "Oui" : "Non");
+    values.set("privacy_consent", "Oui");
+    values.set("_subject", `Signalement Observatoire — ${selectedProject}`);
+    success.hidden = true;
+    failure.hidden = true;
+    submit.disabled = true;
+    submit.textContent = "Envoi en cours…";
     try {
-      await navigator.clipboard.writeText(field.value);
-    } catch {
-      field.select();
-      document.execCommand("copy");
-      field.setSelectionRange(0, 0);
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: values,
+        headers: {Accept: "application/json"},
+      });
+      if (!response.ok) throw new Error(`Formspree a répondu ${response.status}`);
+      form.reset();
+      success.hidden = false;
+      success.scrollIntoView({behavior: "smooth", block: "nearest"});
+    } catch (error) {
+      console.error(error);
+      failure.hidden = false;
+      failure.scrollIntoView({behavior: "smooth", block: "nearest"});
+    } finally {
+      submit.disabled = false;
+      submit.textContent = "Envoyer le signalement";
     }
-    $("#copy-feedback").hidden = false;
   });
-  window.addEventListener("hashchange", () => showRoute(parseRoute()));
+  const syncRoute = () => {
+    const currentHash = location.hash || "#accueil";
+    if (state.renderedHash !== currentHash) showRoute(parseRoute());
+  };
+  window.addEventListener("hashchange", syncRoute);
+  window.addEventListener("popstate", syncRoute);
   window.addEventListener("resize", () => state.map.invalidate());
   document.addEventListener("error", event => {
     if (event.target.tagName === "IMG") event.target.closest("figure, .project-card-media, .row-thumb, .project-header-media, .territory-hero-media, .plan-preview")?.classList.add("image-missing");

@@ -74,6 +74,7 @@ export class ProjectMap {
       const isGroup = group.length > 1;
       const isTerritory = !isGroup && ["docks-zac", "seine-zac"].includes(project.id);
       const marker = L.marker([project.map.latitude, project.map.longitude], {
+        zIndexOffset: isTerritory ? 1000 : 0,
         icon: L.divIcon({
           className: "map-marker-wrap",
           html: isGroup

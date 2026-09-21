@@ -426,6 +426,7 @@ img { display: block; max-width: 100%; }
 .contribution-form input, .contribution-form select, .contribution-form textarea { width: 100%; padding: 14px 15px; border: 1px solid var(--line); border-radius: 0; color: var(--ink); background: white; font: 400 16px var(--sans); text-transform: none; letter-spacing: 0; }
 .contribution-form textarea { resize: vertical; }
 .contribution-form .button { justify-self: start; }
+.contribution-form .button:disabled { cursor: wait; opacity: .65; }
 .contribution-form .check-label { grid-template-columns: auto 1fr; align-items: start; gap: 11px; font-weight: 400; text-transform: none; letter-spacing: 0; line-height: 1.5; }
 .contribution-form .check-label input { width: 18px; height: 18px; margin-top: 2px; padding: 0; }
 .contribution-form .check-label span { color: var(--ink); }
@@ -433,10 +434,11 @@ img { display: block; max-width: 100%; }
 .form-note { color: var(--muted); font-size: 12px; }
 .form-success { padding: 20px; border-left: 4px solid var(--green); background: #e8f0ec; }
 .form-success p { margin: 6px 0 0; color: var(--muted); }
-.form-success textarea { margin-top: 18px; background: rgba(255,255,255,.75); font-size: 14px; line-height: 1.5; }
+.form-error { padding: 20px; border-left: 4px solid #a33b32; color: #6f241e; background: #f8e9e6; }
+.form-error p { margin: 6px 0 0; color: #70443f; }
+.form-honeypot { position: absolute !important; left: -9999px !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none !important; }
 .form-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .form-actions .button { text-decoration: none; }
-.copy-feedback { font-weight: 700; }
 .editorial-principles article > span { display: none; }
 
 @media (max-width: 760px) {
@@ -550,7 +552,7 @@ img { display: block; max-width: 100%; }
   .method-body section > .eyebrow { grid-row: auto; padding-top: 0; }
 }
 
-/* V0.8.5 — lecture publique et médias progressifs */
+/* V0.9 — lecture publique et médias progressifs */
 .hero-stats { display:grid; grid-template-columns: repeat(6, minmax(90px, 1fr)); gap: 20px; }
 .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .feature-territory { min-width: 0; }
@@ -591,7 +593,7 @@ img { display: block; max-width: 100%; }
 .updates-tabs { justify-content: center; padding: 34px 0; }
 .updates-tabs button { min-height: 56px; padding: 14px 23px; font-size: 14px; }
 
-/* V0.8.5 — FAQ et informations de publication */
+/* V0.9 — FAQ et informations de publication */
 .faq-section .faq-list { grid-column: 2; display: grid; gap: 10px; }
 .faq-list details { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.58); }
 .faq-list summary { position: relative; padding: 18px 48px 18px 20px; font-weight: 750; cursor: pointer; list-style: none; }
