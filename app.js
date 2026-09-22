@@ -292,7 +292,6 @@ function updateExplorer() {
   $("#project-list").innerHTML = projects.map(listRow).join("");
   $("#result-count").textContent = projects.length;
   $("#point-count").textContent = `${points.length} sur la carte`;
-  $("#map-context").textContent = state.territory || "Tous les territoires";
   $("#empty-state").hidden = projects.length > 0;
   $("#clear-search").hidden = !state.search;
   updateMapLegend(projects);

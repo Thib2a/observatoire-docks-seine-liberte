@@ -159,8 +159,8 @@ img { display: block; max-width: 100%; }
 .empty-state strong { display: block; color: var(--ink); font: 400 24px var(--serif); }
 .map-column { position: sticky; top: 78px; height: calc(100svh - 78px); min-height: 650px; background: #d8dfd8; }
 .map { position: absolute; inset: 0; z-index: 1; }
-.map-toolbar { position: absolute; z-index: 4; top: 18px; left: 18px; right: 18px; display: flex; justify-content: space-between; pointer-events: none; }
-.map-toolbar span, .map-toolbar button { padding: 9px 13px; border: 0; border-radius: 99px; background: rgba(255,254,250,.92); box-shadow: 0 8px 22px rgba(20,36,31,.12); font-size: 11px; pointer-events: auto; }
+.map-toolbar { position: absolute; z-index: 4; top: 18px; left: 18px; right: 18px; display: flex; justify-content: flex-end; pointer-events: none; }
+.map-toolbar button { padding: 9px 13px; border: 0; border-radius: 99px; background: rgba(255,254,250,.92); box-shadow: 0 8px 22px rgba(20,36,31,.12); font-size: 11px; pointer-events: auto; }
 .map-toolbar button { cursor: pointer; }
 .map-footnote { position: absolute; z-index: 4; left: 18px; right: 18px; bottom: 18px; display: flex; align-items: center; gap: 8px; width: fit-content; max-width: calc(100% - 36px); padding: 9px 12px; border-radius: 9px; color: #40514b; background: rgba(255,254,250,.92); box-shadow: 0 8px 22px rgba(20,36,31,.12); font-size: 10px; }
 .external-map-resource { width: min(1180px, calc(100% - 40px)); margin: 42px auto 90px; padding: clamp(24px, 4vw, 44px); border: 1px solid var(--line); border-radius: 22px; background: var(--white); display: flex; align-items: center; justify-content: space-between; gap: 32px; }
@@ -628,7 +628,7 @@ img { display: block; max-width: 100%; }
   .footer-links { justify-content: flex-start; }
 }
 @media (max-width: 1100px) { .hero-stats { grid-template-columns: repeat(3, minmax(0,1fr)); } }
-@media (max-width: 760px) { .feature-grid { grid-template-columns: 1fr; } .hero-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } .hero-stats dd { white-space: normal; } .hero-stats div:last-child { display: grid; } .map-toolbar { gap: 8px; flex-wrap: wrap; } .map-toolbar-actions label { display: none; } .map-legend { right: 12px; bottom: 54px; max-height: 48%; overflow: auto; } .map-footnote { left: 12px; right: 12px; bottom: 8px; } }
+@media (max-width: 760px) { .feature-grid { grid-template-columns: 1fr; } .hero-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } .hero-stats dd { white-space: normal; } .hero-stats div:last-child { display: grid; } .map-toolbar-actions label { display: none; } }
 .hero-slide-controls { position:absolute; z-index:4; left:24px; bottom:18px; display:flex; gap:6px; }
 .door-slide-controls,.territory-slide-controls { display:flex; align-items:center; gap:9px; margin-top:20px; }
 .door-slide-controls span { min-width:48px; text-align:center; color:white; font-size:12px; font-weight:750; text-shadow:0 1px 8px rgba(0,0,0,.5); }
@@ -657,4 +657,32 @@ img { display: block; max-width: 100%; }
 
 @media (max-width: 420px) {
   .updates-tabs { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .home-hero h1 { font-size: 43px; line-height: 1.02; letter-spacing: 0; text-wrap: balance; }
+  .home-hero h1 br { display: none; }
+  .explorer-view .compact-intro { padding-top: 72px; }
+  .map-column {
+    --mobile-map-height: clamp(380px, 54svh, 560px);
+    height: auto;
+    min-height: 0;
+    padding-top: var(--mobile-map-height);
+    background: var(--paper);
+  }
+  .map { inset: 0 0 auto; height: var(--mobile-map-height); }
+  .map-toolbar { top: 12px; left: 12px; right: 12px; }
+  .map-legend, .map-footnote {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    width: auto;
+    max-width: none;
+    box-shadow: none;
+  }
+  .map-legend { margin: 12px 12px 0; border: 1px solid var(--line); background: var(--white); }
+  .map-footnote { margin: 0 12px 14px; padding: 10px 2px; background: transparent; font-size: 11px; line-height: 1.4; }
+}
+@media (max-width: 380px) {
+  .home-hero h1 { font-size: 36px; }
 }
