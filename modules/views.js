@@ -95,8 +95,8 @@ function territoryOverview(isSeine, items, territory, presentation = {}, present
     ? "https://www.ville-clichy.fr/170-les-projets-clichy.htm"
     : "https://www.docks-saintouen.fr/explorer-les-cartes-interactives/programmation-les-docks-de-saint-ouen/";
   const content = isSeine
-    ? `<p>Située à Clichy, en continuité des Docks de Saint-Ouen, la ZAC Seine-Liberté prévoit la transformation d’anciens terrains d’activité en un nouveau quartier associant logements, équipements publics, espaces verts, nouvelles rues et berges aménagées.</p><p>Les plans d’ensemble permettent de visualiser l’organisation du futur quartier, de situer ses différents lots et de comprendre comment il prendra progressivement forme.</p>`
-    : `<p>Les Docks de Saint-Ouen forment un quartier en pleine transformation, où se côtoient logements, équipements, espaces publics et Grand Parc. Si plusieurs secteurs sont déjà livrés et habités, l’aménagement se poursuit, notamment autour du secteur 6.</p><p>Cette carte d’ensemble permet de comprendre l’organisation du quartier, de situer les différents projets et de découvrir les transformations à venir.</p>`;
+    ? `<p>La ZAC Seine-Liberté prévoit la transformation d'anciens terrains d'activité en un nouveau quartier associant logements, équipements publics, espaces verts, nouvelles rues et berges aménagées.</p><p>Les plans d'ensemble permettent de comprendre son organisation, de situer les différents lots et de suivre la réalisation progressive des aménagements.</p>`
+    : `<p>Les Docks réunissent plusieurs secteurs aux caractéristiques et aux stades d'aménagement différents. Certains sont déjà livrés et habités, tandis que d'autres accueillent de nouveaux chantiers ou des projets encore à l'étude.</p><p>Les plans d'ensemble permettent de comprendre l'organisation du quartier, de situer les différentes opérations et de découvrir les aménagements à venir.</p>`;
   return `<section class="reference-plan territory-overview" aria-labelledby="overview-title">
     <div><p class="eyebrow">Vue d’ensemble</p><h2 id="overview-title">${isSeine ? "Découvrir le futur quartier Seine-Liberté" : "Découvrir les Docks et leurs différents secteurs"}</h2>${content}<a class="overview-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${isSeine ? "Découvrir les projets urbains de Clichy" : "Consulter la carte officielle des Docks"} ↗</a></div>
     <div class="overview-visual">${plans.length ? `<button class="plan-preview" type="button" data-lightbox-src="${escapeHtml(plans[0].src)}" data-lightbox-alt="Plan d’ensemble de ${escapeHtml(territory)}" data-lightbox-caption="${escapeHtml(plans[0].caption || "Plan d’ensemble")}"><img src="${escapeHtml(plans[0].src)}" alt="Plan d’ensemble de ${escapeHtml(territory)}" loading="lazy"><span>Agrandir le plan d’ensemble</span></button>${plans.length > 1 ? `<div class="plan-pager"><button type="button" data-plan-step="-1">← Précédent</button><span data-plan-count>1 / ${plans.length}</span><button type="button" data-plan-step="1">Suivant →</button></div>` : ""}` : `<div class="overview-map">Plan d’ensemble à sélectionner</div>`}<a class="overview-source" href="#explorer">Voir les projets sur la carte interactive →</a></div>
@@ -106,10 +106,11 @@ function territoryOverview(isSeine, items, territory, presentation = {}, present
 
 export function renderTerritory(territory, projects, presentation = {}, presentationMedia = {}) {
   const items = projects.filter(project => project.territory === territory);
+  const operations = items.filter(project => project.projectType !== "ENSEMBLE");
   const additive = items.filter(project => project.additive);
-  const current = items.filter(project => ACTIVE_STATUSES.has(project.status));
+  const current = operations.filter(project => ACTIVE_STATUSES.has(project.status));
   const future = additive.filter(project => FUTURE_STATUSES.has(project.status));
-  const delivered = items.filter(project => project.status === "LIVRÉ / TERMINÉ");
+  const delivered = operations.filter(project => project.status === "LIVRÉ / TERMINÉ");
   const publicSpaces = additive.filter(project => ["Espaces publics", "Espaces verts", "Infrastructures", "Équipements"].includes(project.category));
   const visualProject = items
     .filter(project => cardVisual(project))
@@ -119,8 +120,8 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
   const contextProject = isSeine ? items.find(project => project.projectType === "ENSEMBLE") : null;
   const contextVisual = contextProject?.visuals.find(item => item.role === "GALERIE" && item.caption.includes("Perspective urbaine Seine-Liberté"));
   const intro = isSeine
-    ? "Entre Clichy et Saint-Ouen, la ZAC prépare une nouvelle séquence urbaine tournée vers la Seine, avec logements, école, parcs, berges et nouvelles rues."
-    : "Ancien territoire industriel devenu quartier mixte, les Docks continuent d’évoluer autour du secteur 6, des grands équipements et des espaces publics.";
+    ? "À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, Seine-Liberté prend progressivement forme. Logements, équipements publics, espaces verts, nouvelles rues et berges aménagées composeront ce nouveau quartier, dont les différentes opérations avancent à leur rythme."
+    : "Ancien territoire industriel devenu un quartier de vie, les Docks de Saint-Ouen poursuivent leur transformation. Entre secteurs déjà habités, nouveaux programmes immobiliers, équipements et espaces publics, découvrez les projets qui façonnent le quartier d'aujourd'hui et de demain.";
   const eyebrow = isSeine ? "Clichy · bord de Seine" : "Saint-Ouen-sur-Seine";
 
   const projectStrip = (title, subtitle, rows) => rows.length ? `<section class="territory-section">
@@ -198,24 +199,24 @@ export function renderProject(project) {
     <div class="detail-heading"><p class="eyebrow">Images et documents graphiques</p><h2>${title}</h2></div>
     <div class="gallery-grid">${visuals.map((visual, index) => `
       <figure class="gallery-item ${index === 0 ? "is-wide" : ""}">
-        <button type="button" data-lightbox-src="${escapeHtml(visual.src)}" data-lightbox-alt="${escapeHtml(mediaAlt(project, visual))}" data-lightbox-caption="${escapeHtml(visual.caption)}">
-          ${imageMarkup(project, visual)}<span>${escapeHtml(visual.role.replaceAll("_", " ").toLowerCase())}</span>
-        </button>
+        ${visual.src.toLowerCase().split("?")[0].endsWith(".pdf")
+          ? `<a class="pdf-visual-link" href="${escapeHtml(visual.src)}" target="_blank" rel="noopener">${visual.thumbnail ? `<img src="${escapeHtml(visual.thumbnail)}" alt="Première page de ${escapeHtml(visual.caption)}" loading="lazy">` : '<span class="pdf-thumb-fallback">PDF</span>'}<span>${escapeHtml(visual.caption)}</span><em>Consulter le PDF ↗</em></a>`
+          : `<button type="button" data-lightbox-src="${escapeHtml(visual.src)}" data-lightbox-alt="${escapeHtml(mediaAlt(project, visual))}" data-lightbox-caption="${escapeHtml(visual.caption)}">${imageMarkup(project, visual)}<span>${escapeHtml(({PLAN_SITUATION: "Plan de situation", PLAN_MASSE: "Plan de masse"})[visual.role] || visual.role.replaceAll("_", " ").toLowerCase())}</span></button>`}
         <figcaption><strong>${escapeHtml(visual.caption)}</strong>${visual.originProjectName ? `<small>Rattaché depuis ${escapeHtml(visual.originProjectName)}</small>` : ""}${mediaCredit(visual)}</figcaption>
       </figure>`).join("")}</div>
     ${visuals.length > 8 ? `<button class="button gallery-more" type="button" data-gallery-more>Voir tous les ${kind} (${visuals.length})</button>` : ""}
   </section>`;
   const gallerySection = [
     mediaGroup("Photos et perspectives", "visuels", gallery.filter(item => ["GALERIE", "HERO"].includes(item.role))),
-    mediaGroup("Plans de situation", "plans", gallery.filter(item => item.role === "PLAN_SITUATION")),
-    mediaGroup("Plans de masse", "plans", gallery.filter(item => item.role === "PLAN_MASSE")),
+    mediaGroup("Plans de situation et de masse", "plans", gallery.filter(item => ["PLAN_SITUATION", "PLAN_MASSE"].includes(item.role))),
     mediaGroup("Documents graphiques", "documents", gallery.filter(item => item.role === "DOCUMENT")),
     mediaGroup("Images de contexte et versions anciennes", "visuels", gallery.filter(item => ["CONTEXTE", "HISTORIQUE"].includes(item.role))),
   ].join("");
 
   const documentsSection = project.documents.length ? `<section class="detail-section documents-section">
     <div class="detail-heading"><p class="eyebrow">Pour aller plus loin</p><h2>Documents utiles</h2></div>
-    <div class="document-list">${project.documents.map((document, index) => `
+    <div class="document-list">${project.documents.map((document, index) => document.isPdf ? `
+      <a class="pdf-document ${index >= 5 ? "is-extra-document" : ""}" href="${escapeHtml(document.url)}" target="_blank" rel="noopener">${document.thumbnail ? `<img class="pdf-document-thumb" src="${escapeHtml(document.thumbnail)}" alt="Première page de ${escapeHtml(document.title)}" loading="lazy">` : '<span class="pdf-document-thumb pdf-thumb-fallback">PDF</span>'}<span class="pdf-document-info"><small>${escapeHtml(document.type || "PDF")}${document.date ? ` · ${escapeHtml(formatDate(document.date))}` : ""}${document.originProjectName ? ` · Dossier ${escapeHtml(document.originProjectName)}` : ""}</small><strong>${escapeHtml(document.title)}</strong><em>Consulter le PDF ↗</em></span></a>` : `
       <a class="${index >= 5 ? "is-extra-document" : ""}" href="${escapeHtml(document.url)}" target="_blank" rel="noopener"><span>${escapeHtml(document.type || "Document")}${document.date ? ` · ${escapeHtml(formatDate(document.date))}` : ""}${document.originProjectName ? ` · Dossier ${escapeHtml(document.originProjectName)}` : ""}</span><strong>${escapeHtml(document.title)}</strong><i aria-hidden="true">↗</i></a>`).join("")}</div>
     ${project.documents.length > 5 ? `<button type="button" class="button source-more" data-doc-more>Voir les ${project.documents.length - 5} autres documents</button>` : ""}
   </section>` : "";

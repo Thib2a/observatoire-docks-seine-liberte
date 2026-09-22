@@ -16,7 +16,6 @@ const state = {
   status: "",
   territory: "",
   category: "",
-  includeContext: true,
   map: null,
   carouselTimers: [],
   slideControllers: {},
@@ -133,19 +132,20 @@ function featuredProjects() {
 
 function renderHome() {
   const projects = state.data.projects;
-  const active = projects.filter(project => ACTIVE_STATUSES.has(project.status));
-  const delivered = projects.filter(project => project.status === "LIVRÉ / TERMINÉ");
+  const operations = projects.filter(project => project.projectType !== "ENSEMBLE");
+  const active = operations.filter(project => ACTIVE_STATUSES.has(project.status));
+  const delivered = operations.filter(project => project.status === "LIVRÉ / TERMINÉ");
+  $("#stat-territories").textContent = new Set(projects.map(project => project.territory)).size;
+  $("#stat-public").textContent = operations.length;
   $("#stat-active").textContent = active.length;
   $("#stat-delivered").textContent = delivered.length;
-  $("#stat-public").textContent = projects.length;
   $("#footer-date").textContent = formatDate(state.data.meta.lastReviewedAt);
+  $("#footer-date").dateTime = state.data.meta.lastReviewedAt;
   const featured = featuredProjects();
   $("#featured-projects").innerHTML = ["Docks de Saint-Ouen", "Seine-Liberté"].map(territory => {
     const group = featured.filter(project => project.territory === territory);
     return `<section class="feature-territory"><h3>${escapeHtml(territory)}</h3><div class="feature-rotator">${group.map((project, index) => `<div class="feature-slide ${index === 0 ? "is-active" : ""}" ${index ? 'aria-hidden="true" inert' : ""}>${projectCard(project)}</div>`).join("")}</div><div class="feature-controls"><button type="button" data-feature-step="-1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet précédent de ${escapeHtml(territory)}">←</button><span>1 / ${group.length}</span><button type="button" data-feature-step="1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet suivant de ${escapeHtml(territory)}">→</button></div></section>`;
   }).join("");
-
-  $("#stat-public").textContent = projects.length;
 
   const updates = state.data.territoryNews.filter(update => state.byId.get(update.projectId)?.readiness !== "NON_PRET");
   $("#home-updates").innerHTML = updates.slice(0, 5).map(updateRow).join("");
@@ -249,7 +249,6 @@ function filteredProjects() {
   const query = normalize(state.search);
   let projects = state.data.projects.filter(project => {
     if (query && !searchText(project).includes(query)) return false;
-    if (!state.includeContext && project.projectType === "ENSEMBLE") return false;
     return true;
   });
   if (state.status) projects = projects.filter(project => project.status === state.status);
@@ -265,7 +264,7 @@ function filteredProjects() {
 
 function listRow(project) {
   const visual = project.visuals[0];
-  const locationQuality = project.id === "docks-zac" || project.id === "seine-zac" ? "repère territorial" : "emplacement vérifié";
+  const locationQuality = project.id === "docks-zac" || project.id === "seine-zac" ? "repère de quartier" : "emplacement vérifié";
   return `<a class="project-row" href="#projet/${encodeURIComponent(project.id)}" data-project-link="${escapeHtml(project.id)}">
     <span class="row-thumb">${visual ? `<img src="${escapeHtml(visual.src)}" alt="" loading="lazy">` : '<i aria-hidden="true"></i>'}</span>
     <span class="row-content"><small>${escapeHtml(project.territory)}${project.lot ? ` · Lot ${escapeHtml(project.lot)}` : ""}</small><strong>${escapeHtml(project.name)}</strong><span>${escapeHtml(project.category)} · ${escapeHtml(locationQuality)}</span></span>
@@ -384,7 +383,6 @@ function bindEvents() {
   $("#filter-status").addEventListener("change", event => { state.status = event.target.value; updateExplorer(); });
   $("#filter-territory").addEventListener("change", event => { state.territory = event.target.value; updateExplorer(); });
   $("#filter-category").addEventListener("change", event => { state.category = event.target.value; updateExplorer(); });
-  $("#include-context").addEventListener("change", event => { state.includeContext = event.target.checked; updateExplorer(); });
   $("#fit-map").addEventListener("click", () => state.map.fit());
   $("#map-base").addEventListener("change", event => state.map.setBase(event.target.value));
   $("#timeline-territory").addEventListener("change", renderTimeline);

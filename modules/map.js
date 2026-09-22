@@ -80,7 +80,7 @@ export class ProjectMap {
           className: "map-marker-wrap",
           html: isGroup
             ? `<span class="map-marker is-cluster" style="--marker:${statusColor(project.status)}">${group.length}</span>`
-            : isTerritory ? `<span class="map-marker is-territory" title="Grand repère territorial"><b>⌖</b></span>`
+            : isTerritory ? `<span class="map-marker is-territory" title="Repère de quartier"><b>⌖</b></span>`
             : `<span class="map-marker" style="--marker:${statusColor(project.status)}"><i aria-hidden="true">${statusSymbol(project.status)}</i></span>`,
           iconSize: isGroup ? [36, 36] : isTerritory ? [32, 32] : [30, 30],
           iconAnchor: isGroup ? [18, 18] : isTerritory ? [16, 16] : [15, 15],
@@ -94,7 +94,7 @@ export class ProjectMap {
           ${popupVisual && popupPlan ? `<div class="popup-media-switch"><button type="button" data-popup-src="${escapeHtml(popupVisual.src)}" data-popup-alt="${escapeHtml(mediaAlt(project, popupVisual))}" data-popup-role="photo">Photo</button><button type="button" data-popup-src="${escapeHtml(popupPlan.src)}" data-popup-alt="${escapeHtml(mediaAlt(project, popupPlan))}" data-popup-role="plan">Plan</button></div>` : ""}
           <span>${escapeHtml(project.territory)}${project.lot ? ` · lot ${escapeHtml(project.lot)}` : ""}</span>
           <strong>${escapeHtml(project.name)}</strong>
-          <small>${isTerritory ? "Grand repère · " : `${escapeHtml(projectStatusLabel(project))} · `}${escapeHtml(qualityLabel(project.map.quality))}</small>
+          <small>${isTerritory ? "Repère de quartier · " : `${escapeHtml(projectStatusLabel(project))} · `}${escapeHtml(qualityLabel(project.map.quality))}</small>
           <a href="${projectHref(project.id)}" data-project-link="${escapeHtml(project.id)}">Voir la fiche</a>
         </div>`;
       marker.bindPopup(popup);
