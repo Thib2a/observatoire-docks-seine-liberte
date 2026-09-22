@@ -20,6 +20,13 @@ function readinessNote(project) {
   return "";
 }
 
+function publicLocation(project) {
+  const location = project.locationText?.trim() || project.map.address || [project.map.sector, project.commune].filter(Boolean).join(", ");
+  const sector = location.match(/^(\d+[a-z]?)\s*—\s*(.+?)\s*·\s*(.+)$/i);
+  if (sector) return `Secteur ${sector[1]} — ${sector[2]}, ${sector[3]}`;
+  return location;
+}
+
 
 export function cardVisual(project) {
   return project.visuals.find(visual => ["HERO", "GALERIE"].includes(visual.role) && !visual.src.includes("_ARCHIVES_TECHNIQUES/APERÇUS_PDF")) || null;
@@ -55,7 +62,7 @@ export function projectCard(project, options = {}) {
       ${statusBadge(project)}
       <h3>${escapeHtml(project.name)}</h3>
       <p>${escapeHtml(formatEmbeddedDates(project.description))}</p>
-      <div class="card-meta"><span>${escapeHtml(project.lot ? `Lot ${project.lot}` : project.category)}</span><span>${escapeHtml(formatEmbeddedDates(project.dateText || project.locationText))}</span></div>
+      <div class="card-meta"><span>${escapeHtml(project.lot ? `Lot ${project.lot}` : project.category)}</span><span>${escapeHtml(formatEmbeddedDates(project.dateText || publicLocation(project)))}</span></div>
     </div>
   </a>`;
 }
@@ -138,7 +145,7 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
       <h1>${escapeHtml(territory)}</h1>
       <p>${escapeHtml(intro)}</p>
       <button class="button button-light" type="button" data-explore-territory="${escapeHtml(territory)}">Voir sur la carte</button>
-      <dl><div><dt>${items.length}</dt><dd>fiches publiques</dd></div><div><dt>${current.length}</dt><dd>en cours ou à venir</dd></div><div><dt>${delivered.length}</dt><dd>opérations livrées</dd></div></dl>
+      <dl><div><dt>${operations.length}</dt><dd>Opérations suivies</dd></div><div><dt>${current.length}</dt><dd>En cours / à venir</dd></div><div><dt>${delivered.length}</dt><dd>Opérations livrées</dd></div></dl>
     </div>
     ${isSeine ? (contextVisual ? `<div class="territory-hero-caption">Vue de contexte du site, non rendu du projet final · ${mediaCredit(contextVisual)}</div>` : "") : (visual ? `<div class="territory-hero-caption">${escapeHtml(visual.caption)} · ${mediaCredit(visual)}</div>` : "")}
   </header>
@@ -193,7 +200,7 @@ export function renderProject(project) {
   const figures = figureItems(project);
   const actors = actorItems(project);
   const timeline = timelineItems(project);
-  const locationText = project.locationText || [project.map.address, project.map.sector, project.map.zone].filter(Boolean).join(" · ");
+  const locationText = publicLocation(project);
   const locationQualifier = "Emplacement vérifié";
   const mediaGroup = (title, kind, visuals) => !visuals.length ? "" : `<section class="detail-section gallery-section" data-progressive-gallery>
     <div class="detail-heading"><p class="eyebrow">Images et documents graphiques</p><h2>${title}</h2></div>
@@ -228,9 +235,9 @@ export function renderProject(project) {
       ${project.links.map(link => `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener"><span>${escapeHtml(link.type)}</span><strong>${escapeHtml(link.label)}</strong><i aria-hidden="true">↗</i></a>`).join("")}</div>
     ${project.sources.length > 5 ? `<button type="button" class="button source-more" data-source-more>Voir les ${project.sources.length - 5} autres sources</button>` : ""}
   </section>` : "";
-  const componentsSection = project.relatedComponents?.length ? `<section class="detail-section components-section">
+  const componentsSection = project.relatedProjects?.length ? `<section class="detail-section components-section">
     <div class="detail-heading"><p class="eyebrow">Pour comprendre ce projet</p><h2>Éléments liés</h2></div>
-    <div class="component-list">${project.relatedComponents.map(component => `<article><strong>${escapeHtml(component.name)}</strong>${component.program ? `<p>${escapeHtml(component.program)}</p>` : ""}${component.multiTarget ? `<small>Cet élément concerne plusieurs projets ; sa répartition reste à confirmer.</small>` : `<small>Informations issues d’un dossier antérieur.</small>`}</article>`).join("")}</div>
+    <div class="component-list">${project.relatedProjects.map(related => `<article><small>${escapeHtml(related.relation)}</small><strong><a href="${projectHref(related.id)}" data-project-link="${escapeHtml(related.id)}">${escapeHtml(related.name)} ↗</a></strong></article>`).join("")}</div>
   </section>` : "";
 
   return `<header class="project-header ${hero ? "has-media" : "no-media"}">
@@ -250,7 +257,6 @@ export function renderProject(project) {
       <div>
         ${readinessNote(project)}
         <h2>Le projet</h2><p class="project-description">${escapeHtml(formatEmbeddedDates(project.description))}</p>
-        ${project.editorialNote ? `<p class="editorial-note">${escapeHtml(formatEmbeddedDates(project.editorialNote))}</p>` : ""}
       </div>
       <aside class="project-at-glance">
         <div><span>Statut</span><strong>${escapeHtml(projectStatusLabel(project))}</strong></div>
