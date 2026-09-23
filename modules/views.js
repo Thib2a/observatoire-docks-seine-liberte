@@ -271,7 +271,7 @@ export function renderProject(project) {
     ${documentsSection}
     ${sourcesSection}
     ${componentsSection}
-    <section class="community-cta"><div><p class="eyebrow">OBSERVATOIRE CITOYEN ET INDÉPENDANT</p><h2>Une information à compléter ou un contenu à signaler ?</h2><p>Vous avez repéré une erreur, souhaitez proposer une information ou demander la correction ou le retrait d'un contenu ? Contactez-nous via le formulaire.</p></div><button class="button button-primary" type="button" data-route="contribute" data-contribution-project="${escapeHtml(project.id)}">Faire un signalement</button></section>
+    <section class="community-cta"><div><p class="eyebrow">OBSERVATOIRE CITOYEN ET INDÉPENDANT</p><h2>Une information à compléter ou un contenu à signaler ?</h2><p>Vous avez repéré une erreur, souhaitez proposer une information ou demander la correction ou le retrait d'un contenu ? Utilisez le formulaire de signalement.</p></div><button class="button button-primary" type="button" data-route="contribute" data-contribution-project="${escapeHtml(project.id)}">Faire un signalement</button></section>
   </div>`;
 }
 

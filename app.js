@@ -396,8 +396,8 @@ function bindEvents() {
   });
   const reasonHelp = {
     "Signaler une erreur ou une information à actualiser": "Indiquez l'information concernée et, si possible, la source de la correction.",
-    "Proposer une information ou un document": "Décrivez l'information, joignez un PDF ou indiquez le lien du document dans le champ source.",
-    "Proposer une photographie": "Joignez la photographie et précisez sa provenance ainsi que sa situation au regard des droits.",
+    "Proposer une information ou un document": "Décrivez l'information et indiquez le lien du PDF dans le champ source, si vous proposez un document.",
+    "Proposer une photographie": "Indiquez le lien de la photographie, sa provenance et sa situation au regard des droits.",
     "Demander une correction de crédit ou de source": "Précisez le média, le crédit ou le lien concerné et la correction demandée. Une adresse de réponse facilitera le suivi.",
     "Demander le retrait d'un contenu": "Indiquez le lien ou la fiche, le média concerné et le motif du retrait. Une adresse de réponse facilitera le suivi.",
     "Autre demande": "Précisez l'objet de votre demande dans le message.",
@@ -408,11 +408,10 @@ function bindEvents() {
     help.textContent = reasonHelp[reason] || "";
     help.hidden = !help.textContent;
     const rights = $("#contribution-photo-rights");
-    rights.hidden = !(reason === "Proposer une photographie" && $("#contribution-form input[name=photo]").files.length);
+    rights.hidden = reason !== "Proposer une photographie";
     if (rights.hidden) rights.querySelector("select").value = "";
   };
   $("#contribution-reason").addEventListener("change", updateContributionFields);
-  $("#contribution-form input[name=photo]").addEventListener("change", updateContributionFields);
   $("#contribution-form").addEventListener("submit", async event => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -438,13 +437,18 @@ function bindEvents() {
         body: values,
         headers: {Accept: "application/json"},
       });
-      if (!response.ok) throw new Error(`Formspree a répondu ${response.status}`);
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        const details = Array.isArray(result.errors) ? result.errors.map(item => item.message).filter(Boolean).join(" ") : "";
+        throw new Error(details || `Le service de formulaire a répondu avec le code ${response.status}.`);
+      }
       form.reset();
       updateContributionFields();
       success.hidden = false;
       success.scrollIntoView({behavior: "smooth", block: "nearest"});
     } catch (error) {
       console.error(error);
+      $("#form-error-detail").textContent = error.message || "Veuillez réessayer dans quelques instants ou utiliser l’adresse de contact indiquée dans les mentions légales.";
       failure.hidden = false;
       failure.scrollIntoView({behavior: "smooth", block: "nearest"});
     } finally {
