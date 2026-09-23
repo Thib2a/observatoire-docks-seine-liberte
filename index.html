@@ -54,7 +54,7 @@
         <div class="home-hero-media" id="home-hero-media" aria-hidden="true"></div>
         <div class="home-hero-overlay"></div>
         <div class="home-hero-content">
-          <p class="eyebrow">OBSERVATOIRE CITOYEN · SAINT-OUEN-SUR-SEINE &amp; CLICHY</p>
+          <p class="eyebrow">OBSERVATOIRE CITOYEN</p>
           <h1>Suivre les transformations <br>des<em> Docks </em>et&nbsp;de <br><em>Seine-Liberté</em></h1>
           <div class="hero-intro">
             <p>Un observatoire indépendant pour comprendre et suivre les transformations des Docks de Saint-Ouen et de Seine-Liberté à Clichy.</p>
@@ -82,7 +82,7 @@
         <div class="feature-grid" id="featured-projects"></div>
       </section>
 
-      <section class="territory-doors" aria-label="Explorer par territoire">
+      <section class="territory-doors" aria-label="Explorer par quartier">
         <article class="territory-door territory-docks">
           <div class="territory-door-media" id="docks-door-media" aria-hidden="true"></div>
           <div class="territory-door-shade"></div>
@@ -90,7 +90,7 @@
             <p class="eyebrow">Saint-Ouen-sur-Seine</p>
             <h2>Les Docks</h2>
             <p>Un quartier déjà habité, où de nouveaux logements, équipements et espaces publics continuent de voir le jour. Découvrez les opérations réalisées, les chantiers en cours et les projets à venir.</p>
-            <button class="button button-light" type="button" data-territory="Docks de Saint-Ouen">Découvrir le territoire</button>
+            <button class="button button-light" type="button" data-territory="Docks de Saint-Ouen">Découvrir le quartier</button>
             <div class="door-slide-controls" aria-label="Images des Docks"><button type="button" data-carousel-target="#docks-door-media" data-carousel-step="-1" aria-label="Image précédente des Docks">←</button><span data-carousel-count="#docks-door-media">1 / 5</span><button type="button" data-carousel-target="#docks-door-media" data-carousel-step="1" aria-label="Image suivante des Docks">→</button></div>
           </div>
         </article>
@@ -109,7 +109,7 @@
 
       <section class="home-section updates-preview" aria-labelledby="updates-preview-title">
         <div class="section-heading">
-          <div><p class="eyebrow">Le territoire bouge</p><h2 id="updates-preview-title">Actualités du territoire</h2></div>
+          <div><p class="eyebrow">Les quartiers bougent</p><h2 id="updates-preview-title">Actualités des quartiers</h2></div>
           <button class="text-link" type="button" data-route="updates">Toutes les actualités <span aria-hidden="true">↗</span></button>
         </div>
         <div class="update-list" id="home-updates"></div>
@@ -131,7 +131,7 @@
           </div>
           <div class="filters" aria-label="Filtres des projets">
             <select id="filter-status" aria-label="Filtrer par statut"><option value="">Tous les statuts</option></select>
-            <select id="filter-territory" aria-label="Filtrer par territoire"><option value="">Tous les territoires</option></select>
+            <select id="filter-territory" aria-label="Filtrer par quartier"><option value="">Tous les quartiers</option></select>
             <select id="filter-category" aria-label="Filtrer par catégorie"><option value="">Toutes les catégories</option></select>
           </div>
           <div class="results-meta"><strong><span id="result-count">—</span> résultats</strong><span id="point-count">— sur la carte</span></div>
@@ -167,44 +167,41 @@
         <p>Les actualités retracent les annonces et les évolutions des projets. Le journal de l'Observatoire présente les modifications apportées aux fiches et au site. La date d'un événement peut donc être différente de celle de son intégration à l'Observatoire.</p>
       </header>
       <div class="updates-layout">
-        <nav class="updates-tabs" aria-label="Sections de la page"><button type="button" data-scroll-target="territory-news">Actualités du territoire</button><button type="button" data-scroll-target="observatory-journal">Journal de l’Observatoire</button></nav>
-        <section id="territory-news" class="updates-block" aria-labelledby="territory-news-title"><p class="eyebrow">Événements et annonces</p><h2 id="territory-news-title">Actualités du territoire</h2><p>Travaux, ouvertures, décisions et publications sourcées. La légende de chaque date précise s’il s’agit d’un événement, d’une période ou d’une publication.</p><div class="timeline-page" id="territory-news-list"></div></section>
+        <nav class="updates-tabs" aria-label="Sections de la page"><button type="button" data-scroll-target="territory-news">Actualités des quartiers</button><button type="button" data-scroll-target="observatory-journal">Journal de l’Observatoire</button></nav>
+        <section id="territory-news" class="updates-block" aria-labelledby="territory-news-title"><p class="eyebrow">Événements et annonces</p><h2 id="territory-news-title">Actualités des quartiers</h2><p>Travaux, ouvertures, décisions et publications sourcées. La légende de chaque date précise s’il s’agit d’un événement, d’une période ou d’une publication.</p><div class="timeline-page" id="territory-news-list"></div></section>
         <section id="observatory-journal" class="updates-block" aria-labelledby="journal-title"><p class="eyebrow">Mises à jour des fiches</p><h2 id="journal-title">Journal de l’Observatoire</h2><p>Retrouvez les fiches actualisées, les nouvelles sources et les plans ajoutés. Ces dates indiquent la mise à jour du site, pas nécessairement un changement sur le terrain.</p><div class="timeline-page" id="observatory-journal-list"></div></section>
       </div>
     </section>
 
     <section class="view history-view" id="view-timeline" data-view="timeline" hidden>
       <header class="page-intro">
-        <p class="eyebrow">Le territoire dans le temps</p>
+        <p class="eyebrow">Les quartiers dans le temps</p>
         <h1>Chronologie</h1>
         <p>Découvrez les grandes étapes de transformation des Docks et de Seine-Liberté, des premiers aménagements aux projets actuels et futurs.</p>
         <p>Cette chronologie permet de replacer les événements dans leur contexte et de suivre l'évolution des deux quartiers au fil des années. Les dates sont présentées selon la précision des informations disponibles.</p>
       </header>
-      <div class="timeline-tools"><div class="timeline-filters"><label for="timeline-territory">Territoire</label><select id="timeline-territory"><option value="">Tous</option><option value="Docks">Docks</option><option value="Seine-Liberté">Seine-Liberté</option></select></div><div class="timeline-filters"><label for="timeline-order">Ordre</label><select id="timeline-order"><option value="oldest">Ancien d’abord</option><option value="newest">Plus récent d’abord</option></select></div><button type="button" class="button timeline-today" id="timeline-today">Aller à aujourd’hui</button></div>
+      <div class="timeline-tools"><div class="timeline-filters"><label for="timeline-territory">Quartier</label><select id="timeline-territory"><option value="">Tous</option><option value="Docks">Docks</option><option value="Seine-Liberté">Seine-Liberté</option></select></div><div class="timeline-filters"><label for="timeline-order">Ordre</label><select id="timeline-order"><option value="oldest">Ancien d’abord</option><option value="newest">Plus récent d’abord</option></select></div><button type="button" class="button timeline-today" id="timeline-today">Aller à aujourd’hui</button></div>
       <div class="timeline-rail" id="timeline-rail" aria-label="Frise des principales étapes"></div>
       <div class="history-list" id="timeline-list"></div>
     </section>
 
     <section class="view method-view" id="view-method" data-view="method" hidden>
       <header class="page-intro method-intro">
-        <p class="eyebrow">Un observatoire citoyen et indépendant</p>
-        <h1>À propos de l’Observatoire</h1>
-        <p><strong>Comprendre les Docks et Seine-Liberté, aujourd’hui et demain</strong></p>
-        <p>Que va-t-il se construire près de chez vous ? Quels projets sont en chantier, lesquels sont encore à l'étude et quels aménagements sont déjà réalisés ?</p>
-        <p>Les informations concernant les Docks de Saint-Ouen et Seine-Liberté à Clichy sont dispersées entre les collectivités, les aménageurs, les promoteurs, les architectes et de nombreux documents publics.</p>
-        <p>L'Observatoire les rassemble au même endroit pour permettre à chacun de comprendre les transformations de ces deux quartiers, de suivre les différentes opérations et de retrouver leurs informations, leurs évolutions et leurs sources.</p>
+        <p class="eyebrow">UN PROJET CITOYEN ET INDÉPENDANT</p>
+        <h1>À propos de l'Observatoire</h1>
+        <p>Comprendre ce qui se construit près de chez soi, suivre les projets en cours et découvrir les futurs aménagements des Docks de Saint-Ouen et de Seine-Liberté à Clichy.</p>
+        <p>L'Observatoire rassemble les informations sur les transformations de ces deux quartiers à travers une carte interactive, des fiches de projets, des visuels et des sources documentaires.</p>
       </header>
       <div class="method-body">
         <section>
           <p class="eyebrow">L’origine du projet</p>
           <h2>Pourquoi cet Observatoire ?</h2>
           <p>Créé en 2026 par Thib2a, futur habitant du secteur 6 des Docks, l'Observatoire est né d'une démarche personnelle : comprendre ce qui allait réellement se construire autour de son futur logement.</p>
-          <p>Au fil des recherches, les informations se sont révélées nombreuses, dispersées, parfois anciennes ou contradictoires. Il a fallu retrouver les documents, comparer les projets, examiner les plans et confronter les informations disponibles pour mieux comprendre les transformations du quartier.</p>
-          <p>Ce travail s'est progressivement élargi à l'ensemble des Docks, à Seine-Liberté et aux projets voisins qui relient les deux territoires.</p>
-          <p>L'objectif est aujourd'hui de partager ces recherches avec les habitants, les futurs habitants et toutes les personnes intéressées, à travers un outil indépendant, accessible et régulièrement actualisé.</p>
+          <p>Face à des informations nombreuses, dispersées et parfois contradictoires, les recherches se sont progressivement élargies à l'ensemble des Docks, à Seine-Liberté et aux projets voisins, afin de réunir les informations disponibles au même endroit.</p>
+          <p>L'objectif est aujourd'hui de partager ce travail avec les habitants, les futurs habitants et toutes les personnes intéressées, à travers un outil indépendant et accessible à tous.</p>
         </section>
         <section>
-          <p class="eyebrow">Explorer le territoire</p>
+          <p class="eyebrow">Explorer les quartiers</p>
           <h2>Ce que vous pouvez découvrir</h2>
           <h3>Une carte interactive</h3>
           <p>Localisez les programmes immobiliers, équipements, espaces publics et grands projets d’aménagement, des opérations terminées aux projets futurs.</p>
@@ -229,13 +226,11 @@
           <h2>Un projet indépendant et participatif</h2>
           <p>L’Observatoire est une initiative personnelle et citoyenne, réalisée et financée par Thib2a. Il ne représente aucune collectivité, aucun aménageur ni aucun promoteur.</p>
           <p>Le site est librement accessible. Il ne bénéficie actuellement d’aucun partenaire, financement institutionnel ou revenu publicitaire. D’éventuels soutiens volontaires serviront aux frais de fonctionnement du projet.</p>
-        </section>
-        <section class="method-project-link">
-          <h2>Un projet indépendant</h2>
-          <p>L'Observatoire est un projet citoyen indépendant, développé et maintenu par Thib2a. Sa version publique est accessible sur GitHub.</p>
+          <p>Sa version publique est accessible sur GitHub.</p>
           <p><a href="https://github.com/thib2a/observatoire-docks-seine-liberte" target="_blank" rel="noopener noreferrer">Consulter le projet sur GitHub ↗</a></p>
         </section>
         <section>
+          <p class="eyebrow">SOURCES ET CRÉDITS</p>
           <h2>Sources, crédits et demandes de retrait</h2>
           <p>L'Observatoire est une initiative citoyenne et indépendante visant à faciliter l'accès aux informations sur les transformations des Docks de Saint-Ouen et de Seine-Liberté à Clichy.</p>
           <p>Les documents et visuels présentés proviennent de différentes sources, indiquées dans la mesure du possible sur les fiches concernées.</p>
@@ -246,7 +241,7 @@
           <p class="eyebrow">Questions fréquentes</p>
           <h2>Comprendre les fiches et les chiffres</h2>
           <div class="faq-list">
-            <details><summary>Que recouvrent les 128 fiches de l'Observatoire ?</summary><p>L'Observatoire rassemble 126 opérations suivies dans les Docks et à Seine-Liberté : programmes immobiliers, équipements, infrastructures, espaces publics, commerces et autres projets d'aménagement.</p><p>Deux fiches supplémentaires, appelées « repères de quartier », présentent une vue d'ensemble de chacun des deux territoires.</p><p>Chaque opération dispose de sa propre fiche, avec les informations disponibles sur son avancement, ses caractéristiques, ses visuels et ses sources.</p></details>
+            <details><summary>Que recouvrent les 128 fiches de l'Observatoire ?</summary><p>L'Observatoire rassemble 126 opérations suivies dans les Docks et à Seine-Liberté : programmes immobiliers, équipements, infrastructures, espaces publics, commerces et autres projets d'aménagement.</p><p>Deux fiches supplémentaires, appelées « repères de quartier », présentent une vue d'ensemble de chacun des deux quartiers.</p><p>Chaque opération dispose de sa propre fiche, avec les informations disponibles sur son avancement, ses caractéristiques, ses visuels et ses sources.</p></details>
             <details><summary>Que signifient les différents statuts ?</summary><p>« En études » désigne un projet encore en définition ; « Programmé », une opération annoncée ou autorisée sans chantier principal documenté ; « Travaux préparatoires », les interventions préalables ; « En chantier », des travaux engagés ; et « Livré / terminé », une réalisation achevée ou mise en service. Un projet peut également avoir un statut à confirmer.</p></details>
             <details><summary>Pourquoi certaines dates ou certains chiffres diffèrent-ils selon les sources ?</summary><p>Un projet peut évoluer entre sa conception, son autorisation et sa réalisation. L’Observatoire conserve l’historique des informations et privilégie les éléments les plus pertinents pour l’état actuel du projet, tout en signalant les divergences importantes.</p></details>
             <details><summary>Pourquoi certaines informations sont-elles absentes ou indiquées comme étant à confirmer ?</summary><p>Certains projets sont encore à l'étude ou font l'objet de publications incomplètes. Leurs caractéristiques, leurs dates ou leurs emplacements peuvent évoluer, et toutes les informations ne sont pas nécessairement accessibles au public.</p><p>L'Observatoire distingue les éléments vérifiés des informations encore incertaines. Lorsqu'une donnée ne peut pas être établie, elle reste à préciser plutôt que d'être remplacée par une estimation non vérifiée.</p></details>
@@ -256,7 +251,7 @@
           </div>
         </section>
       </div>
-      <section class="community-cta method-community"><div><p class="eyebrow">Faire vivre l’observatoire</p><h2>Une information manque ou semble incorrecte ?</h2><p>Préparez un message sourcé ou transmettez une photographie. Chaque proposition est relue avant publication.</p></div><button class="button button-primary" type="button" data-route="contribute">Contact & signalements</button></section>
+      <section class="community-cta home-community"><div><p class="eyebrow">OBSERVATOIRE CITOYEN ET INDÉPENDANT</p><h2>Une information à compléter ou un contenu à signaler ?</h2><p>Vous avez repéré une erreur, souhaitez proposer une information ou demander la correction ou le retrait d'un contenu ? Contactez-nous via le formulaire.</p></div><button class="button button-primary" type="button" data-route="contribute">Faire un signalement</button></section>
     </section>
 
     <section class="view contribute-view" id="view-contribute" data-view="contribute" hidden>
@@ -344,7 +339,7 @@
     <figure><img id="lightbox-image" alt=""><figcaption id="lightbox-caption"></figcaption></figure>
   </dialog>
 
-  <div class="loading-screen" id="loading-screen" role="status"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><p>Ouverture du territoire…</p></div>
+  <div class="loading-screen" id="loading-screen" role="status"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><p>Ouverture des quartiers…</p></div>
     <div class="fatal-error" id="fatal-error" hidden><strong>Impossible de charger les fiches.</strong><p>Actualisez la page. Si le problème persiste, utilisez le contact indiqué dans les mentions légales.</p></div>
 
   <footer class="site-footer">
@@ -357,7 +352,7 @@
       <button type="button" data-route="credits">Crédits & droits</button>
     </nav>
     <!-- The preparation batch updates this date after the publication files are synchronized. -->
-    <span>Site actualisé le <time datetime="2026-09-23">23 septembre 2026</time><br>Dernière revue des données : <time id="footer-date">—</time></span>
+    <span>Site actualisé le <time datetime="2026-09-24">24 septembre 2026</time><br>Dernière revue des données : <time id="footer-date">—</time></span>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>

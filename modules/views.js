@@ -74,7 +74,7 @@ export function updateRow(update) {
     <span class="update-kind">${escapeHtml(update.title)}</span>
     <strong>${update.projectId ? `<a href="${projectHref(update.projectId)}" data-project-link="${escapeHtml(update.projectId)}">${escapeHtml(update.projectName)}</a>` : escapeHtml(update.projectName)}</strong>
     <p>${escapeHtml(update.detail)}</p>
-    ${update.sourceUrl ? `<a class="update-source" href="${escapeHtml(update.sourceUrl)}" target="_blank" rel="noopener">Source ↗</a>` : '<span aria-hidden="true">↗</span>'}
+    ${update.sourceUrl ? `<a class="update-source" href="${escapeHtml(update.sourceUrl)}" target="_blank" rel="noopener"${update.sourceDescription ? ` aria-label="${escapeHtml(update.sourceDescription)}" title="${escapeHtml(update.sourceDescription)}"` : ""}>${escapeHtml(update.sourceLabel || "Source")} ↗</a>` : '<span aria-hidden="true">↗</span>'}
   </article>`;
 }
 
@@ -184,7 +184,7 @@ function actorItems(project) {
 function timelineItems(project) {
   return project.milestones.map(item => `
     <li class="timeline-item ${item.nature === "ACTUEL" ? "is-current" : ""}">
-      <span></span><div><small>${escapeHtml(MILESTONE_LABELS[item.type] || "Étape")}</small><strong>${escapeHtml(formatTemporal(item.date, item.precision, item.label))}</strong>${item.nature === "ACTUEL" ? "<em>Référence actuelle</em>" : ""}</div>
+      <span></span><div><small>${escapeHtml(item.permitLabel || MILESTONE_LABELS[item.type] || "Étape")}</small><strong>${escapeHtml(formatTemporal(item.date, item.precision, item.label))}</strong>${item.permitReferences?.length ? `<small>${escapeHtml([item.permitContext, item.permitReferences.join(" · ")].filter(Boolean).join(" : "))}</small>` : ""}${(item.permitSources || []).map(source => `<a class="permit-source" href="${escapeHtml(source.url)}" target="_blank" rel="noopener" aria-label="${escapeHtml(source.label)}, source complémentaire pour ${escapeHtml(source.reference)}" title="${escapeHtml(source.label)}, source complémentaire">${escapeHtml(source.label)}${item.permitSources.length > 1 ? ` ${escapeHtml(source.reference)}` : ""} ↗</a>`).join("")}${item.nature === "ACTUEL" ? "<em>Référence actuelle</em>" : ""}</div>
     </li>`).join("");
 }
 
