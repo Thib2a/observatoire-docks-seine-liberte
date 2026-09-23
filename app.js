@@ -101,7 +101,7 @@ function showRoute(parsed, options = {}) {
     state.map.invalidate();
     if (options.focusSearch) setTimeout(() => $("#project-search")?.focus(), 100);
   } else {
-    document.title = ({updates: "Actualités & évolutions — Observatoire", timeline: "Chronologie — Observatoire", method: "À propos de l’Observatoire", contribute: "Signaler une information — Observatoire", legal: "Mentions légales — Observatoire", privacy: "Confidentialité & cookies — Observatoire", credits: "Crédits & droits des images — Observatoire"})[parsed.route] || "Observatoire Docks & Seine-Liberté";
+    document.title = ({updates: "Actualités & évolutions — Observatoire", timeline: "Chronologie — Observatoire", method: "À propos de l’Observatoire", contribute: "Contact & signalements — Observatoire", legal: "Mentions légales — Observatoire", privacy: "Confidentialité & cookies — Observatoire", credits: "Crédits & droits des images — Observatoire"})[parsed.route] || "Observatoire Docks & Seine-Liberté";
   }
   if (parsed.route === "home") mountHomeSlides();
   $("#main-content").focus({preventScroll: true});
@@ -344,7 +344,7 @@ function bindEvents() {
       const focusSearch = routeButton.hasAttribute("data-focus-search");
       const contributionProject = routeButton.dataset.contributionProject;
       navigate(routeButton.dataset.route);
-      if (contributionProject) setTimeout(() => { $("#contribution-project").value = contributionProject; }, 50);
+      if (routeButton.dataset.route === "contribute") $("#contribution-project").value = contributionProject || "";
       if (focusSearch) setTimeout(() => $("#project-search")?.focus(), 150);
       return;
     }
@@ -394,20 +394,40 @@ function bindEvents() {
     $("#menu-toggle").setAttribute("aria-expanded", String(!open));
     $("#main-nav").classList.toggle("is-open", !open);
   });
+  const reasonHelp = {
+    "Signaler une erreur ou une information à actualiser": "Indiquez l'information concernée et, si possible, la source de la correction.",
+    "Proposer une information ou un document": "Décrivez l'information, joignez un PDF ou indiquez le lien du document dans le champ source.",
+    "Proposer une photographie": "Joignez la photographie et précisez sa provenance ainsi que sa situation au regard des droits.",
+    "Demander une correction de crédit ou de source": "Précisez le média, le crédit ou le lien concerné et la correction demandée. Une adresse de réponse facilitera le suivi.",
+    "Demander le retrait d'un contenu": "Indiquez le lien ou la fiche, le média concerné et le motif du retrait. Une adresse de réponse facilitera le suivi.",
+    "Autre demande": "Précisez l'objet de votre demande dans le message.",
+  };
+  const updateContributionFields = () => {
+    const reason = $("#contribution-reason").value;
+    const help = $("#contribution-reason-help");
+    help.textContent = reasonHelp[reason] || "";
+    help.hidden = !help.textContent;
+    const rights = $("#contribution-photo-rights");
+    rights.hidden = !(reason === "Proposer une photographie" && $("#contribution-form input[name=photo]").files.length);
+    if (rights.hidden) rights.querySelector("select").value = "";
+  };
+  $("#contribution-reason").addEventListener("change", updateContributionFields);
+  $("#contribution-form input[name=photo]").addEventListener("change", updateContributionFields);
   $("#contribution-form").addEventListener("submit", async event => {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
     const values = new FormData(form);
     const projectSelect = $("#contribution-project");
-    const selectedProject = projectSelect.options[projectSelect.selectedIndex]?.textContent || values.get("project") || "Non précisé";
+    const selectedProject = projectSelect.value ? projectSelect.options[projectSelect.selectedIndex]?.textContent : "Aucun projet particulier";
+    const reason = String(values.get("type") || "Demande générale");
     const submit = $("#contribution-submit");
     const success = $("#form-success");
     const failure = $("#form-error");
     values.set("project_name", selectedProject);
     values.set("publish_pseudonym", values.get("publish_pseudonym") ? "Oui" : "Non");
     values.set("privacy_consent", "Oui");
-    values.set("_subject", `Signalement Observatoire — ${selectedProject}`);
+    values.set("_subject", `Observatoire — ${reason} — ${selectedProject}`);
     success.hidden = true;
     failure.hidden = true;
     submit.disabled = true;
@@ -420,6 +440,7 @@ function bindEvents() {
       });
       if (!response.ok) throw new Error(`Formspree a répondu ${response.status}`);
       form.reset();
+      updateContributionFields();
       success.hidden = false;
       success.scrollIntoView({behavior: "smooth", block: "nearest"});
     } catch (error) {
@@ -428,7 +449,7 @@ function bindEvents() {
       failure.scrollIntoView({behavior: "smooth", block: "nearest"});
     } finally {
       submit.disabled = false;
-      submit.textContent = "Envoyer le signalement";
+      submit.textContent = "Envoyer ma demande";
     }
   });
   const syncRoute = () => {

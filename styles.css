@@ -431,6 +431,7 @@ img { display: block; max-width: 100%; }
 .community-cta { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 40px; margin-top: 88px; padding: 38px; color: white; background: var(--green); }
 .community-cta h2 { margin: 4px 0 10px; font: 400 clamp(27px, 2.8vw, 38px)/1.08 var(--serif); }
 .community-cta p:last-child { color: rgba(255,255,255,.72); }
+.home-community { width: min(1420px, calc(100% - 48px)); margin: 0 auto 100px; }
 .method-community { width: min(1180px, calc(100% - 40px)); margin: 0 auto 110px; }
 .contribution-form { width: min(760px, calc(100% - 40px)); margin: 65px auto 120px; display: grid; gap: 22px; }
 .contribution-form label { display: grid; gap: 8px; color: var(--green); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
@@ -449,6 +450,7 @@ img { display: block; max-width: 100%; }
 .form-error { padding: 20px; border-left: 4px solid #a33b32; color: #6f241e; background: #f8e9e6; }
 .form-error p { margin: 6px 0 0; color: #70443f; }
 .form-honeypot { position: absolute !important; left: -9999px !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none !important; }
+.form-reason-help { margin: -12px 0 0; color: var(--muted); font-size: 14px; }
 .form-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .form-actions .button { text-decoration: none; }
 .editorial-principles article > span { display: none; }
