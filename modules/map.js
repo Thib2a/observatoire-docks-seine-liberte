@@ -57,7 +57,7 @@ export class ProjectMap {
     if (!this.ready) this.init();
     if (!this.map) {
       const fallback = document.querySelector("#fallback-points");
-      if (fallback) fallback.innerHTML = this.projects.slice(0, 14).map(project => `<a href="${projectHref(project.id)}"><i style="--status:${statusColor(project.status)}"></i><span>${escapeHtml(project.name)}</span></a>`).join("");
+      if (fallback) fallback.innerHTML = this.projects.slice(0, 14).map(project => `<a href="${projectHref(project.id)}" data-project-link="${escapeHtml(project.id)}"><i style="--status:${statusColor(project.status)}"></i><span>${escapeHtml(project.name)}</span></a>`).join("");
       return;
     }
     this.layer.clearLayers();

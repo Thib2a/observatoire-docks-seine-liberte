@@ -7,6 +7,32 @@ import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTer
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
+const CANONICAL_URL = "https://observatoire-docks-seine.org/";
+const HOME_TITLE = "Observatoire des Docks de Saint-Ouen & Seine-Liberté à Clichy";
+const HOME_DESCRIPTION = "Explorez les transformations des Docks de Saint-Ouen et de Seine-Liberté à Clichy : carte interactive, projets immobiliers, chantiers, plans et actualités.";
+const ROUTE_SEO = {
+  home: {title: HOME_TITLE, description: HOME_DESCRIPTION},
+  explore: {
+    title: "Carte des projets | Docks de Saint-Ouen & Seine-Liberté",
+    description: "Explorez la carte interactive des projets immobiliers, travaux, chantiers, permis de construire et équipements des Docks de Saint-Ouen et de Seine-Liberté.",
+  },
+  updates: {
+    title: "Actualités des Docks de Saint-Ouen & Seine-Liberté",
+    description: "Suivez les actualités des projets urbains, travaux et chantiers des Docks de Saint-Ouen-sur-Seine et de Seine-Liberté à Clichy.",
+  },
+  timeline: {
+    title: "Chronologie des Docks de Saint-Ouen & Seine-Liberté",
+    description: "Parcourez les étapes documentées des projets urbains et des transformations des Docks de Saint-Ouen et de Seine-Liberté à Clichy.",
+  },
+  method: {
+    title: "À propos | Observatoire Docks & Seine-Liberté",
+    description: "Découvrez la démarche citoyenne et indépendante de l’Observatoire des Docks de Saint-Ouen et de Seine-Liberté à Clichy.",
+  },
+  contribute: {title: "Contact & signalements | Observatoire Docks & Seine-Liberté", description: "Signalez une correction, proposez une information ou contactez l’Observatoire Docks & Seine-Liberté."},
+  legal: {title: "Mentions légales | Observatoire Docks & Seine-Liberté", description: "Mentions légales de l’Observatoire citoyen Docks & Seine-Liberté."},
+  privacy: {title: "Confidentialité | Observatoire Docks & Seine-Liberté", description: "Informations sur la confidentialité, les cookies et la mesure d’audience de l’Observatoire Docks & Seine-Liberté."},
+  credits: {title: "Crédits et droits des images | Observatoire", description: "Crédits, sources et informations relatives aux images publiées par l’Observatoire Docks & Seine-Liberté."},
+};
 const state = {
   data: null,
   byId: new Map(),
@@ -25,6 +51,49 @@ const state = {
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+
+function conciseDescription(value, maxLength = 160) {
+  const text = String(value || "").replace(/\s+/g, " ").trim();
+  if (text.length <= maxLength) return text;
+  const shortened = text.slice(0, maxLength - 1).replace(/\s+\S*$/, "").replace(/[,:;.!?\s]+$/, "");
+  return `${shortened}…`;
+}
+
+
+function setMeta(selector, content) {
+  const element = $(selector);
+  if (element) element.setAttribute("content", content);
+}
+
+
+function updateSeo(parsed, project = null) {
+  let seo = ROUTE_SEO[parsed.route] || ROUTE_SEO.home;
+  if (parsed.route === "territory") {
+    seo = parsed.territory === "Seine-Liberté"
+      ? {
+          title: "Seine-Liberté à Clichy : projets et chantiers | Observatoire",
+          description: "Découvrez les projets urbains et immobiliers de Seine-Liberté à Clichy : logements, travaux, chantiers, équipements, espaces verts et berges.",
+        }
+      : {
+          title: "Docks de Saint-Ouen : projets et chantiers | Observatoire",
+          description: "Suivez les projets immobiliers, travaux, chantiers, permis de construire, équipements et espaces publics des Docks de Saint-Ouen-sur-Seine.",
+        };
+  } else if (parsed.route === "project" && project) {
+    seo = {
+      title: `${project.name} | ${project.territory}`,
+      description: conciseDescription(`${project.name} à ${project.commune || project.territory}. ${project.description}`),
+    };
+  }
+
+  document.title = seo.title;
+  setMeta('meta[name="description"]', seo.description);
+  setMeta('meta[property="og:title"]', seo.title);
+  setMeta('meta[property="og:description"]', seo.description);
+  setMeta('meta[property="og:url"]', CANONICAL_URL);
+  setMeta('meta[name="twitter:title"]', seo.title);
+  setMeta('meta[name="twitter:description"]', seo.description);
+}
 
 
 function parseRoute() {
@@ -84,7 +153,6 @@ function showRoute(parsed, options = {}) {
     state.planIndex = 0;
     const key = parsed.territory === "Seine-Liberté" ? "seineSlides" : "docksSlides";
     mountSlides("#territory-content .territory-hero-media", state.data.presentation?.[key], 8000);
-    document.title = `${parsed.territory} — Observatoire`;
   } else if (parsed.route === "project") {
     const project = state.byId.get(parsed.id);
     if (!project) {
@@ -94,15 +162,12 @@ function showRoute(parsed, options = {}) {
       return;
     }
     $("#project-content").innerHTML = renderProject(project);
-    document.title = `${project.name} — Observatoire`;
   } else if (parsed.route === "explore") {
-    document.title = "Carte & projets — Observatoire";
     updateExplorer();
     state.map.invalidate();
     if (options.focusSearch) setTimeout(() => $("#project-search")?.focus(), 100);
-  } else {
-    document.title = ({updates: "Actualités & évolutions — Observatoire", timeline: "Chronologie — Observatoire", method: "À propos de l’Observatoire", contribute: "Contact & signalements — Observatoire", legal: "Mentions légales — Observatoire", privacy: "Confidentialité & cookies — Observatoire", credits: "Crédits & droits des images — Observatoire"})[parsed.route] || "Observatoire Docks & Seine-Liberté";
   }
+  updateSeo(parsed, parsed.route === "project" ? state.byId.get(parsed.id) : null);
   if (parsed.route === "home") mountHomeSlides();
   $("#main-content").focus({preventScroll: true});
   window.scrollTo({top: 0, behavior: options.instant ? "auto" : "smooth"});
@@ -265,7 +330,7 @@ function filteredProjects() {
 function listRow(project) {
   const visual = project.visuals[0];
   const locationQuality = project.id === "docks-zac" || project.id === "seine-zac" ? "repère de quartier" : "emplacement vérifié";
-  return `<a class="project-row" href="#projet/${encodeURIComponent(project.id)}" data-project-link="${escapeHtml(project.id)}">
+  return `<a class="project-row" href="/projets/${encodeURIComponent(project.id)}/" data-project-link="${escapeHtml(project.id)}">
     <span class="row-thumb">${visual ? `<img src="${escapeHtml(visual.src)}" alt="" loading="lazy">` : '<i aria-hidden="true"></i>'}</span>
     <span class="row-content"><small>${escapeHtml(project.territory)}${project.lot ? ` · Lot ${escapeHtml(project.lot)}` : ""}</small><strong>${escapeHtml(project.name)}</strong><span>${escapeHtml(project.category)} · ${escapeHtml(locationQuality)}</span></span>
     <span class="row-status" style="--status:${statusColor(project.status)}">${escapeHtml(projectStatusLabel(project))}</span>
@@ -336,6 +401,12 @@ function bindEvents() {
     const scrollButton = event.target.closest("[data-scroll-target], [data-timeline-target]");
     if (scrollButton) {
       document.getElementById(scrollButton.dataset.scrollTarget || scrollButton.dataset.timelineTarget)?.scrollIntoView({behavior: "smooth", block: "start"});
+      return;
+    }
+    const projectLink = event.target.closest("[data-project-link]");
+    if (projectLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+      navigate("project", {id: projectLink.dataset.projectLink});
       return;
     }
     const routeButton = event.target.closest("[data-route]");

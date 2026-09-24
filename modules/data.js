@@ -140,7 +140,7 @@ export function searchText(project) {
 }
 
 export function projectHref(projectId) {
-  return `#projet/${encodeURIComponent(projectId)}`;
+  return `/projets/${encodeURIComponent(projectId)}/`;
 }
 
 export function statusBadge(project) {

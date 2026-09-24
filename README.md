@@ -2,124 +2,53 @@
 
 ### Suivre les transformations urbaines, comprendre les projets et découvrir les quartiers de demain.
 
-Un observatoire indépendant consacré aux transformations urbaines des **Docks de Saint-Ouen-sur-Seine** et de la **ZAC Seine-Liberté à Clichy**, aux portes de Paris.
+L'Observatoire est une initiative citoyenne indépendante consacrée aux transformations des **Docks de Saint-Ouen-sur-Seine** et de la **ZAC Seine-Liberté à Clichy**, aux portes de Paris.
 
-L'objectif est de réunir au même endroit les informations sur les opérations immobilières, les nouveaux équipements, les espaces publics, les infrastructures et les transformations de ces deux territoires.
+Il rassemble dans une même interface les informations disponibles sur les opérations immobilières, les équipements, les espaces publics, les infrastructures et la vie de ces deux territoires.
 
-À travers une carte interactive, des fiches détaillées, des illustrations, des actualités et des chronologies, l'Observatoire permet de mieux comprendre les changements en cours et de suivre leur évolution dans le temps.
+Sa consultation est libre et gratuite.
 
-🌐 **[Découvrir l'Observatoire](https://thib2a.github.io/observatoire-docks-seine-liberte/)**
+**[Découvrir l'Observatoire](https://observatoire-docks-seine.org/)**
 
----
+## Contenu
 
-## Deux territoires en pleine transformation
+- une carte interactive avec recherche et filtres ;
+- 128 fiches détaillées et cartographiées ;
+- des photographies, perspectives, plans et documents ;
+- des actualités et des chronologies ;
+- les sources et crédits disponibles pour chaque opération.
 
-### Les Docks de Saint-Ouen-sur-Seine
+Chaque fiche dispose également d'une page HTML dédiée, reliée à la carte interactive.
 
-Les Docks constituent un quartier en transformation, associant logements, activités économiques, équipements publics, espaces verts et aménagements des berges de Seine.
+## Chiffres de la V1.0
 
-L'Observatoire présente aussi bien les opérations déjà livrées que les projets en chantier, programmés ou encore à l'étude.
+| Indicateur | Nombre |
+| --- | ---: |
+| Territoires suivis | 2 |
+| Opérations suivies | 126 |
+| Repères de quartier | 2 |
+| Fiches publiques et points cartographiés | 128 |
+| Fiches avec au moins un visuel | 127 |
+| Sources documentaires référencées | 510 |
 
-Il permet notamment de suivre les différents secteurs du quartier, ses espaces publics et les évolutions de son environnement urbain.
+Les 128 fiches comprennent 109 entrées pour les Docks de Saint-Ouen et 19 pour Seine-Liberté, avec un repère de quartier dans chaque territoire. Ces chiffres correspondent à la publication du 24 septembre 2026.
 
-### Seine-Liberté à Clichy
+## Projet indépendant et participatif
 
-La ZAC Seine-Liberté porte la transformation d'anciens terrains d'activité en un nouveau quartier mêlant logements, équipements, espaces publics, nouvelles rues, espaces verts et aménagements des berges.
+L'Observatoire est développé indépendamment des collectivités, aménageurs, promoteurs et autres acteurs des opérations présentées. Il ne constitue pas une communication officielle.
 
-L'Observatoire rassemble les informations disponibles sur les opérations prévues et leur progression, afin de suivre la transformation du quartier au fil des années.
+Les informations sont regroupées, recoupées et présentées avec leurs sources lorsqu'elles sont disponibles. Certaines données peuvent évoluer, rester incomplètes ou différer selon les documents.
 
----
+Le formulaire de signalement du site permet d'envoyer un message et des liens vers une source, un document ou une photographie. Il ne permet pas l'envoi direct de pièces jointes. Chaque contribution est examinée avant une éventuelle intégration.
 
-## Ce que vous pouvez découvrir
+## Évolutions
 
-**Une carte interactive**
+**Version actuelle : V1.0 — 24 septembre 2026**
 
-Localisez les projets sur les deux territoires, consultez leur statut et accédez directement à leurs fiches. La carte propose plusieurs fonds et des filtres pour faciliter l'exploration.
-
-**Des fiches de projets détaillées**
-
-Chaque fiche regroupe les informations disponibles sur une opération : présentation, localisation, état d'avancement, calendrier, illustrations, plans, documents et sources.
-
-**Des photographies, perspectives et plans**
-
-Découvrez les projets à travers différents types de visuels : photographies, perspectives architecturales, plans de situation, plans de masse et documents graphiques.
-
-**Des actualités et une chronologie**
-
-Suivez les événements qui transforment les quartiers et retrouvez les principales étapes de leur développement.
-
-**Un suivi des évolutions**
-
-L'Observatoire distingue les actualités du territoire des modifications apportées à sa propre base documentaire, afin de rendre le suivi des informations plus transparent.
-
----
-
-## L'Observatoire en quelques chiffres
-
-La version V0.9 comprend :
-
-| Indicateur                        | Nombre |
-| --------------------------------- | -----: |
-| Territoires suivis                |      2 |
-| Fiches publiques                  |    128 |
-| Projets et repères cartographiés  |    128 |
-| Fiches avec au moins un visuel    |    127 |
-| Sources documentaires référencées |    508 |
-
-Les 128 fiches publiques se répartissent entre les Docks de Saint-Ouen (109 fiches) et Seine-Liberté (19 fiches).
-
-Ces chiffres correspondent à l'état de référence du 21 septembre 2026 et sont susceptibles d'évoluer avec les futures mises à jour.
-
----
-
-## Un projet personnel, indépendant et participatif
-
-L'Observatoire est une initiative personnelle et citoyenne, développée indépendamment des collectivités, aménageurs, promoteurs et autres acteurs des opérations présentées.
-
-Il est né de l'envie de mieux comprendre les transformations urbaines de ces quartiers et de rendre les informations existantes plus facilement accessibles.
-
-Les informations proviennent de différentes sources documentaires et publiques. Elles sont regroupées, recoupées et présentées dans une interface commune.
-
-Malgré le soin apporté à leur traitement, certaines données peuvent évoluer, être incomplètes ou présenter des divergences entre les sources.
-
-L'Observatoire ne constitue donc pas une communication officielle des collectivités ou des acteurs concernés.
-
-### Signaler une erreur ou contribuer
-
-Vous avez identifié une information incorrecte, découvert un nouveau document ou souhaitez apporter une précision sur un projet ?
-
-Vous pouvez utiliser le formulaire de signalement disponible sur le site pour proposer une correction ou une information complémentaire.
-
-Les contributions sont examinées avant leur éventuelle intégration à l'Observatoire.
-
----
-
-## Évolutions du projet
-
-**Version actuelle : V0.9 — septembre 2026**
-
-Cette version constitue la première base consolidée de l'Observatoire, avec ses 128 fiches publiques, sa cartographie et ses principales fonctionnalités de consultation.
-
-Les prochaines évolutions porteront notamment sur l'enrichissement des informations, l'intégration de nouvelles sources et la mise à jour régulière des opérations suivies.
-
-À terme, l'objectif est de mettre en place un processus d'actualisation mensuelle permettant de détecter les nouvelles informations, de comparer les évolutions des projets et de proposer des mises à jour contrôlées de la base documentaire.
-
-Les informations importantes continueront de faire l'objet d'une vérification avant publication.
-
----
+La V1.0 consolide les 128 fiches, la cartographie, les médias utiles et les principales fonctions de consultation. Les prochaines évolutions dépendront des corrections confirmées, des retours d'usage et du temps de maintenance disponible. Aucun rythme de mise à jour automatique ou mensuel n'est promis.
 
 ## Crédits et droits
 
-L'Observatoire est un projet indépendant de documentation et de valorisation des transformations urbaines.
+Les photographies, illustrations, perspectives, plans, cartes et documents présentés peuvent appartenir à leurs auteurs, éditeurs ou ayants droit respectifs. Leur présence sur le site ou dans ce dépôt n'implique pas qu'ils soient libres de réutilisation.
 
-Les photographies, illustrations, perspectives, plans, cartes et autres documents présentés peuvent appartenir à leurs auteurs, éditeurs ou ayants droit respectifs.
-
-Leur présence sur le site ou dans ce dépôt n'implique pas qu'ils soient libres de réutilisation.
-
-Les informations relatives aux sources et aux crédits sont présentées dans la mesure où elles sont disponibles et pourront être complétées au fil des mises à jour.
-
-Pour toute question relative à un contenu ou à son attribution, vous pouvez utiliser les coordonnées indiquées sur le site.
-
----
-
-*Un observatoire pour explorer les transformations d'aujourd'hui et suivre les quartiers de demain.*
+Les sources et crédits sont indiqués dans la mesure où ils sont connus. Pour toute question relative à un contenu, à son attribution ou à son retrait, utiliser les coordonnées disponibles sur le site.
