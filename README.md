@@ -20,7 +20,7 @@ Sa consultation est libre et gratuite.
 
 Chaque fiche dispose également d'une page HTML dédiée, reliée à la carte interactive.
 
-## Chiffres de la V1.0
+## Chiffres de la V1.0.5
 
 | Indicateur | Nombre |
 | --- | ---: |
@@ -29,9 +29,9 @@ Chaque fiche dispose également d'une page HTML dédiée, reliée à la carte in
 | Repères de quartier | 2 |
 | Fiches publiques et points cartographiés | 128 |
 | Fiches avec au moins un visuel | 127 |
-| Sources documentaires référencées | 510 |
+| Sources documentaires référencées | 525 |
 
-Les 128 fiches comprennent 109 entrées pour les Docks de Saint-Ouen et 19 pour Seine-Liberté, avec un repère de quartier dans chaque territoire. Ces chiffres correspondent à la publication du 24 septembre 2026.
+Les 128 fiches comprennent 126 opérations et deux repères de quartier. La dernière revue humaine complète date du 24 septembre 2026.
 
 ## Projet indépendant et participatif
 
@@ -43,9 +43,9 @@ Le formulaire de signalement du site permet d'envoyer un message et des liens ve
 
 ## Évolutions
 
-**Version actuelle : V1.0 — 24 septembre 2026**
+**Version préparée : V1.0.5 — 25 septembre 2026**
 
-La V1.0 consolide les 128 fiches, la cartographie, les médias utiles et les principales fonctions de consultation. Les prochaines évolutions dépendront des corrections confirmées, des retours d'usage et du temps de maintenance disponible. Aucun rythme de mise à jour automatique ou mensuel n'est promis.
+La V1.0.5 conserve les 128 fiches et leur cartographie, enrichit les sources, les documents utiles et plusieurs plans, et précise la lecture documentaire de certains projets. Aucun rythme de mise à jour automatique ou mensuel n'est promis.
 
 ## Crédits et droits
 
