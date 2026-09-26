@@ -31,7 +31,7 @@ Chaque fiche dispose également d'une page HTML dédiée, reliée à la carte in
 | Fiches avec au moins un visuel | 127 |
 | Sources documentaires référencées | 525 |
 
-Les 128 fiches comprennent 126 opérations et deux repères de quartier. La dernière revue humaine complète date du 24 septembre 2026.
+Les 129 fiches comprennent 127 opérations et deux repères de quartier. Les 128 positions historiques ont été validées humainement ; le point de l'Espace Ziegler reste provisoire. La dernière revue humaine complète date du 24 septembre 2026.
 
 ## Projet indépendant et participatif
 

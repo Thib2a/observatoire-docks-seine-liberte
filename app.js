@@ -378,7 +378,7 @@ function bindEvents() {
     if (featureStep) { rotateFeature(featureStep.closest(".feature-territory"), Number(featureStep.dataset.featureStep)); return; }
     const planStep = event.target.closest("[data-plan-step]");
     if (planStep) {
-      const planKey = parseRoute().territory === "Seine-Liberté" ? "seinePlans" : "docksPlans";
+      const planKey = parseRoute().territory === "Seine-Liberté" ? "seineSlides" : "docksSlides";
       const plans = (state.data.presentation?.[planKey] || []).map(key => state.data.presentationMedia?.[key]).filter(Boolean);
       if (!plans.length) return;
       state.planIndex = (state.planIndex + Number(planStep.dataset.planStep) + plans.length) % plans.length;

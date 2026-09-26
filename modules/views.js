@@ -94,7 +94,7 @@ export function timelineEvent(event, projectsById) {
 
 function territoryOverview(isSeine, items, territory, presentation = {}, presentationMedia = {}) {
   const ensemble = items.find(project => project.projectType === "ENSEMBLE");
-  const chosen = isSeine ? presentation.seinePlans : (presentation.docksPlans || [presentation.docksPlan]);
+  const chosen = isSeine ? presentation.seineSlides : presentation.docksSlides;
   const plans = (chosen || []).map(key => presentationMedia[key]).filter(Boolean);
   const fallback = ensemble?.visuals.find(visual => visual.role === "PLAN_MASSE" || visual.role === "PLAN_SITUATION");
   if (!plans.length && fallback) plans.push(fallback);
@@ -201,7 +201,9 @@ export function renderProject(project) {
   const actors = actorItems(project);
   const timeline = timelineItems(project);
   const locationText = publicLocation(project);
-  const locationQualifier = "Emplacement vérifié";
+  const locationQualifier = project.map?.verified
+    ? "Emplacement vérifié"
+    : (project.map?.precision || "Emplacement à vérifier");
   const mediaGroup = (title, kind, visuals) => !visuals.length ? "" : `<section class="detail-section gallery-section" data-progressive-gallery>
     <div class="detail-heading"><p class="eyebrow">Images et documents graphiques</p><h2>${title}</h2></div>
     <div class="gallery-grid">${visuals.map((visual, index) => `

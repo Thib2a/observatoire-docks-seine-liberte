@@ -219,6 +219,7 @@ img { display: block; max-width: 100%; }
 
 .project-header { min-height: 760px; }
 .project-header.no-media { min-height: 540px; }
+.project-header.no-media .media-placeholder { align-content: end; justify-items: end; padding: 0 24px 18px; box-sizing: border-box; }
 .project-header-content { width: min(1100px, 88vw); }
 .project-kicker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
 .project-kicker span { padding: 6px 9px; border: 1px solid rgba(255,255,255,.35); border-radius: 99px; font-size: 10px; }
