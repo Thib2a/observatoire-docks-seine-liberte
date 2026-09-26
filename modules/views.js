@@ -1,6 +1,6 @@
 import {
   CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
-  escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, projectHref, projectStatusLabel, statusBadge,
+  escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaCreditLabel, projectHref, projectStatusLabel, statusBadge,
 } from "./data.js";
 
 
@@ -45,7 +45,7 @@ function mediaCredit(visual) {
   const source = visual.sourceUrl
     ? `<a href="${escapeHtml(visual.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(sourceLabel)}</a>`
     : (visual.sourceLabel && visual.sourceLabel !== credit ? escapeHtml(visual.sourceLabel) : "");
-  return `<span>${escapeHtml(credit)}${source ? ` · ${source}` : ""}</span>`;
+  return `<span>${escapeHtml(mediaCreditLabel(credit))}${source ? ` · ${source}` : ""}</span>`;
 }
 
 
@@ -127,8 +127,8 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
   const contextProject = isSeine ? items.find(project => project.projectType === "ENSEMBLE") : null;
   const contextVisual = contextProject?.visuals.find(item => item.role === "GALERIE" && item.caption.includes("Perspective urbaine Seine-Liberté"));
   const intro = isSeine
-    ? "À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, Seine-Liberté prend progressivement forme. Logements, équipements publics, espaces verts, nouvelles rues et berges aménagées composeront ce nouveau quartier, dont les différentes opérations avancent à leur rythme."
-    : "Ancien territoire industriel devenu un quartier de vie, les Docks de Saint-Ouen poursuivent leur transformation. Entre secteurs déjà habités, nouveaux programmes immobiliers, équipements et espaces publics, découvrez les projets qui façonnent le quartier d'aujourd'hui et de demain.";
+    ? "À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, la ZAC Seine-Liberté prend progressivement forme. Logements, équipements publics, espaces verts, nouvelles rues et berges aménagées composeront ce nouveau quartier, dont les différentes opérations avancent à leur rythme."
+    : "Ancien territoire industriel devenu un quartier de vie, les Docks de Saint-Ouen-sur-Seine poursuivent leur transformation. Entre secteurs déjà habités, nouveaux programmes immobiliers, équipements et espaces publics, découvrez les projets qui façonnent le quartier d'aujourd'hui et de demain.";
   const eyebrow = isSeine ? "Clichy · bord de Seine" : "Saint-Ouen-sur-Seine";
 
   const projectStrip = (title, subtitle, rows) => rows.length ? `<section class="territory-section">
@@ -162,6 +162,7 @@ function figureItems(project) {
   const labels = {
     housing: "logements", socialHousing: "logements sociaux", rooms: "chambres",
     capacity: "places", surface: "surface", shops: "commerces", facilities: "équipements", budget: "budget",
+    householdsSupplied: "foyers alimentés", businessesSupplied: "PME et commerces alimentés",
   };
   return Object.entries(project.figures)
     .filter(([key, value]) => value && !(key === "housing" && value === project.figures.socialHousing))
@@ -183,8 +184,8 @@ function actorItems(project) {
 
 function timelineItems(project) {
   return project.milestones.map(item => `
-    <li class="timeline-item ${item.nature === "ACTUEL" ? "is-current" : ""}">
-      <span></span><div><small>${escapeHtml(item.permitLabel || MILESTONE_LABELS[item.type] || "Étape")}</small><strong>${escapeHtml(formatTemporal(item.date, item.precision, item.label))}</strong>${item.permitReferences?.length ? `<small>${escapeHtml([item.permitContext, item.permitReferences.join(" · ")].filter(Boolean).join(" : "))}</small>` : ""}${(item.permitSources || []).map(source => `<a class="permit-source" href="${escapeHtml(source.url)}" target="_blank" rel="noopener" aria-label="${escapeHtml(source.label)}, source complémentaire pour ${escapeHtml(source.reference)}" title="${escapeHtml(source.label)}, source complémentaire">${escapeHtml(source.label)}${item.permitSources.length > 1 ? ` ${escapeHtml(source.reference)}` : ""} ↗</a>`).join("")}${item.nature === "ACTUEL" ? "<em>Référence actuelle</em>" : ""}</div>
+    <li class="timeline-item ${item.type === "LIVRAISON_PREVUE" ? "is-announced" : item.type === "DEBUT_TRAVAUX" ? "is-work-start" : ""}">
+      <span></span><div><small>${escapeHtml(item.displayLabel || item.permitLabel || MILESTONE_LABELS[item.type] || "Étape")}</small><strong>${escapeHtml(formatTemporal(item.date, item.precision, item.label))}</strong>${item.permitReferences?.length ? `<small>${escapeHtml([item.permitContext, item.permitReferences.join(" · ")].filter(Boolean).join(" : "))}</small>` : ""}${(item.permitSources || []).map(source => `<a class="permit-source" href="${escapeHtml(source.url)}" target="_blank" rel="noopener" aria-label="${escapeHtml(source.label)}, source complémentaire pour ${escapeHtml(source.reference)}" title="${escapeHtml(source.label)}, source complémentaire">${escapeHtml(source.label)}${item.permitSources.length > 1 ? ` ${escapeHtml(source.reference)}` : ""} ↗</a>`).join("")}${item.source?.url ? `<a class="permit-source" href="${escapeHtml(item.source.url)}" target="_blank" rel="noopener" title="${escapeHtml(item.source.locator ? `Source du jalon : ${item.source.locator}` : "Source du jalon")}">${escapeHtml(item.source.organization || item.source.title || "Source")}${item.source.locator ? ` · ${escapeHtml(item.source.locator)}` : ""} ↗</a>` : ""}</div>
     </li>`).join("");
 }
 
@@ -200,6 +201,12 @@ export function renderProject(project) {
   const figures = figureItems(project);
   const actors = actorItems(project);
   const timeline = timelineItems(project);
+  const announcedDelivery = ["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"].includes(project.status)
+    ? project.milestones.find(item => item.type === "LIVRAISON_PREVUE" && item.nature === "ACTUEL")
+    : null;
+  const mainDate = project.dateText || (announcedDelivery
+    ? `Livraison annoncée : ${formatTemporal(announcedDelivery.date, announcedDelivery.precision, announcedDelivery.label)}`
+    : "");
   const locationText = publicLocation(project);
   const locationQualifier = project.map?.verified
     ? "Emplacement vérifié"
@@ -217,9 +224,10 @@ export function renderProject(project) {
   </section>`;
   const gallerySection = [
     mediaGroup("Photos et perspectives", "visuels", gallery.filter(item => ["GALERIE", "HERO"].includes(item.role))),
-    mediaGroup("Plans de situation et de masse", "plans", gallery.filter(item => ["PLAN_SITUATION", "PLAN_MASSE"].includes(item.role))),
+    mediaGroup("Photos de chantier", "photos", gallery.filter(item => item.role === "PHOTO_CHANTIER")),
+    mediaGroup("Contexte et versions anciennes", "visuels", gallery.filter(item => ["CONTEXTE", "HISTORIQUE"].includes(item.role))),
     mediaGroup("Documents graphiques", "documents", gallery.filter(item => item.role === "DOCUMENT")),
-    mediaGroup("Images de contexte et versions anciennes", "visuels", gallery.filter(item => ["CONTEXTE", "HISTORIQUE"].includes(item.role))),
+    mediaGroup("Plans de situation et de masse", "plans", gallery.filter(item => ["PLAN_SITUATION", "PLAN_MASSE"].includes(item.role))),
   ].join("");
 
   const documentsSection = project.documents.length ? `<section class="detail-section documents-section">
@@ -250,7 +258,7 @@ export function renderProject(project) {
       <div class="project-kicker"><span>${escapeHtml(project.territory)}</span>${project.lot ? `<span>Lot ${escapeHtml(project.lot)}</span>` : ""}<span>${escapeHtml(project.category)}</span></div>
       ${statusBadge(project)}
       <h1>${escapeHtml(project.name)}</h1>
-      ${project.dateText ? `<p class="project-main-date">${escapeHtml(formatEmbeddedDates(project.dateText))}</p>` : ""}
+      ${mainDate ? `<p class="project-main-date">${escapeHtml(formatEmbeddedDates(mainDate))}</p>` : ""}
     </div>
     ${hero ? `<div class="project-hero-credit">${escapeHtml(hero.caption)} · ${mediaCredit(hero)}</div>` : ""}
   </header>

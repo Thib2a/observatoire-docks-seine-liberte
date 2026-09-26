@@ -1,5 +1,14 @@
 export const DATA_URL = "./data/app-data.json";
 
+export function mediaCreditLabel(value) {
+  const credit = String(value || "").trim();
+  if (!credit) return "Crédit non précisé";
+  if (credit.startsWith("©")) return credit;
+  if (/^(Dossier de création|Rapport d’activité|Inventaire citoyen)/i.test(credit)) return `Document : ${credit}`;
+  if (/^(Séquano \/ site officiel des Docks|Google (?:Maps - )?Street View|Caue Observatoire)/i.test(credit) || credit.includes("copie du site citoyen")) return `Source : ${credit}`;
+  return `Crédit : ${credit}`;
+}
+
 export const STATUS_ORDER = [
   "EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES",
   "SUSPENDU / RETARDÉ", "LIVRÉ / TERMINÉ", "ABANDONNÉ", "STATUT INCONNU",
@@ -47,7 +56,7 @@ export const MILESTONE_LABELS = {
   DOC: "Début déclaré",
   DEBUT_TRAVAUX: "Début des travaux",
   COMMERCIALISATION: "Commercialisation",
-  LIVRAISON_PREVUE: "Livraison prévue",
+  LIVRAISON_PREVUE: "Livraison annoncée",
   LIVRAISON_REELLE: "Livraison réalisée",
   OUVERTURE: "Ouverture",
   DAACT: "Achèvement déclaré",
@@ -117,7 +126,10 @@ export function formatTemporal(value, precision = "JOUR", label = "") {
     if (safeLabel) return safeLabel;
     return (safeValue.match(/^\d{4}/) || [safeValue || "Date à préciser"])[0];
   }
-  if (precision === "ANNEE") return (safeValue.match(/^\d{4}/) || safeLabel.match(/\b(?:19|20)\d{2}\b/) || [safeLabel])[0];
+  if (precision === "ANNEE") {
+    if (/(?<!\p{L})(?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre|printemps|été|automne|hiver)(?!\p{L})/iu.test(safeLabel)) return safeLabel;
+    return (safeValue.match(/^\d{4}/) || safeLabel.match(/\b(?:19|20)\d{2}\b/) || [safeLabel])[0];
+  }
   if (precision === "TRIMESTRE") return safeLabel || safeValue;
   if (precision === "MOIS" && /^\d{4}-\d{2}/.test(safeValue)) return formatDate(safeValue.slice(0, 7));
   if (precision === "JOUR" && safeValue) return formatDate(safeValue);

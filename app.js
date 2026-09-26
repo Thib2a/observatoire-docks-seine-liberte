@@ -1,5 +1,5 @@
 import {
-  DATA_URL, STATUS_ORDER, escapeHtml, formatDate, formatTemporal, loadData, normalize,
+  DATA_URL, STATUS_ORDER, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
   projectStatusLabel, searchText, statusColor, statusLabel, statusSymbol,
 } from "./modules/data.js";
 import {ProjectMap} from "./modules/map.js";
@@ -72,12 +72,12 @@ function updateSeo(parsed, project = null) {
   if (parsed.route === "territory") {
     seo = parsed.territory === "Seine-Liberté"
       ? {
-          title: "Seine-Liberté à Clichy : projets et chantiers | Observatoire",
-          description: "Découvrez les projets urbains et immobiliers de Seine-Liberté à Clichy : logements, travaux, chantiers, équipements, espaces verts et berges.",
+          title: "ZAC Seine-Liberté à Clichy : projets et travaux | Observatoire",
+          description: "Découvrez les projets, travaux, équipements, espaces publics et le calendrier de la ZAC Seine-Liberté à Clichy.",
         }
       : {
-          title: "Docks de Saint-Ouen : projets et chantiers | Observatoire",
-          description: "Suivez les projets immobiliers, travaux, chantiers, permis de construire, équipements et espaces publics des Docks de Saint-Ouen-sur-Seine.",
+          title: "Docks de Saint-Ouen-sur-Seine : projets et chantiers | Observatoire",
+          description: "Suivez les projets, chantiers, équipements et espaces publics des Docks de Saint-Ouen-sur-Seine et leurs transformations.",
         };
   } else if (parsed.route === "project" && project) {
     seo = {
@@ -241,10 +241,10 @@ function mountSlides(selector, keys = [], delay = 0) {
       setTimeout(() => previous.forEach(child => child.remove()), 750);
     };
     if (next.complete) show(); else next.addEventListener("load", show, {once:true});
-    if (selector === "#home-hero-media") $("#home-hero-caption").textContent = `${item.caption || item.projectName} · ${item.credit || "Source indiquée sur la fiche"}`;
+    if (selector === "#home-hero-media") $("#home-hero-caption").textContent = `${item.caption || item.projectName} · ${mediaCreditLabel(item.credit)}`;
     if (selector === "#territory-content .territory-hero-media") {
       const caption = $("#territory-content .territory-hero-caption");
-      if (caption) caption.textContent = `${item.caption || item.projectName} · ${item.credit || "Source indiquée sur la fiche"}`;
+      if (caption) caption.textContent = `${item.caption || item.projectName} · ${mediaCreditLabel(item.credit)}`;
     }
     target.dataset.slideIndex = String(index);
     const counter = document.querySelector(`[data-carousel-count="${selector}"]`);
@@ -420,7 +420,7 @@ function bindEvents() {
       return;
     }
     const territoryButton = event.target.closest("[data-territory]");
-    if (territoryButton) {
+    if (territoryButton && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) {
       event.preventDefault();
       navigate("territory", {territory: territoryButton.dataset.territory});
       return;
