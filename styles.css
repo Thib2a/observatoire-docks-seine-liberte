@@ -110,9 +110,10 @@ img { display: block; max-width: 100%; }
 .territory-door-art i { right: -4%; width: 32%; height: 72%; transform: skewY(12deg); }
 .territory-seine { background: #304d60; }
 .territory-door-media, .territory-door-shade { position: absolute; inset: 0; background-size: cover; background-position: center; }
-.territory-door-shade { background: linear-gradient(0deg, rgba(16,34,42,.92), rgba(16,34,42,.08) 72%); }
+.territory-door-shade { background: linear-gradient(90deg, rgba(8,35,31,.54), rgba(8,35,31,.12) 78%), linear-gradient(0deg, rgba(16,34,42,.92), rgba(16,34,42,.14) 72%); }
 .territory-door-copy { color: white; background: transparent; }
-.territory-door-copy .eyebrow, .territory-door-copy p:not(.eyebrow) { color: rgba(255,255,255,.86); text-shadow: 0 2px 18px rgba(0,0,0,.42); }
+.territory-door-copy h2 { text-shadow: 0 2px 18px rgba(0,0,0,.3); }
+.territory-door-copy .eyebrow, .territory-door-copy p:not(.eyebrow) { color: rgba(255,255,255,.96); text-shadow: 0 2px 18px rgba(0,0,0,.42); }
 .territory-door-copy .button { text-decoration: none; }
 
 .updates-preview { padding-block: 110px; }
@@ -204,11 +205,17 @@ img { display: block; max-width: 100%; }
 .territory-hero-content, .project-header-content { position: relative; z-index: 2; width: min(980px, 80vw); padding: 70px clamp(24px, 7vw, 110px); }
 .back-link { width: fit-content; margin-bottom: 55px; padding: 0; border: 0; border-bottom: 1px solid rgba(255,255,255,.55); color: white; background: none; cursor: pointer; }
 .territory-hero h1, .project-header h1 { margin: 0; font: 400 clamp(58px, 8vw, 120px)/.88 var(--serif); letter-spacing: -.05em; }
-.territory-hero-content > p:not(.eyebrow) { max-width: 700px; margin: 26px 0; color: rgba(255,255,255,.77); font-size: 19px; }
+.territory-hero-content > p:not(.eyebrow) { max-width: 700px; margin: 26px 0; color: rgba(255,255,255,.94); font-size: 19px; }
 .territory-hero dl { display: flex; gap: 48px; margin: 45px 0 0; }
 .territory-hero dl div { display: grid; }
 .territory-hero dt { font: 400 42px/1 var(--serif); }
 .territory-hero dd { margin: 4px 0 0; color: rgba(255,255,255,.6); font-size: 11px; }
+@media (min-width: 761px) {
+  .territory-hero-content { padding-top: 45px; padding-bottom: 45px; }
+  .territory-hero .back-link { margin-bottom: 25px; }
+  .territory-hero-content > p:not(.eyebrow) { margin-block: 20px; }
+  .territory-hero dl { margin-top: 25px; }
+}
 .territory-body { padding-block: 90px 120px; }
 .territory-section { margin-top: 100px; }
 .reference-plan { display: grid; grid-template-columns: .8fr 1.2fr; align-items: center; gap: clamp(35px, 7vw, 100px); padding: clamp(25px, 5vw, 70px); border-radius: 30px; color: white; background: var(--green); }

@@ -128,7 +128,7 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
   const contextVisual = contextProject?.visuals.find(item => item.role === "GALERIE" && item.caption.includes("Perspective urbaine Seine-Liberté"));
   const intro = isSeine
     ? "À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, la ZAC Seine-Liberté prend progressivement forme. Logements, équipements publics, espaces verts, nouvelles rues et berges aménagées composeront ce nouveau quartier, dont les différentes opérations avancent à leur rythme."
-    : "Ancien territoire industriel devenu un quartier de vie, les Docks de Saint-Ouen-sur-Seine poursuivent leur transformation. Entre secteurs déjà habités, nouveaux programmes immobiliers, équipements et espaces publics, découvrez les projets qui façonnent le quartier d'aujourd'hui et de demain.";
+    : "La ZAC des Docks de Saint-Ouen-sur-Seine, ancien territoire industriel devenu un quartier de vie, poursuit sa transformation. Entre secteurs déjà habités, nouveaux programmes immobiliers, équipements et espaces publics, découvrez les projets qui façonnent le quartier d'aujourd'hui et de demain.";
   const eyebrow = isSeine ? "Clichy · bord de Seine" : "Saint-Ouen-sur-Seine";
 
   const projectStrip = (title, subtitle, rows) => rows.length ? `<section class="territory-section">
