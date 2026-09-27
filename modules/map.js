@@ -46,8 +46,10 @@ export class ProjectMap {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.map);
-    this.aerialLayer = L.imageOverlay("assets/basemap-aerial.jpg",
-      [[48.901, 2.307], [48.920, 2.339]], {opacity: 1, attribution: "Vue aérienne © IGN · date de prise de vue à confirmer"});
+    this.aerialLayer = L.tileLayer(
+      "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg&TILEMATRIXSET=PM_0_19&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+      {maxZoom: 19, tileSize: 256, attribution: '&copy; <a href="https://www.ign.fr/">IGN</a>'}
+    );
     this.layer = L.layerGroup().addTo(this.map);
     this.map.setView([48.914, 2.326], 14);
   }
@@ -117,16 +119,9 @@ export class ProjectMap {
     if (mode === "aerial") {
       this.map.removeLayer(this.planLayer);
       this.aerialLayer.addTo(this.map);
-      this.map.setMaxBounds([[48.900, 2.306], [48.921, 2.340]]);
-      this.map.setMinZoom(13);
-      this.map.setMaxZoom(18);
-      this.map.setView([48.912, 2.323], Math.max(14, this.map.getZoom()));
     } else {
       this.map.removeLayer(this.aerialLayer);
       this.planLayer.addTo(this.map);
-      this.map.setMaxBounds(null);
-      this.map.setMinZoom(11);
-      this.map.setMaxZoom(19);
     }
   }
 
