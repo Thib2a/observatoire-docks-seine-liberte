@@ -9,24 +9,24 @@ import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTer
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
 const CANONICAL_URL = "https://observatoire-docks-seine.org/";
 const HOME_TITLE = "Observatoire des Docks de Saint-Ouen & Seine-Liberté à Clichy";
-const HOME_DESCRIPTION = "Explorez les transformations des Docks de Saint-Ouen et de Seine-Liberté à Clichy : carte interactive, projets immobiliers, chantiers, plans et actualités.";
+const HOME_DESCRIPTION = "Explorez les transformations des Docks de Saint-Ouen, de Seine-Liberté à Clichy et de leurs abords immédiats : projets, chantiers, plans et actualités.";
 const ROUTE_SEO = {
   home: {title: HOME_TITLE, description: HOME_DESCRIPTION},
   explore: {
     title: "Carte des projets | Docks de Saint-Ouen & Seine-Liberté",
-    description: "Explorez la carte interactive des projets immobiliers, travaux, chantiers, permis de construire et équipements des Docks de Saint-Ouen et de Seine-Liberté.",
+    description: "Explorez la carte interactive des projets immobiliers, travaux, chantiers, permis de construire et équipements des Docks de Saint-Ouen, de Seine-Liberté et de leurs abords immédiats.",
   },
   updates: {
     title: "Actualités des Docks de Saint-Ouen & Seine-Liberté",
-    description: "Suivez les actualités des projets urbains, travaux et chantiers des Docks de Saint-Ouen-sur-Seine et de Seine-Liberté à Clichy.",
+    description: "Suivez les actualités des projets urbains, travaux et chantiers des Docks de Saint-Ouen-sur-Seine, de Seine-Liberté à Clichy et de leurs abords immédiats.",
   },
   timeline: {
     title: "Chronologie des Docks de Saint-Ouen & Seine-Liberté",
-    description: "Parcourez les étapes documentées des projets urbains et des transformations des Docks de Saint-Ouen et de Seine-Liberté à Clichy.",
+    description: "Parcourez les étapes documentées des projets urbains et des transformations des Docks de Saint-Ouen, de Seine-Liberté à Clichy et de leurs abords immédiats.",
   },
   method: {
     title: "À propos | Observatoire Docks & Seine-Liberté",
-    description: "Découvrez la démarche citoyenne et indépendante de l’Observatoire des Docks de Saint-Ouen et de Seine-Liberté à Clichy.",
+    description: "Découvrez la démarche citoyenne et indépendante de l’Observatoire des Docks de Saint-Ouen, de Seine-Liberté à Clichy et de leurs abords immédiats.",
   },
   contribute: {title: "Contact & signalements | Observatoire Docks & Seine-Liberté", description: "Signalez une correction, proposez une information ou contactez l’Observatoire Docks & Seine-Liberté."},
   legal: {title: "Mentions légales | Observatoire Docks & Seine-Liberté", description: "Mentions légales de l’Observatoire citoyen Docks & Seine-Liberté."},
@@ -47,6 +47,8 @@ const state = {
   slideControllers: {},
   planIndex: 0,
   renderedHash: null,
+  lightboxItems: [],
+  lightboxIndex: 0,
 };
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -73,11 +75,11 @@ function updateSeo(parsed, project = null) {
     seo = parsed.territory === "Seine-Liberté"
       ? {
           title: "ZAC Seine-Liberté à Clichy : projets et travaux | Observatoire",
-          description: "Découvrez les projets, travaux, équipements, espaces publics et le calendrier de la ZAC Seine-Liberté à Clichy.",
+          description: "Découvrez les projets, travaux, équipements, espaces publics et le calendrier de Seine-Liberté à Clichy et de ses abords immédiats.",
         }
       : {
           title: "Docks de Saint-Ouen-sur-Seine : projets et chantiers | Observatoire",
-          description: "Suivez les projets, chantiers, équipements et espaces publics des Docks de Saint-Ouen-sur-Seine et leurs transformations.",
+          description: "Suivez les projets, chantiers, équipements et espaces publics des Docks de Saint-Ouen-sur-Seine et de leurs abords immédiats.",
         };
   } else if (parsed.route === "project" && project) {
     seo = {
@@ -244,7 +246,20 @@ function mountSlides(selector, keys = [], delay = 0) {
     if (selector === "#home-hero-media") $("#home-hero-caption").textContent = `${item.caption || item.projectName} · ${mediaCreditLabel(item.credit)}`;
     if (selector === "#territory-content .territory-hero-media") {
       const caption = $("#territory-content .territory-hero-caption");
-      if (caption) caption.textContent = `${item.caption || item.projectName} · ${mediaCreditLabel(item.credit)}`;
+      if (caption) {
+        caption.textContent = `${item.caption || item.projectName || ""} · `;
+        if (item.sourceUrl) {
+          const source = document.createElement("a");
+          source.href = item.sourceUrl;
+          source.target = "_blank";
+          source.rel = "noopener";
+          source.title = "Voir la source";
+          source.textContent = mediaCreditLabel(item.credit);
+          caption.append(source);
+        } else {
+          caption.append(document.createTextNode(mediaCreditLabel(item.credit)));
+        }
+      }
     }
     target.dataset.slideIndex = String(index);
     const counter = document.querySelector(`[data-carousel-count="${selector}"]`);
@@ -364,12 +379,29 @@ function updateExplorer() {
 }
 
 
+function showLightboxItem(index) {
+  const items = state.lightboxItems;
+  if (!items.length) return;
+  state.lightboxIndex = (index + items.length) % items.length;
+  const item = items[state.lightboxIndex];
+  $("#lightbox-image").src = item.src;
+  $("#lightbox-image").alt = item.alt;
+  $("#lightbox-caption").textContent = item.caption;
+  $("#lightbox-count").textContent = items.length > 1 ? `${state.lightboxIndex + 1} / ${items.length}` : "";
+  $$("[data-lightbox-step]").forEach(button => { button.hidden = items.length < 2; });
+}
+
 function bindEvents() {
   document.addEventListener("click", event => {
     const slideStep = event.target.closest("[data-carousel-step]");
     if (slideStep) { state.slideControllers[slideStep.dataset.carouselTarget]?.(Number(slideStep.dataset.carouselStep)); return; }
-    const galleryMore = event.target.closest("[data-gallery-more]");
-    if (galleryMore) { galleryMore.closest("[data-progressive-gallery]").classList.add("is-expanded"); galleryMore.remove(); return; }
+    const galleryStep = event.target.closest("[data-gallery-step]");
+    if (galleryStep) {
+      const track = galleryStep.closest(".gallery-content").querySelector("[data-gallery-scroll]");
+      const item = track.querySelector(".gallery-item");
+      if (item) track.scrollLeft += Number(galleryStep.dataset.galleryStep) * (item.getBoundingClientRect().width + 16);
+      return;
+    }
     const sourceMore = event.target.closest("[data-source-more]");
     if (sourceMore) { sourceMore.closest(".sources-section").classList.add("is-expanded"); sourceMore.remove(); return; }
     const docMore = event.target.closest("[data-doc-more]");
@@ -441,9 +473,14 @@ function bindEvents() {
     const lightbox = event.target.closest("[data-lightbox-src]");
     if (lightbox) {
       const dialog = $("#lightbox");
-      $("#lightbox-image").src = lightbox.dataset.lightboxSrc;
-      $("#lightbox-image").alt = lightbox.dataset.lightboxAlt || "";
-      $("#lightbox-caption").textContent = lightbox.dataset.lightboxCaption || "";
+      const gallery = lightbox.closest(".gallery-section");
+      const buttons = gallery ? $$("[data-lightbox-src]", gallery) : [lightbox];
+      state.lightboxItems = buttons.map(button => ({
+        src: button.dataset.lightboxSrc,
+        alt: button.dataset.lightboxAlt || "",
+        caption: button.dataset.lightboxCaption || "",
+      }));
+      showLightboxItem(buttons.indexOf(lightbox));
       dialog.showModal();
     }
   });
@@ -459,6 +496,15 @@ function bindEvents() {
   $("#timeline-order").addEventListener("change", renderTimeline);
   $("#timeline-today").addEventListener("click", goToToday);
   $("#lightbox-close").addEventListener("click", () => $("#lightbox").close());
+  $$("[data-lightbox-step]").forEach(button => button.addEventListener("click", () => {
+    showLightboxItem(state.lightboxIndex + Number(button.dataset.lightboxStep));
+  }));
+  $("#lightbox").addEventListener("keydown", event => {
+    if (state.lightboxItems.length < 2 || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+    event.preventDefault();
+    showLightboxItem(state.lightboxIndex + (event.key === "ArrowLeft" ? -1 : 1));
+  });
+  $("#lightbox").addEventListener("close", () => { state.lightboxItems = []; });
   $("#lightbox").addEventListener("click", event => { if (event.target === $("#lightbox")) $("#lightbox").close(); });
   $("#menu-toggle").addEventListener("click", () => {
     const open = $("#menu-toggle").getAttribute("aria-expanded") === "true";

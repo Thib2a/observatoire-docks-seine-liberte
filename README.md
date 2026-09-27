@@ -13,25 +13,24 @@ Sa consultation est libre et gratuite.
 ## Contenu
 
 - une carte interactive avec recherche et filtres ;
-- 128 fiches détaillées et cartographiées ;
+- 132 fiches détaillées et cartographiées ;
 - des photographies, perspectives, plans et documents ;
 - des actualités et des chronologies ;
 - les sources et crédits disponibles pour chaque opération.
 
 Chaque fiche dispose également d'une page HTML dédiée, reliée à la carte interactive.
 
-## Chiffres de la V1.0.5
+## Chiffres de la V1.2
 
 | Indicateur | Nombre |
 | --- | ---: |
 | Territoires suivis | 2 |
-| Opérations suivies | 126 |
+| Opérations suivies | 130 |
 | Repères de quartier | 2 |
-| Fiches publiques et points cartographiés | 128 |
-| Fiches avec au moins un visuel | 127 |
-| Sources documentaires référencées | 525 |
+| Fiches publiques et points cartographiés | 132 |
+| Fiches avec au moins un visuel | 132 |
 
-Les 129 fiches comprennent 127 opérations et deux repères de quartier. Les 128 positions historiques ont été validées humainement ; le point de l'Espace Ziegler reste provisoire. La dernière revue humaine complète date du 24 septembre 2026.
+Les 132 fiches comprennent 130 opérations et deux repères de quartier. Leurs positions ont été validées humainement. La dernière revue humaine complète date du 27 septembre 2026.
 
 ## Projet indépendant et participatif
 
@@ -43,9 +42,9 @@ Le formulaire de signalement du site permet d'envoyer un message et des liens ve
 
 ## Évolutions
 
-**Version préparée : V1.0.5 — 25 septembre 2026**
+**Version préparée : V1.2 — 27 septembre 2026**
 
-La V1.0.5 conserve les 128 fiches et leur cartographie, enrichit les sources, les documents utiles et plusieurs plans, et précise la lecture documentaire de certains projets. Aucun rythme de mise à jour automatique ou mensuel n'est promis.
+La V1.2 rassemble 132 fiches, dont quatre nouvelles opérations dans les abords, avec leurs sources, documents, visuels et calendriers revus. Aucun rythme de mise à jour automatique ou mensuel n'est promis.
 
 ## Crédits et droits
 

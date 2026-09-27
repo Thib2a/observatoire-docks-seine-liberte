@@ -41,11 +41,16 @@ function imageMarkup(project, visual, className = "") {
 function mediaCredit(visual) {
   if (!visual) return "";
   const credit = visual.credit || "Crédit non précisé";
-  const sourceLabel = visual.sourceLabel && visual.sourceLabel !== credit ? visual.sourceLabel : "Source";
+  const creditLabel = escapeHtml(mediaCreditLabel(credit));
+  const sameLabel = visual.sourceLabel?.trim() === credit.trim();
+  if (visual.sourceUrl && sameLabel) {
+    return `<span><a href="${escapeHtml(visual.sourceUrl)}" target="_blank" rel="noopener" title="Voir la source">${creditLabel}</a></span>`;
+  }
+  const sourceLabel = visual.sourceLabel || "Source";
   const source = visual.sourceUrl
     ? `<a href="${escapeHtml(visual.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(sourceLabel)}</a>`
-    : (visual.sourceLabel && visual.sourceLabel !== credit ? escapeHtml(visual.sourceLabel) : "");
-  return `<span>${escapeHtml(mediaCreditLabel(credit))}${source ? ` · ${source}` : ""}</span>`;
+    : (visual.sourceLabel && visual.sourceLabel !== "Source" && !sameLabel ? escapeHtml(visual.sourceLabel) : "");
+  return `<span>${creditLabel}${source ? ` · ${source}` : ""}</span>`;
 }
 
 
@@ -62,7 +67,7 @@ export function projectCard(project, options = {}) {
       ${statusBadge(project)}
       <h3>${escapeHtml(project.name)}</h3>
       <p>${escapeHtml(formatEmbeddedDates(project.description))}</p>
-      <div class="card-meta"><span>${escapeHtml(project.lot ? `Lot ${project.lot}` : project.category)}</span><span>${escapeHtml(formatEmbeddedDates(project.dateText || publicLocation(project)))}</span></div>
+      <div class="card-meta"><span>${escapeHtml(project.category)}</span><span>${escapeHtml(formatEmbeddedDates(project.dateText || publicLocation(project)))}</span></div>
     </div>
   </a>`;
 }
@@ -127,8 +132,8 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
   const contextProject = isSeine ? items.find(project => project.projectType === "ENSEMBLE") : null;
   const contextVisual = contextProject?.visuals.find(item => item.role === "GALERIE" && item.caption.includes("Perspective urbaine Seine-Liberté"));
   const intro = isSeine
-    ? "À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, la ZAC Seine-Liberté prend progressivement forme. Logements, équipements publics, espaces verts, nouvelles rues et berges aménagées composeront ce nouveau quartier, dont les différentes opérations avancent à leur rythme."
-    : "La ZAC des Docks de Saint-Ouen-sur-Seine, ancien territoire industriel devenu un quartier de vie, poursuit sa transformation. Entre secteurs déjà habités, nouveaux programmes immobiliers, équipements et espaces publics, découvrez les projets qui façonnent le quartier d'aujourd'hui et de demain.";
+    ? "À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, la ZAC Seine-Liberté prend progressivement forme. Cette page rassemble les projets de Seine-Liberté ainsi que certains projets situés à ses abords immédiats lorsqu’ils participent directement aux transformations du secteur."
+    : "La ZAC des Docks de Saint-Ouen-sur-Seine, ancien territoire industriel devenu un quartier de vie, poursuit sa transformation. Cette page rassemble les projets suivis dans les Docks de Saint-Ouen ainsi que certains projets situés à leurs abords immédiats lorsqu’ils participent directement aux transformations du secteur.";
   const eyebrow = isSeine ? "Clichy · bord de Seine" : "Saint-Ouen-sur-Seine";
 
   const projectStrip = (title, subtitle, rows) => rows.length ? `<section class="territory-section">
@@ -169,16 +174,36 @@ function figureItems(project) {
     .map(([key, value]) => {
       const label = labels[key] || key;
       const alreadyLabeled = /[a-zà-ÿ]/i.test(String(value).replace(/m²|m2|\bSDP\b/gi, ""));
-      return `<div><strong>${escapeHtml(value)}</strong>${alreadyLabeled ? "" : `<span>${escapeHtml(label)}</span>`}</div>`;
+      const longValue = String(value).trim().length > 28;
+      return `<div class="${longValue ? "is-long" : ""}"><strong>${escapeHtml(value)}</strong>${alreadyLabeled ? "" : `<span>${escapeHtml(label)}</span>`}</div>`;
     })
     .join("");
 }
 
 
 function actorItems(project) {
-  const majorRoles = ["AMENAGEUR", "PROMOTEUR", "MAITRE_OUVRAGE", "ARCHITECTE", "PAYSAGISTE", "BAILLEUR", "EXPLOITANT", "COLLECTIVITE"];
-  return project.actors.filter(actor => majorRoles.includes(actor.role)).slice(0, 8).map(actor => `
-    <div class="actor-row"><span>${escapeHtml(ROLE_LABELS[actor.role] || actor.role)}</span><strong>${escapeHtml(actor.name)}</strong>${actor.detail ? `<small>${escapeHtml(actor.detail)}</small>` : ""}</div>`).join("");
+  const roleOrder = ["AMENAGEUR", "MAITRE_OUVRAGE", "PROMOTEUR", "ARCHITECTE", "PAYSAGISTE", "BAILLEUR", "EXPLOITANT", "COLLECTIVITE", "ENTREPRISE", "AUTRE"];
+  const priority = role => {
+    const index = roleOrder.indexOf(role);
+    return index < 0 ? roleOrder.length : index;
+  };
+  const redundantDetails = {
+    ARCHITECTE: ["architecte"],
+    PAYSAGISTE: ["paysagiste"],
+    PROMOTEUR: ["promoteur", "operateur", "operateur / responsable du projet"],
+    MAITRE_OUVRAGE: ["maitre d'ouvrage / petitionnaire", "maitrise d'ouvrage / developpement"],
+  };
+  const normalize = value => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("fr").replaceAll("’", "'").replace(/\s+/g, " ").trim();
+  return [...project.actors].sort((a, b) => priority(a.role) - priority(b.role)).map(actor => {
+    const normalized = normalize(actor.detail);
+    const detail = normalized === normalize(actor.name) || normalized === "x"
+      || normalized.startsWith("extrait du texte source conserve")
+      || redundantDetails[actor.role]?.includes(normalized)
+      ? ""
+      : normalized === "societe de projet / maitre d'ouvrage" ? "société de projet" : actor.detail;
+    return `<div class="actor-row"><span>${escapeHtml(ROLE_LABELS[actor.role] || actor.role)}</span><strong>${escapeHtml(actor.name)}</strong>${detail ? `<small>${escapeHtml(detail)}</small>` : ""}</div>`;
+  }).join("");
 }
 
 
@@ -211,16 +236,18 @@ export function renderProject(project) {
   const locationQualifier = project.map?.verified
     ? "Emplacement vérifié"
     : (project.map?.precision || "Emplacement à vérifier");
-  const mediaGroup = (title, kind, visuals) => !visuals.length ? "" : `<section class="detail-section gallery-section" data-progressive-gallery>
+  const mediaGroup = (title, kind, visuals) => !visuals.length ? "" : `<section class="detail-section gallery-section">
     <div class="detail-heading"><p class="eyebrow">Images et documents graphiques</p><h2>${title}</h2></div>
-    <div class="gallery-grid">${visuals.map((visual, index) => `
-      <figure class="gallery-item ${index === 0 ? "is-wide" : ""}">
+    <div class="gallery-content">
+    ${visuals.length > 1 ? `<div class="gallery-controls"><button type="button" data-gallery-step="-1" aria-label="Image précédente" title="Image précédente"><svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><button type="button" data-gallery-step="1" aria-label="Image suivante" title="Image suivante"><svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><span>${visuals.length} ${kind}</span></div>` : ""}
+    <div class="gallery-grid" data-gallery-scroll>${visuals.map(visual => `
+      <figure class="gallery-item">
         ${visual.src.toLowerCase().split("?")[0].endsWith(".pdf")
           ? `<a class="pdf-visual-link" href="${escapeHtml(visual.src)}" target="_blank" rel="noopener">${visual.thumbnail ? `<img src="${escapeHtml(visual.thumbnail)}" alt="Première page de ${escapeHtml(visual.caption)}" loading="lazy">` : '<span class="pdf-thumb-fallback">PDF</span>'}<span>${escapeHtml(visual.caption)}</span><em>Consulter le PDF ↗</em></a>`
           : `<button type="button" data-lightbox-src="${escapeHtml(visual.src)}" data-lightbox-alt="${escapeHtml(mediaAlt(project, visual))}" data-lightbox-caption="${escapeHtml(visual.caption)}">${imageMarkup(project, visual)}<span>${escapeHtml(({PLAN_SITUATION: "Plan de situation", PLAN_MASSE: "Plan de masse"})[visual.role] || visual.role.replaceAll("_", " ").toLowerCase())}</span></button>`}
         <figcaption><strong>${escapeHtml(visual.caption)}</strong>${visual.originProjectName ? `<small>Rattaché depuis ${escapeHtml(visual.originProjectName)}</small>` : ""}${mediaCredit(visual)}</figcaption>
       </figure>`).join("")}</div>
-    ${visuals.length > 8 ? `<button class="button gallery-more" type="button" data-gallery-more>Voir tous les ${kind} (${visuals.length})</button>` : ""}
+    </div>
   </section>`;
   const gallerySection = [
     mediaGroup("Photos et perspectives", "visuels", gallery.filter(item => ["GALERIE", "HERO"].includes(item.role))),
@@ -255,7 +282,7 @@ export function renderProject(project) {
     <div class="project-header-shade"></div>
     <div class="project-header-content">
       <button class="back-link" type="button" data-back>← Retour</button>
-      <div class="project-kicker"><span>${escapeHtml(project.territory)}</span>${project.lot ? `<span>Lot ${escapeHtml(project.lot)}</span>` : ""}<span>${escapeHtml(project.category)}</span></div>
+      <div class="project-kicker"><span>${escapeHtml(project.territory)}</span><span>${escapeHtml(project.category)}</span></div>
       ${statusBadge(project)}
       <h1>${escapeHtml(project.name)}</h1>
       ${mainDate ? `<p class="project-main-date">${escapeHtml(formatEmbeddedDates(mainDate))}</p>` : ""}
