@@ -25,12 +25,12 @@ const ROUTE_SEO = {
     description: "Parcourez les étapes documentées des projets urbains et des transformations des Docks de Saint-Ouen, de Seine-Liberté à Clichy et de leurs abords immédiats.",
   },
   method: {
-    title: "À propos | Observatoire Docks & Seine-Liberté",
+    title: "À propos de l’Observatoire | Observatoire Docks & Seine-Liberté",
     description: "Découvrez la démarche citoyenne et indépendante de l’Observatoire des Docks de Saint-Ouen, de Seine-Liberté à Clichy et de leurs abords immédiats.",
   },
   contribute: {title: "Contact & signalements | Observatoire Docks & Seine-Liberté", description: "Signalez une correction, proposez une information ou contactez l’Observatoire Docks & Seine-Liberté."},
   legal: {title: "Mentions légales | Observatoire Docks & Seine-Liberté", description: "Mentions légales de l’Observatoire citoyen Docks & Seine-Liberté."},
-  privacy: {title: "Confidentialité | Observatoire Docks & Seine-Liberté", description: "Informations sur la confidentialité, les cookies et la mesure d’audience de l’Observatoire Docks & Seine-Liberté."},
+  privacy: {title: "Confidentialité & données personnelles | Observatoire Docks & Seine-Liberté", description: "Données personnelles, formulaire Contact & signalements et services externes de l’Observatoire Docks & Seine-Liberté."},
   credits: {title: "Crédits et droits des images | Observatoire", description: "Crédits, sources et informations relatives aux images publiées par l’Observatoire Docks & Seine-Liberté."},
 };
 const state = {
@@ -574,7 +574,7 @@ function bindEvents() {
     const failure = $("#form-error");
     values.set("project_name", selectedProject);
     values.set("publish_pseudonym", values.get("publish_pseudonym") ? "Oui" : "Non");
-    values.set("privacy_consent", "Oui");
+    values.set("privacy_acknowledged", "Oui");
     values.set("_subject", `Observatoire — ${reason} — ${selectedProject}`);
     success.hidden = true;
     failure.hidden = true;
