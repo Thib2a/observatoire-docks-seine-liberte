@@ -29,7 +29,7 @@ export const STATUS_COLORS = {
   "LIVRÉ / TERMINÉ": "#237a63",
   "EN CHANTIER": "#e0643a",
   "TRAVAUX PRÉPARATOIRES": "#c28a12",
-  "PROGRAMMÉ": "#3478c8",
+  "PROGRAMMÉ": "#007f9e",
   "EN ÉTUDES": "#7861a8",
   "SUSPENDU / RETARDÉ": "#a94452",
   "ABANDONNÉ": "#555d5a",
@@ -100,7 +100,37 @@ export const normalize = (value = "") => String(value)
 
 export const statusLabel = status => STATUS_LABELS[status] || status;
 export const statusColor = status => STATUS_COLORS[status] || STATUS_COLORS["STATUT INCONNU"];
-export const statusSymbol = status => STATUS_SYMBOLS[status] || STATUS_SYMBOLS["STATUT INCONNU"];
+export const statusSymbol = status => status === "PROGRAMMÉ"
+  ? '<span class="status-ring"></span>'
+  : STATUS_SYMBOLS[status] || STATUS_SYMBOLS["STATUT INCONNU"];
+
+export const externalLinkIcon = '<svg class="external-link-icon lucide lucide-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10M7 17 17 7"/></svg>';
+
+export function chevronIcon(direction) {
+  const path = direction < 0 ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6";
+  return `<svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${path}"/></svg>`;
+}
+
+const sourceNames = new Map();
+
+function sourceKey(value) {
+  try {
+    const url = new URL(value);
+    url.hash = "";
+    return url.href;
+  } catch {
+    return "";
+  }
+}
+
+export function sourceName(url, label = "") {
+  const name = String(label || "").trim();
+  if (name && !/^(source|consulter la source)$/i.test(name)) return name;
+  const recorded = sourceNames.get(sourceKey(url));
+  if (recorded) return recorded;
+  try { return new URL(url).hostname.replace(/^www\./, ""); }
+  catch { return "Source"; }
+}
 
 export function formatDate(value) {
   if (!value) return "Date à préciser";
@@ -174,6 +204,14 @@ export async function loadData() {
   const response = await fetch(DATA_URL, {cache: "no-store"});
   if (!response.ok) throw new Error(`Chargement impossible (${response.status})`);
   const payload = await response.json();
+  sourceNames.clear();
+  for (const project of payload.projects) {
+    for (const source of project.sources) {
+      const name = (source.organization || "").trim();
+      const key = sourceKey(source.url);
+      if (key && name && !/^source$/i.test(name) && !sourceNames.has(key)) sourceNames.set(key, name);
+    }
+  }
   publicProjectSlugs = payload.projectPublicSlugs || {};
   return payload;
 }

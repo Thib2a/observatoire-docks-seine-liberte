@@ -1,5 +1,5 @@
 import {
-  DATA_URL, STATUS_ORDER, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
+  DATA_URL, STATUS_ORDER, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
   projectHref, projectStatusLabel, searchText, statusColor, statusLabel, statusSymbol,
 } from "./modules/data.js";
 import {ProjectMap} from "./modules/map.js";
@@ -218,7 +218,7 @@ function renderHome() {
   const featured = featuredProjects();
   $("#featured-projects").innerHTML = ["Docks de Saint-Ouen", "Seine-Liberté"].map(territory => {
     const group = featured.filter(project => project.territory === territory);
-    return `<section class="feature-territory"><h3>${escapeHtml(territory)}</h3><div class="feature-rotator">${group.map((project, index) => `<div class="feature-slide ${index === 0 ? "is-active" : ""}" ${index ? 'aria-hidden="true" inert' : ""}>${projectCard(project)}</div>`).join("")}</div><div class="feature-controls"><button type="button" data-feature-step="-1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet précédent de ${escapeHtml(territory)}">←</button><span>1 / ${group.length}</span><button type="button" data-feature-step="1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet suivant de ${escapeHtml(territory)}">→</button></div></section>`;
+    return `<section class="feature-territory"><h3>${escapeHtml(territory)}</h3><div class="feature-rotator">${group.map((project, index) => `<div class="feature-slide ${index === 0 ? "is-active" : ""}" ${index ? 'aria-hidden="true" inert' : ""}>${projectCard(project)}</div>`).join("")}</div><div class="feature-controls"><button type="button" data-feature-step="-1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet précédent de ${escapeHtml(territory)}">${chevronIcon(-1)}</button><span>1 / ${group.length}</span><button type="button" data-feature-step="1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet suivant de ${escapeHtml(territory)}">${chevronIcon(1)}</button></div></section>`;
   }).join("");
 
   const updates = state.data.territoryNews.filter(update => state.byId.get(update.projectId)?.readiness !== "NON_PRET");
