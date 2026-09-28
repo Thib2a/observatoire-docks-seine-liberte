@@ -174,10 +174,22 @@ export function projectStatusLabel(project) {
   return statusLabel(project.status);
 }
 
+export function documentaryGroup(project) {
+  return project.documentaryGroup || (project.id?.startsWith("abords-") ? "Abords" : groupValue(project.territory));
+}
+
+export function groupValue(value) {
+  return value === "Docks de Saint-Ouen" ? "Docks" : value;
+}
+
+export function filterDocumentaryGroup(projects, value) {
+  return value ? projects.filter(project => documentaryGroup(project) === groupValue(value)) : projects;
+}
+
 export function searchText(project) {
   return normalize([
     project.name, project.officialName, project.lot, project.category, project.subcategory,
-    project.territory, project.zone, project.sector, project.commune, ...project.aliases,
+    documentaryGroup(project), ...(project.secondaryTerritories || []), project.territory, project.zone, project.sector, project.commune, ...project.aliases,
   ].join(" "));
 }
 

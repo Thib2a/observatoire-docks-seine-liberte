@@ -1,7 +1,7 @@
 import {
-  CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
+  filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaCreditLabel, projectHref, projectStatusLabel, statusBadge,
-} from "./data.js?v=872472845799";
+} from "./data.js?v=a082920f5926";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -117,7 +117,7 @@ function territoryOverview(isSeine, items, territory, presentation = {}, present
 
 
 export function renderTerritory(territory, projects, presentation = {}, presentationMedia = {}) {
-  const items = projects.filter(project => project.territory === territory);
+  const items = filterDocumentaryGroup(projects, territory);
   const operations = items.filter(project => project.projectType !== "ENSEMBLE");
   const additive = items.filter(project => project.additive);
   const current = operations.filter(project => ACTIVE_STATUSES.has(project.status));

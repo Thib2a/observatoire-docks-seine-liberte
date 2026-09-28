@@ -1,11 +1,11 @@
 import {
-  DATA_URL, STATUS_ORDER, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
+  DATA_URL, STATUS_ORDER, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
   projectHref, projectStatusLabel, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=872472845799";
-import {syncPageHeading} from "./modules/headings.js?v=872472845799";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=872472845799";
-import {ProjectMap} from "./modules/map.js?v=872472845799";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=872472845799";
+} from "./modules/data.js?v=a082920f5926";
+import {syncPageHeading} from "./modules/headings.js?v=a082920f5926";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=a082920f5926";
+import {ProjectMap} from "./modules/map.js?v=a082920f5926";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=a082920f5926";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -16,7 +16,7 @@ const ROUTE_SEO = {
   home: {title: HOME_TITLE, description: HOME_DESCRIPTION},
   explore: {
     title: "Carte des projets | Docks de Saint-Ouen & Seine-Liberté",
-    description: "Explorez la carte interactive des projets immobiliers, travaux, chantiers, permis de construire et équipements des Docks de Saint-Ouen, de Seine-Liberté et de leurs abords immédiats.",
+    description: "Explorez sur la carte les projets et opérations des Docks de Saint-Ouen et de la ZAC Seine-Liberté à Clichy : emplacement, avancement et fiches documentées.",
   },
   updates: {
     title: "Actualités des Docks de Saint-Ouen & Seine-Liberté",
@@ -76,12 +76,12 @@ function updateSeo(parsed, project = null) {
   if (parsed.route === "territory") {
     seo = parsed.territory === "Seine-Liberté"
       ? {
-          title: "ZAC Seine-Liberté à Clichy : projets et travaux | Observatoire",
-          description: "Découvrez les projets, travaux, équipements, espaces publics et le calendrier de Seine-Liberté à Clichy et de ses abords immédiats.",
+          title: "ZAC Seine-Liberté à Clichy : plans, projets et travaux | Observatoire",
+          description: "Retrouvez les plans, projets, travaux et calendriers documentés de la ZAC Seine-Liberté à Clichy, avec les sources publiques et leur état d’avancement.",
         }
       : {
-          title: "Docks de Saint-Ouen-sur-Seine : projets et chantiers | Observatoire",
-          description: "Suivez les projets, chantiers, équipements et espaces publics des Docks de Saint-Ouen-sur-Seine et de leurs abords immédiats.",
+          title: "ZAC des Docks de Saint-Ouen : plans et aménagements | Observatoire",
+          description: "Consultez les plans, projets et travaux de la ZAC des Docks de Saint-Ouen : logements, équipements, espaces publics et aménagements du quartier.",
         };
   } else if (parsed.route === "project" && project) {
     seo = {
@@ -309,7 +309,7 @@ function populateFilters() {
   };
   const statuses = STATUS_ORDER.filter(status => projects.some(project => project.status === status)).map(status => ({value: status, label: statusLabel(status)}));
   $("#filter-status").insertAdjacentHTML("beforeend", statuses.map(({value, label}) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join(""));
-  addOptions("#filter-territory", [...new Set(projects.map(project => project.territory))].sort((a, b) => a.localeCompare(b, "fr")));
+  addOptions("#filter-territory", [...new Set(state.data.projects.map(documentaryGroup))].sort((a, b) => a.localeCompare(b, "fr")));
   addOptions("#filter-category", [...new Set(projects.map(project => project.category).filter(Boolean))].sort((a, b) => a.localeCompare(b, "fr")));
 }
 
@@ -321,7 +321,7 @@ function filteredProjects() {
     return true;
   });
   if (state.status) projects = projects.filter(project => project.status === state.status);
-  if (state.territory) projects = projects.filter(project => project.territory === state.territory);
+  projects = filterDocumentaryGroup(projects, state.territory);
   if (state.category) projects = projects.filter(project => project.category === state.category);
   projects.sort((a, b) =>
     STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status) ||
@@ -336,7 +336,7 @@ function listRow(project) {
   const locationQuality = project.id === "docks-zac" || project.id === "seine-zac" ? "repère de quartier" : "emplacement vérifié";
   return `<a class="project-row" href="/projets/${encodeURIComponent(project.id)}/" data-project-link="${escapeHtml(project.id)}">
     <span class="row-thumb">${visual ? `<img src="${escapeHtml(visual.src)}" alt="" loading="lazy">` : '<i aria-hidden="true"></i>'}</span>
-    <span class="row-content"><small>${escapeHtml(project.territory)}${project.lot ? ` · Lot ${escapeHtml(project.lot)}` : ""}</small><strong>${escapeHtml(project.name)}</strong><span>${escapeHtml(project.category)} · ${escapeHtml(locationQuality)}</span></span>
+    <span class="row-content"><small>${escapeHtml(documentaryGroup(project))}${project.lot ? ` · Lot ${escapeHtml(project.lot)}` : ""}</small><strong>${escapeHtml(project.name)}</strong><span>${escapeHtml(project.category)} · ${escapeHtml(locationQuality)}</span></span>
     <span class="row-status" style="--status:${statusColor(project.status)}">${escapeHtml(projectStatusLabel(project))}</span>
   </a>`;
 }
@@ -469,7 +469,7 @@ function bindEvents() {
     }
     const exploreTerritory = event.target.closest("[data-explore-territory]");
     if (exploreTerritory) {
-      state.territory = exploreTerritory.dataset.exploreTerritory;
+      state.territory = groupValue(exploreTerritory.dataset.exploreTerritory);
       $("#filter-territory").value = state.territory;
       navigate("explore");
       return;

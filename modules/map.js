@@ -1,5 +1,5 @@
-import {escapeHtml, mediaAlt, projectHref, projectStatusLabel, statusColor, statusSymbol} from "./data.js?v=872472845799";
-import {cardVisual} from "./views.js?v=872472845799";
+import {escapeHtml, mediaAlt, projectHref, projectStatusLabel, statusColor, statusSymbol} from "./data.js?v=a082920f5926";
+import {cardVisual} from "./views.js?v=a082920f5926";
 
 const qualityLabel = quality => ({
   VERIFIE: "Emplacement vérifié",
