@@ -1,9 +1,11 @@
 import {
   DATA_URL, STATUS_ORDER, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
   projectHref, projectStatusLabel, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js";
-import {ProjectMap} from "./modules/map.js";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js";
+} from "./modules/data.js?v=872472845799";
+import {syncPageHeading} from "./modules/headings.js?v=872472845799";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=872472845799";
+import {ProjectMap} from "./modules/map.js?v=872472845799";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=872472845799";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -93,7 +95,10 @@ function updateSeo(parsed, project = null) {
   setMeta('meta[property="og:title"]', seo.title);
   setMeta('meta[property="og:description"]', seo.description);
   const canonical = project && parsed.route === "project"
-    ? new URL(projectHref(project.id), CANONICAL_URL).href : CANONICAL_URL;
+    ? new URL(projectHref(project.id), CANONICAL_URL).href
+    : parsed.route === "explore" ? new URL("carte/", CANONICAL_URL).href
+    : parsed.route === "territory" ? new URL(projectHref(parsed.territory === "Seine-Liberté" ? "seine-zac" : "docks-zac"), CANONICAL_URL).href
+    : CANONICAL_URL;
   setMeta('meta[property="og:url"]', canonical);
   $('link[rel="canonical"]')?.setAttribute("href", canonical);
   setMeta('meta[name="twitter:title"]', seo.title);
@@ -102,43 +107,19 @@ function updateSeo(parsed, project = null) {
 
 
 function parseRoute() {
-  const value = location.hash.replace(/^#\/?/, "") || "accueil";
-  if (value.startsWith("fiche/")) return {route: "project", id: decodeURIComponent(value.slice(6))};
-  if (value.startsWith("projet/")) {
-    const historicalId = decodeURIComponent(value.slice(7));
-    return {route: "project", id: state.data?.retiredProjectRedirects?.[historicalId] || historicalId};
-  }
-  if (value.startsWith("territoire/")) return {route: "territory", territory: decodeURIComponent(value.slice(11))};
-  if (["carte", "projets", "explorer"].includes(value)) return {route: "explore"};
-  if (["evolutions", "actualites"].includes(value)) return {route: "updates"};
-  if (["chronologie", "timeline"].includes(value)) return {route: "timeline"};
-  if (["methode", "a-propos"].includes(value)) return {route: "method"};
-  if (["contribuer", "signalement"].includes(value)) return {route: "contribute"};
-  if (["mentions-legales", "legal"].includes(value)) return {route: "legal"};
-  if (["confidentialite", "privacy"].includes(value)) return {route: "privacy"};
-  if (["credits", "droits-images"].includes(value)) return {route: "credits"};
-  return {route: "home"};
+  return resolveRoute(location.pathname, location.hash, state.data?.retiredProjectRedirects);
 }
-
-
-function routeHash(route) {
-  return {home: "#accueil", explore: "#explorer", updates: "#evolutions", timeline: "#chronologie", method: "#a-propos", contribute: "#contribuer", legal: "#mentions-legales", privacy: "#confidentialite", credits: "#credits"}[route] || "#accueil";
-}
-
 
 function navigate(route, payload = {}) {
-  const nextHash = route === "territory"
-    ? `#territoire/${encodeURIComponent(payload.territory)}`
-    : route === "project"
-      ? `#fiche/${encodeURIComponent(payload.id)}`
-      : routeHash(route);
-  if (location.hash !== nextHash) history.pushState(null, "", nextHash);
+  const nextUrl = routeHref(route, payload, location.pathname);
+  const target = new URL(nextUrl, location.href);
+  if (location.pathname !== target.pathname || location.hash !== target.hash) history.pushState(null, "", nextUrl);
   showRoute(parseRoute());
 }
 
 
 function showRoute(parsed, options = {}) {
-  state.renderedHash = location.hash || "#accueil";
+  state.renderedHash = location.pathname + location.hash;
   state.carouselTimers.forEach(clearInterval);
   state.carouselTimers = [];
   state.slideControllers = {};
@@ -176,6 +157,7 @@ function showRoute(parsed, options = {}) {
     state.map.invalidate();
     if (options.focusSearch) setTimeout(() => $("#project-search")?.focus(), 100);
   }
+  syncPageHeading(document, parsed.route);
   updateSeo(parsed, parsed.route === "project" ? state.byId.get(parsed.id) : null);
   if (parsed.route === "home") mountHomeSlides();
   $("#main-content").focus({preventScroll: true});
@@ -470,7 +452,7 @@ function bindEvents() {
       return;
     }
     const routeButton = event.target.closest("[data-route]");
-    if (routeButton) {
+    if (routeButton && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) {
       event.preventDefault();
       const focusSearch = routeButton.hasAttribute("data-focus-search");
       const contributionProject = routeButton.dataset.contributionProject;
@@ -606,7 +588,7 @@ function bindEvents() {
     }
   });
   const syncRoute = () => {
-    const currentHash = location.hash || "#accueil";
+    const currentHash = location.pathname + location.hash;
     if (state.renderedHash !== currentHash) showRoute(parseRoute());
   };
   window.addEventListener("hashchange", syncRoute);

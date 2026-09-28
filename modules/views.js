@@ -1,7 +1,7 @@
 import {
   CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaCreditLabel, projectHref, projectStatusLabel, statusBadge,
-} from "./data.js";
+} from "./data.js?v=872472845799";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -111,7 +111,7 @@ function territoryOverview(isSeine, items, territory, presentation = {}, present
     : `<p>Les Docks réunissent plusieurs secteurs aux caractéristiques et aux stades d'aménagement différents. Certains sont déjà livrés et habités, tandis que d'autres accueillent de nouveaux chantiers ou des projets encore à l'étude.</p><p>Les plans d'ensemble permettent de comprendre l'organisation du quartier, de situer les différentes opérations et de découvrir les aménagements à venir.</p>`;
   return `<section class="reference-plan territory-overview" aria-labelledby="overview-title">
     <div><p class="eyebrow">Vue d’ensemble</p><h2 id="overview-title">${isSeine ? "Découvrir le futur quartier Seine-Liberté" : "Découvrir les Docks et leurs différents secteurs"}</h2>${content}<a class="overview-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${isSeine ? "Découvrir les projets urbains de Clichy" : "Consulter la carte officielle des Docks"} ${externalLinkIcon}</a></div>
-    <div class="overview-visual">${plans.length ? `<button class="plan-preview" type="button" data-lightbox-src="${escapeHtml(plans[0].src)}" data-lightbox-alt="Plan d’ensemble de ${escapeHtml(territory)}" data-lightbox-caption="${escapeHtml(plans[0].caption || "Plan d’ensemble")}"><img src="${escapeHtml(plans[0].src)}" alt="Plan d’ensemble de ${escapeHtml(territory)}" loading="lazy"><span>Agrandir le plan d’ensemble</span></button>${plans.length > 1 ? `<div class="plan-pager"><button type="button" data-plan-step="-1" aria-label="Plan précédent" title="Plan précédent">${chevronIcon(-1)}</button><span data-plan-count>1 / ${plans.length}</span><button type="button" data-plan-step="1" aria-label="Plan suivant" title="Plan suivant">${chevronIcon(1)}</button></div>` : ""}` : `<div class="overview-map">Plan d’ensemble à sélectionner</div>`}<a class="overview-source" href="#explorer">Voir les projets sur la carte interactive →</a></div>
+    <div class="overview-visual">${plans.length ? `<button class="plan-preview" type="button" data-lightbox-src="${escapeHtml(plans[0].src)}" data-lightbox-alt="Plan d’ensemble de ${escapeHtml(territory)}" data-lightbox-caption="${escapeHtml(plans[0].caption || "Plan d’ensemble")}"><img src="${escapeHtml(plans[0].src)}" alt="Plan d’ensemble de ${escapeHtml(territory)}" loading="lazy"><span>Agrandir le plan d’ensemble</span></button>${plans.length > 1 ? `<div class="plan-pager"><button type="button" data-plan-step="-1" aria-label="Plan précédent" title="Plan précédent">${chevronIcon(-1)}</button><span data-plan-count>1 / ${plans.length}</span><button type="button" data-plan-step="1" aria-label="Plan suivant" title="Plan suivant">${chevronIcon(1)}</button></div>` : ""}` : `<div class="overview-map">Plan d’ensemble à sélectionner</div>`}<a class="overview-source" href="/carte/" data-route="explore">Voir les projets sur la carte interactive →</a></div>
   </section>`;
 }
 
@@ -147,7 +147,7 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
     <div class="territory-hero-content">
       <button class="back-link" type="button" data-route="home">← Accueil</button>
       <p class="eyebrow">${escapeHtml(eyebrow)}</p>
-      <h1>${escapeHtml(territory)}</h1>
+      <h1 class="view-title" data-page-heading>${escapeHtml(territory)}</h1>
       <p>${escapeHtml(intro)}</p>
       <button class="button button-light" type="button" data-explore-territory="${escapeHtml(territory)}">Voir sur la carte</button>
       <dl><div><dt>${operations.length}</dt><dd>Opérations suivies</dd></div><div><dt>${current.length}</dt><dd>En cours / à venir</dd></div><div><dt>${delivered.length}</dt><dd>Opérations livrées</dd></div></dl>
@@ -284,7 +284,7 @@ export function renderProject(project) {
       <button class="back-link" type="button" data-back>← Retour</button>
       <div class="project-kicker"><span>${escapeHtml(project.territory)}</span><span>${escapeHtml(project.category)}</span></div>
       ${statusBadge(project)}
-      <h1>${escapeHtml(project.name)}</h1>
+      <h1 class="view-title" data-page-heading>${escapeHtml(project.name)}</h1>
       ${mainDate ? `<p class="project-main-date">${escapeHtml(formatEmbeddedDates(mainDate))}</p>` : ""}
     </div>
     ${hero ? `<div class="project-hero-credit">${escapeHtml(hero.caption)} · ${mediaCredit(hero)}</div>` : ""}
