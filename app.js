@@ -1,11 +1,12 @@
 import {
-  DATA_URL, STATUS_ORDER, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
-  projectHref, projectStatusLabel, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=a082920f5926";
-import {syncPageHeading} from "./modules/headings.js?v=a082920f5926";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=a082920f5926";
-import {ProjectMap} from "./modules/map.js?v=a082920f5926";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=a082920f5926";
+  DATA_URL, STATUS_ORDER, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
+  projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
+} from "./modules/data.js?v=58a1082deb0d";
+import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=58a1082deb0d";
+import {syncPageHeading} from "./modules/headings.js?v=58a1082deb0d";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=58a1082deb0d";
+import {ProjectMap} from "./modules/map.js?v=58a1082deb0d";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=58a1082deb0d";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -107,7 +108,7 @@ function updateSeo(parsed, project = null) {
 
 
 function parseRoute() {
-  return resolveRoute(location.pathname, location.hash, state.data?.retiredProjectRedirects);
+  return resolveRoute(location.pathname, location.hash, state.data?.retiredProjectRedirects, state.data?.projects.map(p => p.id));
 }
 
 function navigate(route, payload = {}) {
@@ -119,7 +120,7 @@ function navigate(route, payload = {}) {
 
 
 function showRoute(parsed, options = {}) {
-  state.renderedHash = location.pathname + location.hash;
+  state.renderedHash = location.pathname + location.search + location.hash;
   state.carouselTimers.forEach(clearInterval);
   state.carouselTimers = [];
   state.slideControllers = {};
@@ -221,7 +222,13 @@ function mountSlides(selector, keys = [], delay = 0) {
     const serial = ++paintSerial;
     const item = media[index];
     const next = new Image();
-    next.src = item.src;
+    next.src = item.displaySrc || item.src;
+    if (item.responsiveSources?.length) {
+      next.srcset = item.responsiveSources.map(source => `${source.src} ${source.width}w`).join(", ");
+      next.sizes = "100vw";
+      next.width = item.width;
+      next.height = item.height;
+    }
     next.alt = item.caption || item.projectName || "";
     next.className = "crossfade-slide";
     const show = () => {
@@ -317,7 +324,7 @@ function populateFilters() {
 function filteredProjects() {
   const query = normalize(state.search);
   let projects = state.data.projects.filter(project => {
-    if (query && !searchText(project).includes(query)) return false;
+    if (!matchesSearch(project, query)) return false;
     return true;
   });
   if (state.status) projects = projects.filter(project => project.status === state.status);
@@ -335,7 +342,7 @@ function listRow(project) {
   const visual = project.visuals[0];
   const locationQuality = project.id === "docks-zac" || project.id === "seine-zac" ? "repère de quartier" : "emplacement vérifié";
   return `<a class="project-row" href="/projets/${encodeURIComponent(project.id)}/" data-project-link="${escapeHtml(project.id)}">
-    <span class="row-thumb">${visual ? `<img src="${escapeHtml(visual.src)}" alt="" loading="lazy">` : '<i aria-hidden="true"></i>'}</span>
+    <span class="row-thumb">${visual ? `<img src="${escapeHtml(visual.thumbnail || visual.src)}" alt="" loading="lazy" decoding="async">` : '<i aria-hidden="true"></i>'}</span>
     <span class="row-content"><small>${escapeHtml(documentaryGroup(project))}${project.lot ? ` · Lot ${escapeHtml(project.lot)}` : ""}</small><strong>${escapeHtml(project.name)}</strong><span>${escapeHtml(project.category)} · ${escapeHtml(locationQuality)}</span></span>
     <span class="row-status" style="--status:${statusColor(project.status)}">${escapeHtml(projectStatusLabel(project))}</span>
   </a>`;
@@ -354,6 +361,18 @@ function updateMapLegend(projects) {
 }
 
 
+function restoreMapFilters() {
+  const choices = {};
+  for (const [field, selector] of [["status", "#filter-status"], ["territory", "#filter-territory"], ["category", "#filter-category"]]) {
+    choices[field] = [...$(selector).options].map(option => option.value);
+  }
+  Object.assign(state, readMapFilters(location.search, choices));
+  $("#project-search").value = state.search;
+  $("#filter-status").value = state.status;
+  $("#filter-territory").value = state.territory;
+  $("#filter-category").value = state.category;
+}
+
 function updateExplorer() {
   if (!state.data) return;
   const projects = filteredProjects();
@@ -365,6 +384,10 @@ function updateExplorer() {
   $("#clear-search").hidden = !state.search;
   updateMapLegend(projects);
   state.map.update(projects);
+  if (state.route === "explore") {
+    history.replaceState(null, "", mapFilterHref(state) + location.hash);
+    state.renderedHash = location.pathname + location.search + location.hash;
+  }
 }
 
 
@@ -426,7 +449,12 @@ function bindEvents() {
       state.planIndex = (state.planIndex + Number(planStep.dataset.planStep) + plans.length) % plans.length;
       const item = plans[state.planIndex], root = planStep.closest(".overview-visual");
       const button = $(".plan-preview", root), next = new Image();
-      next.src = item.src; next.alt = item.caption || "Plan d’ensemble";
+      next.src = item.displaySrc || item.src; next.alt = item.caption || "Plan d’ensemble";
+      if (item.responsiveSources?.length) {
+        next.srcset = item.responsiveSources.map(source => `${source.src} ${source.width}w`).join(", ");
+        next.sizes = "(max-width: 760px) 100vw, 720px";
+        next.width = item.width; next.height = item.height;
+      }
       next.className = "plan-crossfade";
       const show = () => {
         if (plans[state.planIndex]?.src !== item.src) return;
@@ -500,6 +528,16 @@ function bindEvents() {
   $("#filter-status").addEventListener("change", event => { state.status = event.target.value; updateExplorer(); });
   $("#filter-territory").addEventListener("change", event => { state.territory = event.target.value; updateExplorer(); });
   $("#filter-category").addEventListener("change", event => { state.category = event.target.value; updateExplorer(); });
+  $("#share-map").addEventListener("click", async () => {
+    const button = $("#share-map");
+    try {
+      await navigator.clipboard.writeText(new URL(mapFilterHref(state), location.origin).href);
+      button.textContent = "Lien copié";
+    } catch {
+      button.textContent = "Copiez le lien dans la barre d’adresse";
+    }
+    setTimeout(() => { button.textContent = "Copier le lien"; }, 3000);
+  });
   $("#fit-map").addEventListener("click", () => state.map.fit());
   $("#map-base").addEventListener("change", event => state.map.setBase(event.target.value));
   $("#timeline-territory").addEventListener("change", renderTimeline);
@@ -588,8 +626,11 @@ function bindEvents() {
     }
   });
   const syncRoute = () => {
-    const currentHash = location.pathname + location.hash;
-    if (state.renderedHash !== currentHash) showRoute(parseRoute());
+    const currentHash = location.pathname + location.search + location.hash;
+    if (state.renderedHash !== currentHash) {
+      if (parseRoute().route === "explore") restoreMapFilters();
+      showRoute(parseRoute());
+    }
   };
   window.addEventListener("hashchange", syncRoute);
   window.addEventListener("popstate", syncRoute);
@@ -608,6 +649,7 @@ async function start() {
     if (window.matchMedia("(max-width: 760px)").matches) $("#map-legend").open = false;
     if (window.matchMedia("(max-width: 760px)").matches) $("#timeline-order").value = "newest";
     populateFilters();
+    restoreMapFilters();
     $("#contribution-project").insertAdjacentHTML("beforeend", state.data.projects
       .filter(project => project.additive)
       .sort((a, b) => a.name.localeCompare(b.name, "fr"))

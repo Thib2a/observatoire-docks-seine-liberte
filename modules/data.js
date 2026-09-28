@@ -174,6 +174,12 @@ export function projectStatusLabel(project) {
   return statusLabel(project.status);
 }
 
+export function responsiveImageAttrs(visual, sizes = "(max-width: 760px) 100vw, 720px") {
+  const sources = visual?.responsiveSources || [];
+  if (!sources.length) return "";
+  return ` srcset="${escapeHtml(sources.map(item => `${item.src} ${item.width}w`).join(", "))}" sizes="${escapeHtml(sizes)}" width="${visual.width}" height="${visual.height}"`;
+}
+
 export function documentaryGroup(project) {
   return project.documentaryGroup || (project.id?.startsWith("abords-") ? "Abords" : groupValue(project.territory));
 }
@@ -187,11 +193,27 @@ export function filterDocumentaryGroup(projects, value) {
 }
 
 export function searchText(project) {
+  const address = normalize(project.locationText || project.map?.address || "");
+  const districtOnlyAddress = /^\d+[a-z]? (?:dhalenne|parc|ardoin|rer)/.test(address);
   return normalize([
     project.name, project.officialName, project.lot, project.category, project.subcategory,
-    documentaryGroup(project), ...(project.secondaryTerritories || []), project.territory, project.zone, project.sector, project.commune, ...project.aliases,
+    documentaryGroup(project), ...(project.secondaryTerritories || []), project.territory,
+    project.commune, ...(project.aliases || []), districtOnlyAddress ? "" : address,
   ].join(" "));
 }
+
+export function matchesSearch(project, query) {
+  const text = normalize(query);
+  if (!text) return true;
+  if (/^secteur\s+/.test(text)) {
+    const target = text.replace(/^secteur\s+/, "");
+    const sector = normalize(project.sector || "");
+    return target.split(" ").every(word => sector.split(" ").some(value => value.startsWith(word)));
+  }
+  const words = searchText(project).split(" ");
+  return text.split(" ").every(word => words.some(value => value.startsWith(word)));
+}
+
 
 let publicProjectSlugs = {};
 

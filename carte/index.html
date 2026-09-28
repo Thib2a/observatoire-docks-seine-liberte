@@ -30,7 +30,7 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" sizes="180x180">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=a082920f5926">
+  <link rel="stylesheet" href="styles.css?v=58a1082deb0d">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -144,7 +144,7 @@
         <section><h2>Consulter les fiches des projets</h2>
         <p>Activez JavaScript pour utiliser la carte et les filtres, ou consultez directement les fiches ci-dessous.</p>
         <ul><li><a href="/projets/docks-b5d/">22 rue des Bateliers — Îlot B5d</a> — Docks de Saint-Ouen</li>
-<li><a href="/projets/docks-75-rue-albert-dhalenne/">75 rue Albert-Dhalenne — Immeuble de logements</a> — Docks de Saint-Ouen</li>
+<li><a href="/projets/abords-75-rue-albert-dhalenne/">75 rue Albert-Dhalenne — Immeuble de logements</a> — Docks de Saint-Ouen</li>
 <li><a href="/projets/seine-aire-accueil/">Aire d’accueil des gens du voyage — Relocalisation</a> — Seine-Liberté</li>
 <li><a href="/projets/docks-alstom-transport/">Alstom Transport</a> — Docks de Saint-Ouen</li>
 <li><a href="/projets/seine-depollution-total/">Ancien dépôt TotalEnergies — Dépollution et reconversion pour le programme BF3</a> — Seine-Liberté</li>
@@ -152,7 +152,7 @@
 <li><a href="/projets/docks-ilot-b1b1/">Avant Seine – Côté Patio (Îlot B1b1)</a> — Docks de Saint-Ouen</li>
 <li><a href="/projets/docks-b4b/">Avant Seine – Côté Ville (Îlot B4b)</a> — Docks de Saint-Ouen</li>
 <li><a href="/projets/infra-avenue-liberte/">Avenue de la Liberté — Réaménagement départemental</a> — Seine-Liberté</li>
-<li><a href="/projets/repere-belle-allure/">Belle Allure</a> — Docks de Saint-Ouen</li>
+<li><a href="/projets/abords-belle-allure/">Belle Allure</a> — Docks de Saint-Ouen</li>
 <li><a href="/projets/infra-berges-rd1/">Berges de Seine — Séquence Saint-Ouen, RD1 et Syctom</a> — Docks de Saint-Ouen</li>
 <li><a href="/projets/seine-berges/">Berges de Seine — Séquence Seine-Liberté</a> — Seine-Liberté</li>
 <li><a href="/projets/infra-victor-hugo/">Boulevard Victor-Hugo — Requalification</a> — Docks de Saint-Ouen</li>
@@ -201,7 +201,7 @@
 <li><a href="/projets/docks-pavillons-ingenieurs/">Pavillon des Docks</a> — Docks de Saint-Ouen</li>
 <li><a href="/projets/infra-place-roguet/">Place Général-Roguet — Transformation du carrefour</a> — Seine-Liberté</li>
 <li><a href="/projets/docks-enedis/">Poste électrique RTE–Enedis — Reconstruction des installations</a> — Docks de Saint-Ouen</li>
-<li><a href="/projets/abords-cromwell/">Projet Cromwell — étude de reconversion</a> — Docks de Saint-Ouen</li>
+<li><a href="/projets/docks-cromwell/">Projet Cromwell — étude de reconversion</a> — Docks de Saint-Ouen</li>
 <li><a href="/projets/abords-prysm/">PRYSM — Abords ZAC Seine Liberté</a> — Seine-Liberté</li>
 <li><a href="/projets/infra-pole-bus/">Pôle bus de la gare Saint-Ouen</a> — Docks de Saint-Ouen</li>
 <li><a href="/projets/docks-cpcu-requalification/">Pôle énergie CPCU</a> — Docks de Saint-Ouen</li>
@@ -280,7 +280,7 @@
         <aside class="explorer-panel" aria-label="Recherche et résultats">
           <div class="search-box">
             <label for="project-search">Rechercher</label>
-            <div><input id="project-search" type="search" placeholder="Nom, lot, secteur…" autocomplete="off"><button id="clear-search" type="button" aria-label="Effacer la recherche" hidden>×</button></div>
+            <div><input id="project-search" type="search" placeholder="Nom, lot, adresse… ou secteur 1" autocomplete="off"><button id="clear-search" type="button" aria-label="Effacer la recherche" hidden>×</button></div>
           </div>
           <div class="filters" aria-label="Filtres des projets">
             <select id="filter-status" aria-label="Filtrer par statut"><option value="">Tous les statuts</option></select>
@@ -292,7 +292,7 @@
           <div class="empty-state" id="empty-state" hidden><strong>Aucun projet trouvé</strong><p>Modifiez les filtres ou essayez un autre terme.</p></div>
         </aside>
         <section class="map-column" aria-label="Carte des projets">
-          <div class="map-toolbar"><div class="map-toolbar-actions"><label for="map-base">Fond de carte</label><select id="map-base" aria-label="Choisir le fond de carte"><option value="plan">Plan</option><option value="aerial">Vue aérienne</option></select><button type="button" id="fit-map">Recentrer</button></div></div>
+          <div class="map-toolbar"><div class="map-toolbar-actions"><label for="map-base">Fond de carte</label><select id="map-base" aria-label="Choisir le fond de carte"><option value="plan">Plan</option><option value="aerial">Vue aérienne</option></select><button type="button" id="fit-map">Recentrer</button><button type="button" id="share-map" aria-live="polite">Copier le lien</button></div></div>
           <div id="map" class="map" role="application" aria-label="Carte interactive des projets géolocalisés"></div>
           <details class="map-legend" id="map-legend" open>
             <summary>Légende des statuts</summary>
@@ -616,13 +616,13 @@
       <button type="button" data-route="credits">Crédits & droits</button>
     </nav>
     <!-- The preparation batch updates this date after the publication files are synchronized. -->
-    <span>Site actualisé le <time datetime="2026-09-28">28 septembre 2026</time><br>Dernière revue des données : <time id="footer-date" datetime="2026-09-27">27 septembre 2026</time></span>
+    <span>Site actualisé le <time datetime="2026-09-29">29 septembre 2026</time><br>Dernière revue des données : <time id="footer-date" datetime="2026-09-27">27 septembre 2026</time></span>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "89b7f0d07c1344818cfa73b0e58144d9"}'></script>
   <!-- End Cloudflare Web Analytics -->
-  <script type="module" src="app.js?v=a082920f5926"></script>
+  <script type="module" src="app.js?v=58a1082deb0d"></script>
 </body>
 </html>

@@ -7,6 +7,12 @@
     <loc>https://observatoire-docks-seine.org/carte/</loc>
   </url>
   <url>
+    <loc>https://observatoire-docks-seine.org/projets/abords-75-rue-albert-dhalenne/</loc>
+  </url>
+  <url>
+    <loc>https://observatoire-docks-seine.org/projets/abords-belle-allure/</loc>
+  </url>
+  <url>
     <loc>https://observatoire-docks-seine.org/projets/abords-cap-west/</loc>
   </url>
   <url>
@@ -14,9 +20,6 @@
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/abords-chu/</loc>
-  </url>
-  <url>
-    <loc>https://observatoire-docks-seine.org/projets/abords-cromwell/</loc>
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/abords-landy-dhalenne/</loc>
@@ -29,9 +32,6 @@
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/abords-zenith/</loc>
-  </url>
-  <url>
-    <loc>https://observatoire-docks-seine.org/projets/docks-75-rue-albert-dhalenne/</loc>
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/docks-a14/</loc>
@@ -68,6 +68,9 @@
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/docks-cpcu-requalification/</loc>
+  </url>
+  <url>
+    <loc>https://observatoire-docks-seine.org/projets/docks-cromwell/</loc>
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/docks-d1/</loc>
@@ -350,9 +353,6 @@
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/infra-voie-nord-sud/</loc>
-  </url>
-  <url>
-    <loc>https://observatoire-docks-seine.org/projets/repere-belle-allure/</loc>
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/seine-aire-accueil/</loc>

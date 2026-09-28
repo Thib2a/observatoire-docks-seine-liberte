@@ -1,8 +1,11 @@
-export function resolveRoute(pathname, hash, redirects = {}) {
+export function resolveRoute(pathname, hash, redirects = {}, currentIds = []) {
   const fragment = hash.replace(/^#\/?/, "");
   const value = (!fragment || fragment === "main-content")
     ? (/^\/carte\/?$/.test(pathname) ? "explorer" : "accueil") : fragment;
-  if (value.startsWith("fiche/")) return {route: "project", id: decodeURIComponent(value.slice(6))};
+  if (value.startsWith("fiche/")) {
+    const id = decodeURIComponent(value.slice(6));
+    return {route: "project", id: currentIds.includes(id) ? id : (redirects[id] || id)};
+  }
   if (value.startsWith("projet/")) {
     const id = decodeURIComponent(value.slice(7));
     return {route: "project", id: redirects[id] || id};
