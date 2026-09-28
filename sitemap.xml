@@ -205,7 +205,7 @@
     <loc>https://observatoire-docks-seine.org/projets/docks-r10b/</loc>
   </url>
   <url>
-    <loc>https://observatoire-docks-seine.org/projets/docks-r12b/</loc>
+    <loc>https://observatoire-docks-seine.org/projets/docks-r12ab/</loc>
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/docks-r12cd/</loc>
@@ -319,9 +319,6 @@
     <loc>https://observatoire-docks-seine.org/projets/infra-passerelle-seine/</loc>
   </url>
   <url>
-    <loc>https://observatoire-docks-seine.org/projets/infra-place-entree-quartier/</loc>
-  </url>
-  <url>
     <loc>https://observatoire-docks-seine.org/projets/infra-place-roguet/</loc>
   </url>
   <url>
@@ -344,6 +341,9 @@
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/infra-victor-hugo/</loc>
+  </url>
+  <url>
+    <loc>https://observatoire-docks-seine.org/projets/infra-villa-urbaine-entree-quartier/</loc>
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/infra-voie-nord-sud/</loc>
@@ -370,25 +370,25 @@
     <loc>https://observatoire-docks-seine.org/projets/seine-ecole/</loc>
   </url>
   <url>
-    <loc>https://observatoire-docks-seine.org/projets/seine-liberte-if/</loc>
+    <loc>https://observatoire-docks-seine.org/projets/seine-liberte-lot-c/</loc>
   </url>
   <url>
-    <loc>https://observatoire-docks-seine.org/projets/seine-lot-a/</loc>
+    <loc>https://observatoire-docks-seine.org/projets/seine-liberte-lot-f/</loc>
   </url>
   <url>
-    <loc>https://observatoire-docks-seine.org/projets/seine-lot-c/</loc>
+    <loc>https://observatoire-docks-seine.org/projets/seine-liberte-lot-i/</loc>
   </url>
   <url>
-    <loc>https://observatoire-docks-seine.org/projets/seine-lot-d-e/</loc>
+    <loc>https://observatoire-docks-seine.org/projets/seine-lot-a1/</loc>
   </url>
   <url>
-    <loc>https://observatoire-docks-seine.org/projets/seine-lot-f/</loc>
+    <loc>https://observatoire-docks-seine.org/projets/seine-lot-a2/</loc>
   </url>
   <url>
-    <loc>https://observatoire-docks-seine.org/projets/seine-lot-g/</loc>
+    <loc>https://observatoire-docks-seine.org/projets/seine-lot-b/</loc>
   </url>
   <url>
-    <loc>https://observatoire-docks-seine.org/projets/seine-lot-i/</loc>
+    <loc>https://observatoire-docks-seine.org/projets/seine-parc-berges/</loc>
   </url>
   <url>
     <loc>https://observatoire-docks-seine.org/projets/seine-parc-nord/</loc>

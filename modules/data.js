@@ -151,8 +151,10 @@ export function searchText(project) {
   ].join(" "));
 }
 
+let publicProjectSlugs = {};
+
 export function projectHref(projectId) {
-  return `/projets/${encodeURIComponent(projectId)}/`;
+  return `/projets/${encodeURIComponent(publicProjectSlugs[projectId] || projectId)}/`;
 }
 
 export function statusBadge(project) {
@@ -171,5 +173,7 @@ export function mediaAlt(project, visual) {
 export async function loadData() {
   const response = await fetch(DATA_URL, {cache: "no-store"});
   if (!response.ok) throw new Error(`Chargement impossible (${response.status})`);
-  return response.json();
+  const payload = await response.json();
+  publicProjectSlugs = payload.projectPublicSlugs || {};
+  return payload;
 }

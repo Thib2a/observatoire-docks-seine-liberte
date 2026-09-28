@@ -1,6 +1,6 @@
 import {
   DATA_URL, STATUS_ORDER, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
-  projectStatusLabel, searchText, statusColor, statusLabel, statusSymbol,
+  projectHref, projectStatusLabel, searchText, statusColor, statusLabel, statusSymbol,
 } from "./modules/data.js";
 import {ProjectMap} from "./modules/map.js";
 import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js";
@@ -92,7 +92,10 @@ function updateSeo(parsed, project = null) {
   setMeta('meta[name="description"]', seo.description);
   setMeta('meta[property="og:title"]', seo.title);
   setMeta('meta[property="og:description"]', seo.description);
-  setMeta('meta[property="og:url"]', CANONICAL_URL);
+  const canonical = project && parsed.route === "project"
+    ? new URL(projectHref(project.id), CANONICAL_URL).href : CANONICAL_URL;
+  setMeta('meta[property="og:url"]', canonical);
+  $('link[rel="canonical"]')?.setAttribute("href", canonical);
   setMeta('meta[name="twitter:title"]', seo.title);
   setMeta('meta[name="twitter:description"]', seo.description);
 }
@@ -100,7 +103,11 @@ function updateSeo(parsed, project = null) {
 
 function parseRoute() {
   const value = location.hash.replace(/^#\/?/, "") || "accueil";
-  if (value.startsWith("projet/")) return {route: "project", id: decodeURIComponent(value.slice(7))};
+  if (value.startsWith("fiche/")) return {route: "project", id: decodeURIComponent(value.slice(6))};
+  if (value.startsWith("projet/")) {
+    const historicalId = decodeURIComponent(value.slice(7));
+    return {route: "project", id: state.data?.retiredProjectRedirects?.[historicalId] || historicalId};
+  }
   if (value.startsWith("territoire/")) return {route: "territory", territory: decodeURIComponent(value.slice(11))};
   if (["carte", "projets", "explorer"].includes(value)) return {route: "explore"};
   if (["evolutions", "actualites"].includes(value)) return {route: "updates"};
@@ -123,7 +130,7 @@ function navigate(route, payload = {}) {
   const nextHash = route === "territory"
     ? `#territoire/${encodeURIComponent(payload.territory)}`
     : route === "project"
-      ? `#projet/${encodeURIComponent(payload.id)}`
+      ? `#fiche/${encodeURIComponent(payload.id)}`
       : routeHash(route);
   if (location.hash !== nextHash) history.pushState(null, "", nextHash);
   showRoute(parseRoute());
@@ -391,6 +398,27 @@ function showLightboxItem(index) {
   $$("[data-lightbox-step]").forEach(button => { button.hidden = items.length < 2; });
 }
 
+function normalizeSourceInput(input) {
+  const value = input.value.trim();
+  input.setCustomValidity("");
+  if (!value) {
+    input.value = "";
+    return;
+  }
+  const candidate = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  try {
+    const url = new URL(candidate);
+    const labels = url.hostname.split(".");
+    if (!/^https?:$/.test(url.protocol) || url.username || url.password || /\s/.test(value)
+      || labels.length < 2 || !labels.every(label => /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i.test(label))) {
+      throw new Error("Invalid source URL");
+    }
+    input.value = candidate;
+  } catch {
+    input.setCustomValidity("Indiquez un lien valide, par exemple exemple.fr/page ou https://exemple.fr/page.");
+  }
+}
+
 function bindEvents() {
   document.addEventListener("click", event => {
     const slideStep = event.target.closest("[data-carousel-step]");
@@ -529,9 +557,13 @@ function bindEvents() {
     if (rights.hidden) rights.querySelector("select").value = "";
   };
   $("#contribution-reason").addEventListener("change", updateContributionFields);
+  const sourceInput = $('#contribution-form input[name="source"]');
+  sourceInput.addEventListener("input", () => sourceInput.setCustomValidity(""));
+  sourceInput.addEventListener("blur", () => normalizeSourceInput(sourceInput));
   $("#contribution-form").addEventListener("submit", async event => {
     event.preventDefault();
     const form = event.currentTarget;
+    normalizeSourceInput(sourceInput);
     if (!form.reportValidity()) return;
     const values = new FormData(form);
     const projectSelect = $("#contribution-project");
@@ -565,7 +597,7 @@ function bindEvents() {
       success.scrollIntoView({behavior: "smooth", block: "nearest"});
     } catch (error) {
       console.error(error);
-      $("#form-error-detail").textContent = error.message || "Veuillez réessayer dans quelques instants ou utiliser l’adresse de contact indiquée dans les mentions légales.";
+      $("#form-error-detail").textContent = error.message || "Veuillez réessayer dans quelques instants via le formulaire Contact & signalements.";
       failure.hidden = false;
       failure.scrollIntoView({behavior: "smooth", block: "nearest"});
     } finally {
