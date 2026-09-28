@@ -1,53 +1,63 @@
-# Observatoire des Docks de Saint-Ouen & de Seine-Liberté
+# Observatoire Docks & Seine-Liberté
 
-### Suivre les transformations urbaines, comprendre les projets et découvrir les quartiers de demain.
+Un observatoire citoyen et indépendant pour comprendre et suivre les
+transformations des **Docks de Saint-Ouen**, de **Seine-Liberté à Clichy**
+et de certains projets situés à leurs **abords immédiats**.
 
-L'Observatoire est une initiative citoyenne indépendante consacrée aux transformations des **Docks de Saint-Ouen-sur-Seine** et de la **ZAC Seine-Liberté à Clichy**, aux portes de Paris.
+**[Consulter le site](https://observatoire-docks-seine.org/)**
 
-Il rassemble dans une même interface les informations disponibles sur les opérations immobilières, les équipements, les espaces publics, les infrastructures et la vie de ces deux territoires.
+## Explorer les transformations
 
-Sa consultation est libre et gratuite.
+La consultation est libre et gratuite. Le site propose une carte avec recherche
+et filtres, des fiches de projets, des photographies, perspectives et plans,
+des documents, une chronologie et des actualités avec leurs sources disponibles.
+Chaque fiche dispose également d'une page HTML dédiée.
 
-**[Découvrir l'Observatoire](https://observatoire-docks-seine.org/)**
+La **V1.2** rassemble **132 fiches publiques : 130 opérations et 2 repères de
+quartier**. Il s'agit du périmètre de cette version, qui pourra évoluer.
+La revue humaine complète est terminée ; la préparation technique de la BÊTA
+ne préjuge pas de la validation finale des essais en ligne.
 
-## Contenu
+## Une démarche documentaire
 
-- une carte interactive avec recherche et filtres ;
-- 132 fiches détaillées et cartographiées ;
-- des photographies, perspectives, plans et documents ;
-- des actualités et des chronologies ;
-- les sources et crédits disponibles pour chaque opération.
+L'Observatoire rapproche des informations dispersées entre collectivités,
+aménageurs, architectes, promoteurs et autres sources. Les notices, crédits,
+liens et dates permettent de retrouver leur provenance. Les informations
+peuvent rester incomplètes ou évoluer ; une échéance annoncée n'est pas une
+garantie de livraison.
 
-Chaque fiche dispose également d'une page HTML dédiée, reliée à la carte interactive.
+Le projet ne constitue pas un site officiel et ne représente pas les acteurs
+des opérations présentées. Il ne promet pas de mises à jour automatiques.
 
-## Chiffres de la V1.2
+## Des sources au site public
 
-| Indicateur | Nombre |
-| --- | ---: |
-| Territoires suivis | 2 |
-| Opérations suivies | 130 |
-| Repères de quartier | 2 |
-| Fiches publiques et points cartographiés | 132 |
-| Fiches avec au moins un visuel | 132 |
+La base canonique conserve les objets documentaires et leur historique.
+Une couche de publication porte les choix éditoriaux validés.
+Un générateur produit ensuite les données publiques et les pages du site.
 
-Les 132 fiches comprennent 130 opérations et deux repères de quartier. Leurs positions ont été validées humainement. La dernière revue humaine complète date du 27 septembre 2026.
+Des contrôles vérifient notamment les identifiants, ressources, liens, positions
+validées et cohérence des pages générées. Les anciennes revues sont conservées
+pour traçabilité, mais ne sont plus rejouées pendant la génération. Les notes
+internes sont exclues de la distribution publique.
 
-## Projet indépendant et participatif
+La préparation et la validation précèdent la synchronisation locale du paquet.
+La publication finale reste manuelle.
 
-L'Observatoire est développé indépendamment des collectivités, aménageurs, promoteurs et autres acteurs des opérations présentées. Il ne constitue pas une communication officielle.
+## Contribuer ou signaler
 
-Les informations sont regroupées, recoupées et présentées avec leurs sources lorsqu'elles sont disponibles. Certaines données peuvent évoluer, rester incomplètes ou différer selon les documents.
+Une précision, une erreur, une source ou une photographie à proposer, ou une
+demande de retrait : utiliser le formulaire
+[Contact & signalements](https://observatoire-docks-seine.org/#contribuer).
+Il accepte des messages et liens, pas des pièces jointes directes.
+Les contributions sont examinées avant une éventuelle intégration.
 
-Le formulaire de signalement du site permet d'envoyer un message et des liens vers une source, un document ou une photographie. Il ne permet pas l'envoi direct de pièces jointes. Chaque contribution est examinée avant une éventuelle intégration.
+## Crédits et informations
 
-## Évolutions
+Les médias et documents peuvent appartenir à leurs auteurs ou ayants droit.
+Un crédit ou un lien source ne constitue pas une licence de réutilisation ;
+la présence d'un fichier dans ce dépôt ne le rend pas libre de droits.
 
-**Version préparée : V1.2 — 27 septembre 2026**
-
-La V1.2 rassemble 132 fiches, dont quatre nouvelles opérations dans les abords, avec leurs sources, documents, visuels et calendriers revus. Aucun rythme de mise à jour automatique ou mensuel n'est promis.
-
-## Crédits et droits
-
-Les photographies, illustrations, perspectives, plans, cartes et documents présentés peuvent appartenir à leurs auteurs, éditeurs ou ayants droit respectifs. Leur présence sur le site ou dans ce dépôt n'implique pas qu'ils soient libres de réutilisation.
-
-Les sources et crédits sont indiqués dans la mesure où ils sont connus. Pour toute question relative à un contenu, à son attribution ou à son retrait, utiliser les coordonnées disponibles sur le site.
+Consulter [À propos](https://observatoire-docks-seine.org/#a-propos),
+les [crédits](https://observatoire-docks-seine.org/#credits),
+les [mentions légales](https://observatoire-docks-seine.org/#mentions-legales)
+et la [confidentialité](https://observatoire-docks-seine.org/#confidentialite).
