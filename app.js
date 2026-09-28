@@ -8,8 +8,8 @@ import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTer
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
 const CANONICAL_URL = "https://observatoire-docks-seine.org/";
-const HOME_TITLE = "Observatoire des Docks de Saint-Ouen & Seine-Liberté à Clichy";
-const HOME_DESCRIPTION = "Explorez les transformations des Docks de Saint-Ouen, de Seine-Liberté à Clichy et de leurs abords immédiats : projets, chantiers, plans et actualités.";
+const HOME_TITLE = "Docks de Saint-Ouen & ZAC Seine-Liberté à Clichy | Observatoire";
+const HOME_DESCRIPTION = "Explorez les transformations des Docks de Saint-Ouen, de la ZAC Seine-Liberté à Clichy et de leurs abords immédiats : projets, chantiers, plans et actualités.";
 const ROUTE_SEO = {
   home: {title: HOME_TITLE, description: HOME_DESCRIPTION},
   explore: {
