@@ -35,6 +35,7 @@ img { display: block; max-width: 100%; }
 .brand > span:last-child { display: grid; line-height: 1.08; }
 .brand strong { text-transform: uppercase; letter-spacing: .15em; font-size: 12px; }
 .brand small { margin-top: 4px; color: var(--muted); font-size: 12px; }
+.brand-icon { display: block; flex: none; width: 32px; height: 32px; border-radius: 7px; }
 .brand-mark { display: inline-flex; align-items: flex-end; width: 32px; height: 32px; gap: 3px; padding: 5px; color: currentColor; }
 .brand-mark i { display: block; width: 6px; background: currentColor; border-radius: 6px 6px 2px 2px; }
 .brand-mark i:nth-child(1) { height: 12px; }
@@ -249,6 +250,12 @@ img { display: block; max-width: 100%; }
 .component-list a { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
 .component-list p { margin: 0 0 8px; }
 .component-list small, .gallery-item figcaption small { display: block; color: var(--muted); }
+.related-groups { min-width: 0; }
+.related-group { margin-bottom: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
+.related-group summary { padding: 16px 18px; cursor: pointer; font-weight: 750; }
+.related-group summary span { margin-left: 8px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.related-group .component-list { padding: 0 12px 12px; }
+.related-group summary:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
 .project-at-glance { overflow: hidden; border: 1px solid var(--line); border-radius: 19px; background: var(--white); }
 .project-at-glance div { display: grid; padding: 18px 20px; border-bottom: 1px solid var(--line); }
 .project-at-glance div:last-child { border-bottom: 0; }
@@ -811,6 +818,7 @@ img { display: block; max-width: 100%; }
 .static-related { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 .static-related li { display: grid; gap: 5px; padding: 16px; border: 1px solid var(--line); background: var(--white); }
 .static-related a { color: var(--green); font-weight: 750; }
+.static-section .related-group .static-related { padding: 0 12px 12px; }
 .static-actions { margin-top: 90px; padding: 42px; color: white; background: var(--green); }
 .static-actions p { max-width: 720px; color: rgba(255,255,255,.74); }
 .static-actions > div { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }

@@ -1,12 +1,12 @@
 import {
   DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
   projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=e94a2730f563";
-import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=e94a2730f563";
-import {syncPageHeading} from "./modules/headings.js?v=e94a2730f563";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=e94a2730f563";
-import {ProjectMap} from "./modules/map.js?v=e94a2730f563";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=e94a2730f563";
+} from "./modules/data.js?v=6558737ca271";
+import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=6558737ca271";
+import {syncPageHeading} from "./modules/headings.js?v=6558737ca271";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=6558737ca271";
+import {ProjectMap} from "./modules/map.js?v=6558737ca271";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=6558737ca271";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -162,7 +162,7 @@ function showRoute(parsed, options = {}) {
       else navigate("explore");
       return;
     }
-    $("#project-content").innerHTML = renderProject(project);
+    $("#project-content").innerHTML = renderProject(project, state.byId);
   } else if (parsed.route === "explore") {
     updateExplorer({preserveView: Boolean(options.restore)});
     state.map.invalidate();
@@ -219,7 +219,8 @@ function renderHome() {
   const featured = featuredProjects();
   $("#featured-projects").innerHTML = ["Docks de Saint-Ouen", "Seine-Liberté"].map(territory => {
     const group = featured.filter(project => project.territory === territory);
-    return `<section class="feature-territory"><h3>${escapeHtml(territory)}</h3><div class="feature-rotator">${group.map((project, index) => `<div class="feature-slide ${index === 0 ? "is-active" : ""}" ${index ? 'aria-hidden="true" inert' : ""}>${projectCard(project)}</div>`).join("")}</div><div class="feature-controls"><button type="button" data-feature-step="-1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet précédent de ${escapeHtml(territory)}">${chevronIcon(-1)}</button><span>1 / ${group.length}</span><button type="button" data-feature-step="1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet suivant de ${escapeHtml(territory)}">${chevronIcon(1)}</button></div></section>`;
+    const heading = territory === "Seine-Liberté" ? "ZAC Seine-Liberté à Clichy" : "ZAC des Docks de Saint-Ouen";
+    return `<section class="feature-territory"><h3>${escapeHtml(heading)}</h3><div class="feature-rotator">${group.map((project, index) => `<div class="feature-slide ${index === 0 ? "is-active" : ""}" ${index ? 'aria-hidden="true" inert' : ""}>${projectCard(project)}</div>`).join("")}</div><div class="feature-controls"><button type="button" data-feature-step="-1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet précédent de ${escapeHtml(territory)}">${chevronIcon(-1)}</button><span>1 / ${group.length}</span><button type="button" data-feature-step="1" data-feature-territory="${escapeHtml(territory)}" aria-label="Projet suivant de ${escapeHtml(territory)}">${chevronIcon(1)}</button></div></section>`;
   }).join("");
 
   const updates = state.data.territoryNews.filter(update => state.byId.get(update.projectId)?.readiness !== "NON_PRET");

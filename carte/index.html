@@ -33,7 +33,7 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" sizes="180x180">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=e94a2730f563">
+  <link rel="stylesheet" href="styles.css?v=6558737ca271">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -52,7 +52,7 @@
 
   <header class="site-header" id="site-header">
     <a class="brand" href="/" data-route="home" aria-label="Accueil de l’Observatoire">
-      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <img class="brand-icon" src="/assets/favicon.svg" alt="" width="32" height="32" aria-hidden="true">
       <span><strong>Observatoire</strong><small>Docks & Seine-Liberté</small></span>
     </a>
     <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
@@ -140,7 +140,7 @@
       <header class="page-intro compact-intro">
         <p class="eyebrow">Carte & projets</p>
         <h1 class="view-title" data-page-heading>Explorer les transformations</h1>
-        <p>Retrouvez les projets des Docks de Saint-Ouen, de la ZAC Seine-Liberté à Clichy et de leurs abords immédiats sur une carte interactive. Recherchez une opération, découvrez son emplacement et consultez sa fiche pour connaître son avancement, ses caractéristiques, ses visuels et les sources disponibles.</p>
+        <p>Retrouvez les projets de la ZAC des Docks de Saint-Ouen, de la ZAC Seine-Liberté à Clichy et de leurs abords immédiats sur une carte interactive. Recherchez une opération, découvrez son emplacement et consultez sa fiche pour connaître son avancement, ses caractéristiques, ses visuels, ses documents et les sources disponibles.</p>
       </header>
       <noscript>
         <style>#loading-screen { display: none; }</style>
@@ -283,7 +283,7 @@
         <aside class="explorer-panel" aria-label="Recherche et résultats">
           <div class="search-box">
             <label for="project-search">Rechercher</label>
-            <div><input id="project-search" type="search" placeholder="Nom, lot, adresse… ou secteur 1" autocomplete="off"><button id="clear-search" type="button" aria-label="Effacer la recherche" hidden>×</button></div>
+            <div><input id="project-search" type="search" placeholder="Nom de projet, lot ou adresse" autocomplete="off"><button id="clear-search" type="button" aria-label="Effacer la recherche" hidden>×</button></div>
           </div>
           <div class="filters" aria-label="Filtres des projets">
             <select id="filter-status" aria-label="Filtrer par statut"><option value="">Tous les statuts</option></select>
@@ -606,7 +606,7 @@
     <figure><img id="lightbox-image" alt=""><figcaption aria-live="polite"><span id="lightbox-caption"></span><span id="lightbox-count"></span></figcaption></figure>
   </dialog>
 
-  <div class="loading-screen" id="loading-screen" role="status"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><p>Ouverture des quartiers…</p></div>
+  <div class="loading-screen" id="loading-screen" role="status"><img class="brand-icon" src="/assets/favicon.svg" alt="" width="32" height="32" aria-hidden="true"><p>Ouverture des quartiers…</p></div>
     <div class="fatal-error" id="fatal-error" hidden><strong>Impossible de charger les fiches.</strong><p>Actualisez la page. Si le problème persiste, utilisez le contact indiqué dans les mentions légales.</p></div>
 
   <footer class="site-footer">
@@ -626,6 +626,6 @@
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "89b7f0d07c1344818cfa73b0e58144d9"}'></script>
   <!-- End Cloudflare Web Analytics -->
-  <script type="module" src="app.js?v=e94a2730f563"></script>
+  <script type="module" src="app.js?v=6558737ca271"></script>
 </body>
 </html>

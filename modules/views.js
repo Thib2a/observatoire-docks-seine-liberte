@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaCreditLabel, projectHref, projectStatusLabel, statusBadge,
-} from "./data.js?v=e94a2730f563";
+} from "./data.js?v=6558737ca271";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -215,7 +215,35 @@ function timelineItems(project) {
 }
 
 
-export function renderProject(project) {
+export function groupTerritoryRelations(project, projectsById = new Map()) {
+  const groups = new Map();
+  for (const related of project.relatedProjects || []) {
+    const target = projectsById.get(related.id);
+    let label = "Autres opérations liées";
+    if (project.projectType === "ENSEMBLE") {
+      if (target?.documentaryGroup === "Abords") {
+        label = "Projets des abords";
+      } else if (project.id === "seine-zac") {
+        label = "Opérations de Seine-Liberté et aménagements liés";
+      } else if (["infra-passerelle-seine", "infra-pole-bus"].includes(related.id)) {
+        label = target?.sector || "Aménagements en lien";
+      } else if (related.relation === "Comprend") {
+        label = target?.sector || (related.id === "infra-passerelle-college"
+          ? projectsById.get("docks-m8")?.sector : "") || "Autres opérations des Docks";
+      } else {
+        label = "Aménagements en lien";
+      }
+    }
+    if (!groups.has(label)) groups.set(label, []);
+    groups.get(label).push(related);
+  }
+  return [...groups].sort(([a], [b]) => {
+    const rank = label => label === "Projets des abords" ? 2 : label === "Aménagements en lien" ? 1 : 0;
+    return rank(a) - rank(b) || a.localeCompare(b, "fr", {numeric: true});
+  });
+}
+
+export function renderProject(project, projectsById = new Map()) {
   const hero = project.visuals.find(item => item.role === "HERO") || project.visuals[0];
   const seenVisuals = new Set();
   const gallery = project.visuals.filter(item => {
@@ -272,9 +300,12 @@ export function renderProject(project) {
       ${project.links.map(link => `<a href="${escapeHtml(safeLinkUrl(link.url))}" target="_blank" rel="noopener"><span>${escapeHtml(link.type)}</span><strong>${escapeHtml(link.label)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}</div>
     ${project.sources.length > 5 ? `<button type="button" class="button source-more" data-source-more>Voir les ${project.sources.length - 5} autres sources</button>` : ""}
   </section>` : "";
+  const relatedCard = related => `<article><small>${escapeHtml(related.relation)}</small><strong><a href="${projectHref(related.id)}" data-project-link="${escapeHtml(related.id)}">${escapeHtml(related.name)} ${externalLinkIcon}</a></strong></article>`;
   const componentsSection = project.relatedProjects?.length ? `<section class="detail-section components-section">
-    <div class="detail-heading"><p class="eyebrow">Pour comprendre ce projet</p><h2>Éléments liés</h2></div>
-    <div class="component-list">${project.relatedProjects.map(related => `<article><small>${escapeHtml(related.relation)}</small><strong><a href="${projectHref(related.id)}" data-project-link="${escapeHtml(related.id)}">${escapeHtml(related.name)} ${externalLinkIcon}</a></strong></article>`).join("")}</div>
+    <div class="detail-heading"><p class="eyebrow">Pour explorer les projets</p><h2>Opérations liées</h2></div>
+    ${project.projectType === "ENSEMBLE"
+      ? `<div class="related-groups">${groupTerritoryRelations(project, projectsById).map(([label, related]) => `<details class="related-group"><summary>${escapeHtml(label)} <span>${related.length}</span></summary><div class="component-list">${related.map(relatedCard).join("")}</div></details>`).join("")}</div>`
+      : `<div class="component-list">${project.relatedProjects.map(relatedCard).join("")}</div>`}
   </section>` : "";
 
   return `<header class="project-header ${hero ? "has-media" : "no-media"}">
