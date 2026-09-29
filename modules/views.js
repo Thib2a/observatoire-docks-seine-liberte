@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaCreditLabel, projectHref, projectStatusLabel, statusBadge,
-} from "./data.js?v=b7506fef039d";
+} from "./data.js?v=840beca40b83";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -57,7 +57,7 @@ function mediaCredit(visual) {
 export function projectCard(project, options = {}) {
   const visual = cardVisual(project);
   const compact = options.compact ? " is-compact" : "";
-  return `<a class="project-card${compact}" href="${projectHref(project.id)}" data-project-link="${escapeHtml(project.id)}">
+  return `<article class="project-card${compact}"><a class="project-card-link" href="${projectHref(project.id)}" data-project-link="${escapeHtml(project.id)}">
     <div class="project-card-media">
       ${imageMarkup(project, visual)}
       <span class="card-territory">${escapeHtml(projectTerritoryLabel(project))}</span>
@@ -69,7 +69,7 @@ export function projectCard(project, options = {}) {
       <p>${escapeHtml(formatEmbeddedDates(project.description))}</p>
       <div class="card-meta"><span>${escapeHtml(project.category)}</span><span>${escapeHtml(formatEmbeddedDates(project.dateText || publicLocation(project)))}</span></div>
     </div>
-  </a>`;
+  </a>${visual ? `<div class="card-media-credit">${mediaCredit(visual)}</div>` : ""}</article>`;
 }
 
 
@@ -109,9 +109,10 @@ function territoryOverview(isSeine, items, territory, presentation = {}, present
   const content = isSeine
     ? `<p>La ZAC Seine-Liberté prévoit la transformation d'anciens terrains d'activité en un nouveau quartier associant logements, équipements publics, espaces verts, nouvelles rues et berges aménagées.</p><p>Les plans d'ensemble permettent de comprendre son organisation, de situer les différents lots et de suivre la réalisation progressive des aménagements.</p>`
     : `<p>Les Docks réunissent plusieurs secteurs aux caractéristiques et aux stades d'aménagement différents. Certains sont déjà livrés et habités, tandis que d'autres accueillent de nouveaux chantiers ou des projets encore à l'étude.</p><p>Les plans d'ensemble permettent de comprendre l'organisation du quartier, de situer les différentes opérations et de découvrir les aménagements à venir.</p>`;
+  const planCredit = plans.length ? `<p class="presentation-plan-credit" data-plan-credit>${escapeHtml(plans[0].caption || `Visuel — ${territory}`)} · ${mediaCredit(plans[0])}</p>` : "";
   return `<section class="reference-plan territory-overview" aria-labelledby="overview-title">
     <div><p class="eyebrow">Vue d’ensemble</p><h2 id="overview-title">${isSeine ? "Découvrir le futur quartier Seine-Liberté" : "Découvrir les Docks et leurs différents secteurs"}</h2>${content}<a class="overview-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${isSeine ? "Découvrir les projets urbains de Clichy" : "Consulter la carte officielle des Docks"} ${externalLinkIcon}</a></div>
-    <div class="overview-visual">${plans.length ? `<button class="plan-preview" type="button" data-lightbox-src="${escapeHtml(plans[0].src)}" data-lightbox-alt="Plan d’ensemble de ${escapeHtml(territory)}" data-lightbox-caption="${escapeHtml(plans[0].caption || "Plan d’ensemble")}"><img src="${escapeHtml(plans[0].displaySrc || plans[0].src)}"${responsiveImageAttrs(plans[0])} alt="Plan d’ensemble de ${escapeHtml(territory)}" loading="lazy"><span>Agrandir le plan d’ensemble</span></button>${plans.length > 1 ? `<div class="plan-pager"><button type="button" data-plan-step="-1" aria-label="Plan précédent" title="Plan précédent">${chevronIcon(-1)}</button><span data-plan-count>1 / ${plans.length}</span><button type="button" data-plan-step="1" aria-label="Plan suivant" title="Plan suivant">${chevronIcon(1)}</button></div>` : ""}` : `<div class="overview-map">Plan d’ensemble à sélectionner</div>`}<a class="overview-source" href="/carte/" data-route="explore">Voir les projets sur la carte interactive →</a></div>
+    <div class="overview-visual">${plans.length ? `<button class="plan-preview" type="button" data-lightbox-src="${escapeHtml(plans[0].src)}" data-lightbox-alt="Plan d’ensemble de ${escapeHtml(territory)}" data-lightbox-caption="${escapeHtml(plans[0].caption || "Plan d’ensemble")}" data-lightbox-credit="${escapeHtml(plans[0].credit || "")}" data-lightbox-source-url="${escapeHtml(plans[0].sourceUrl || "")}" data-lightbox-source-label="${escapeHtml(plans[0].sourceLabel || "")}"><img src="${escapeHtml(plans[0].displaySrc || plans[0].src)}"${responsiveImageAttrs(plans[0])} alt="Plan d’ensemble de ${escapeHtml(territory)}" loading="lazy"><span>Agrandir le plan d’ensemble</span></button>${plans.length > 1 ? `<div class="plan-pager"><button type="button" data-plan-step="-1" aria-label="Plan précédent" title="Plan précédent">${chevronIcon(-1)}</button><span data-plan-count>1 / ${plans.length}</span><button type="button" data-plan-step="1" aria-label="Plan suivant" title="Plan suivant">${chevronIcon(1)}</button></div>` : ""}` : `<div class="overview-map">Plan d’ensemble à sélectionner</div>`}${planCredit}<a class="overview-source" href="/carte/" data-route="explore">Voir les projets sur la carte interactive →</a></div>
   </section>`;
 }
 
@@ -152,7 +153,7 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
       <button class="button button-light" type="button" data-explore-territory="${escapeHtml(territory)}">Voir sur la carte</button>
       <dl><div><dt>${operations.length}</dt><dd>Opérations suivies</dd></div><div><dt>${current.length}</dt><dd>En cours / à venir</dd></div><div><dt>${delivered.length}</dt><dd>Opérations livrées</dd></div></dl>
     </div>
-    ${isSeine ? (contextVisual ? `<div class="territory-hero-caption">Vue de contexte du site, non rendu du projet final · ${mediaCredit(contextVisual)}</div>` : "") : (visual ? `<div class="territory-hero-caption">${escapeHtml(visual.caption)} · ${mediaCredit(visual)}</div>` : "")}
+    <div class="territory-hero-caption">${isSeine ? (contextVisual ? `Vue de contexte du site, non rendu du projet final · ${mediaCredit(contextVisual)}` : "") : (visual ? `${escapeHtml(visual.caption)} · ${mediaCredit(visual)}` : "")}</div>
   </header>
   <div class="territory-body">
     ${territoryOverview(isSeine, items, territory, presentation, presentationMedia)}
@@ -272,7 +273,7 @@ export function renderProject(project, projectsById = new Map()) {
       <figure class="gallery-item">
         ${visual.src.toLowerCase().split("?")[0].endsWith(".pdf")
           ? `<a class="pdf-visual-link" href="${escapeHtml(visual.src)}" target="_blank" rel="noopener">${visual.thumbnail ? `<img src="${escapeHtml(visual.thumbnail)}" alt="Première page de ${escapeHtml(visual.caption)}" loading="lazy">` : '<span class="pdf-thumb-fallback">PDF</span>'}<span>${escapeHtml(visual.caption)}</span><em>Consulter le PDF ${externalLinkIcon}</em></a>`
-          : `<button type="button" data-lightbox-src="${escapeHtml(visual.src)}" data-lightbox-alt="${escapeHtml(mediaAlt(project, visual))}" data-lightbox-caption="${escapeHtml(visual.caption)}">${imageMarkup(project, visual)}<span>${escapeHtml(({PLAN_SITUATION: "Plan de situation", PLAN_MASSE: "Plan de masse"})[visual.role] || visual.role.replaceAll("_", " ").toLowerCase())}</span></button>`}
+          : `<button type="button" data-lightbox-src="${escapeHtml(visual.src)}" data-lightbox-alt="${escapeHtml(mediaAlt(project, visual))}" data-lightbox-caption="${escapeHtml(visual.caption)}" data-lightbox-credit="${escapeHtml(visual.credit || "")}" data-lightbox-source-url="${escapeHtml(visual.sourceUrl || "")}" data-lightbox-source-label="${escapeHtml(visual.sourceLabel || "")}">${imageMarkup(project, visual)}<span>${escapeHtml(({PLAN_SITUATION: "Plan de situation", PLAN_MASSE: "Plan de masse"})[visual.role] || visual.role.replaceAll("_", " ").toLowerCase())}</span></button>`}
         <figcaption><strong>${escapeHtml(visual.caption)}</strong>${visual.originProjectName ? `<small>Rattaché depuis ${escapeHtml(visual.originProjectName)}</small>` : ""}${mediaCredit(visual)}</figcaption>
       </figure>`).join("")}</div>
     </div>

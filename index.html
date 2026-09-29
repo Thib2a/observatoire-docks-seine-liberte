@@ -33,7 +33,7 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" sizes="180x180">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=b7506fef039d">
+  <link rel="stylesheet" href="styles.css?v=840beca40b83">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -111,6 +111,7 @@
             <a class="button button-light" href="/projets/docks-zac/" data-territory="Docks de Saint-Ouen">Explorer la ZAC des Docks</a>
             <div class="door-slide-controls" aria-label="Images des Docks"><button type="button" data-carousel-target="#docks-door-media" data-carousel-step="-1" aria-label="Image précédente des Docks"><svg class="lucide lucide-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><span data-carousel-count="#docks-door-media">1 / 8</span><button type="button" data-carousel-target="#docks-door-media" data-carousel-step="1" aria-label="Image suivante des Docks"><svg class="lucide lucide-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div>
           </div>
+          <div class="territory-door-caption" id="docks-door-caption"></div>
         </article>
         <article class="territory-door territory-seine" id="seine-door">
           <div class="territory-door-media" id="seine-door-media" aria-hidden="true"></div>
@@ -122,6 +123,7 @@
             <a class="button button-light" href="/projets/seine-zac/" data-territory="Seine-Liberté">Explorer la ZAC Seine-Liberté</a>
             <div class="door-slide-controls" aria-label="Images de Seine-Liberté"><button type="button" data-carousel-target="#seine-door-media" data-carousel-step="-1" aria-label="Image précédente de Seine-Liberté"><svg class="lucide lucide-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><span data-carousel-count="#seine-door-media">1 / 6</span><button type="button" data-carousel-target="#seine-door-media" data-carousel-step="1" aria-label="Image suivante de Seine-Liberté"><svg class="lucide lucide-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div>
           </div>
+          <div class="territory-door-caption" id="seine-door-caption"></div>
         </article>
       </section>
 
@@ -471,7 +473,7 @@
     <button type="button" id="lightbox-close" aria-label="Fermer l’image"><svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     <button type="button" class="lightbox-nav lightbox-prev" data-lightbox-step="-1" aria-label="Image précédente" title="Image précédente" hidden><svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
     <button type="button" class="lightbox-nav lightbox-next" data-lightbox-step="1" aria-label="Image suivante" title="Image suivante" hidden><svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
-    <figure><img id="lightbox-image" alt=""><figcaption aria-live="polite"><span id="lightbox-caption"></span><span id="lightbox-count"></span></figcaption></figure>
+    <figure><img id="lightbox-image" alt=""><figcaption aria-live="polite"><span id="lightbox-caption"></span><span id="lightbox-credit"></span><span id="lightbox-count"></span></figcaption></figure>
   </dialog>
 
   <div class="loading-screen" id="loading-screen" role="status"><img class="brand-icon" src="/assets/favicon.svg" alt="" width="32" height="32" aria-hidden="true"><p>Ouverture des quartiers…</p></div>
@@ -494,6 +496,6 @@
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "89b7f0d07c1344818cfa73b0e58144d9"}'></script>
   <!-- End Cloudflare Web Analytics -->
-  <script type="module" src="app.js?v=b7506fef039d"></script>
+  <script type="module" src="app.js?v=840beca40b83"></script>
 </body>
 </html>

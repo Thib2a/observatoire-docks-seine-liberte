@@ -1,12 +1,12 @@
 import {
-  DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
+  DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, sourceName, normalize,
   projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=b7506fef039d";
-import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=b7506fef039d";
-import {syncPageHeading} from "./modules/headings.js?v=b7506fef039d";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=b7506fef039d";
-import {ProjectMap} from "./modules/map.js?v=b7506fef039d";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=b7506fef039d";
+} from "./modules/data.js?v=840beca40b83";
+import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=840beca40b83";
+import {syncPageHeading} from "./modules/headings.js?v=840beca40b83";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=840beca40b83";
+import {ProjectMap} from "./modules/map.js?v=840beca40b83";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=840beca40b83";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -230,6 +230,19 @@ function renderHome() {
   renderTimeline();
 }
 
+function setPresentationCredit(container, item, includeCaption = true) {
+  if (!container || !item) return;
+  container.textContent = `${includeCaption ? `${item.caption || item.projectName || "Visuel"} · ` : ""}${mediaCreditLabel(item.credit)}`;
+  const url = safeLinkUrl(item.sourceUrl);
+  if (!url) return;
+  const source = document.createElement("a");
+  source.href = url;
+  source.target = "_blank";
+  source.rel = "noopener noreferrer";
+  source.textContent = sourceName(url, item.sourceLabel);
+  container.append(document.createTextNode(" · "), source);
+}
+
 function mountSlides(selector, keys = [], delay = 0) {
   const target = $(selector);
   if (!target) return;
@@ -256,26 +269,15 @@ function mountSlides(selector, keys = [], delay = 0) {
       target.append(next);
       requestAnimationFrame(() => next.classList.add("is-visible"));
       setTimeout(() => previous.forEach(child => child.remove()), 750);
+      const captionSelector = {
+        "#home-hero-media": "#home-hero-caption",
+        "#docks-door-media": "#docks-door-caption",
+        "#seine-door-media": "#seine-door-caption",
+        "#territory-content .territory-hero-media": "#territory-content .territory-hero-caption",
+      }[selector];
+      if (captionSelector) setPresentationCredit($(captionSelector), item);
     };
     if (next.complete) show(); else next.addEventListener("load", show, {once:true});
-    if (selector === "#home-hero-media") $("#home-hero-caption").textContent = `${item.caption || item.projectName} · ${mediaCreditLabel(item.credit)}`;
-    if (selector === "#territory-content .territory-hero-media") {
-      const caption = $("#territory-content .territory-hero-caption");
-      if (caption) {
-        caption.textContent = `${item.caption || item.projectName || ""} · `;
-        if (safeLinkUrl(item.sourceUrl)) {
-          const source = document.createElement("a");
-          source.href = safeLinkUrl(item.sourceUrl);
-          source.target = "_blank";
-          source.rel = "noopener";
-          source.title = "Voir la source";
-          source.textContent = mediaCreditLabel(item.credit);
-          caption.append(source);
-        } else {
-          caption.append(document.createTextNode(mediaCreditLabel(item.credit)));
-        }
-      }
-    }
     target.dataset.slideIndex = String(index);
     const counter = document.querySelector(`[data-carousel-count="${selector}"]`);
     if (counter) counter.textContent = `${index + 1} / ${media.length}`;
@@ -418,6 +420,7 @@ function showLightboxItem(index) {
   $("#lightbox-image").src = item.src;
   $("#lightbox-image").alt = item.alt;
   $("#lightbox-caption").textContent = item.caption;
+  setPresentationCredit($("#lightbox-credit"), item, false);
   $("#lightbox-count").textContent = items.length > 1 ? `${state.lightboxIndex + 1} / ${items.length}` : "";
   $$("[data-lightbox-step]").forEach(button => { button.hidden = items.length < 2; });
 }
@@ -482,9 +485,13 @@ function bindEvents() {
         requestAnimationFrame(() => next.classList.add("is-visible"));
         setTimeout(() => previous.forEach(image => image.remove()), 700);
         button.dataset.lightboxSrc = item.src; button.dataset.lightboxCaption = item.caption || "Plan d’ensemble";
+        button.dataset.lightboxCredit = item.credit || "";
+        button.dataset.lightboxSourceUrl = item.sourceUrl || "";
+        button.dataset.lightboxSourceLabel = item.sourceLabel || "";
       };
       if (next.complete) show(); else next.addEventListener("load", show, {once:true});
       $("[data-plan-count]", root).textContent = `${state.planIndex + 1} / ${plans.length}`;
+      setPresentationCredit($("[data-plan-credit]", root), item);
       return;
     }
     const scrollButton = event.target.closest("[data-scroll-target], [data-timeline-target]");
@@ -536,6 +543,9 @@ function bindEvents() {
         src: button.dataset.lightboxSrc,
         alt: button.dataset.lightboxAlt || "",
         caption: button.dataset.lightboxCaption || "",
+        credit: button.dataset.lightboxCredit || "",
+        sourceUrl: button.dataset.lightboxSourceUrl || "",
+        sourceLabel: button.dataset.lightboxSourceLabel || "",
       }));
       showLightboxItem(buttons.indexOf(lightbox));
       dialog.showModal();
