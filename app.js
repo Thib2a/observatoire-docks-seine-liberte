@@ -1,12 +1,12 @@
 import {
   DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
   projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=6558737ca271";
-import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=6558737ca271";
-import {syncPageHeading} from "./modules/headings.js?v=6558737ca271";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=6558737ca271";
-import {ProjectMap} from "./modules/map.js?v=6558737ca271";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=6558737ca271";
+} from "./modules/data.js?v=b7506fef039d";
+import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=b7506fef039d";
+import {syncPageHeading} from "./modules/headings.js?v=b7506fef039d";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=b7506fef039d";
+import {ProjectMap} from "./modules/map.js?v=b7506fef039d";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=b7506fef039d";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);

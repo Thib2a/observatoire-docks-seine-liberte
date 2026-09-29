@@ -639,7 +639,7 @@ img { display: block; max-width: 100%; }
 .map-toolbar-actions select { max-width: 125px; padding: 8px; border: 0; border-radius: 99px; background: rgba(255,254,250,.95); }
 .map-marker.is-territory { width: 30px; height: 30px; border-radius: 50%; transform: none; background: var(--green); color: white; font-size: 18px; }
 .map-marker.is-territory b { line-height: 1; }
-.project-description { font-size: 19px !important; line-height: 1.6; }
+.project-description { font-size: 19px !important; line-height: 1.6; white-space: pre-line; }
 .source-more { margin-top: 20px; background: white; color: var(--green); border: 1px solid var(--line); cursor: pointer; }
 .sources-section .is-extra-source { display: none; }
 .sources-section.is-expanded .is-extra-source { display: grid; }
