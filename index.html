@@ -3,6 +3,9 @@
 <head>
   <base href="/">
   <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; base-uri &#x27;self&#x27;; object-src &#x27;none&#x27;; frame-src &#x27;none&#x27;; script-src &#x27;self&#x27; https://unpkg.com/leaflet@1.9.4/dist/leaflet.js https://static.cloudflareinsights.com &#x27;sha256-aNdUJYF9+h814WoNhdBhgGgBRJN6yOMCTu0McyvGx3A=&#x27;; style-src &#x27;self&#x27; &#x27;unsafe-inline&#x27; https://unpkg.com/leaflet@1.9.4/dist/leaflet.css; img-src &#x27;self&#x27; data: https://*.tile.openstreetmap.org https://data.geopf.fr https://unpkg.com; connect-src &#x27;self&#x27; https://formspree.io https://cloudflareinsights.com https://*.cloudflareinsights.com; form-action https://formspree.io/f/mkjgroep; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#102e2a">
   <meta name="description" content="Explorez les transformations des Docks de Saint-Ouen, de la ZAC Seine-Liberté à Clichy et de leurs abords immédiats : projets, chantiers, plans et actualités.">
@@ -29,8 +32,8 @@
   <link rel="icon" href="assets/favicon-48.png" type="image/png" sizes="48x48">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" sizes="180x180">
   <link rel="preconnect" href="https://unpkg.com">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=58a1082deb0d">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="styles.css?v=e94a2730f563">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -149,7 +152,7 @@
             <select id="filter-territory" aria-label="Filtrer par secteur"><option value="">Tous les secteurs</option></select>
             <select id="filter-category" aria-label="Filtrer par catégorie"><option value="">Toutes les catégories</option></select>
           </div>
-          <div class="results-meta"><strong><span id="result-count">—</span> résultats</strong><span id="point-count">— sur la carte</span></div>
+          <div class="results-meta"><strong role="status" aria-live="polite" aria-atomic="true"><span id="result-count">—</span> résultats</strong><span id="point-count">— sur la carte</span></div>
           <div class="project-list" id="project-list"></div>
           <div class="empty-state" id="empty-state" hidden><strong>Aucun projet trouvé</strong><p>Modifiez les filtres ou essayez un autre terme.</p></div>
         </aside>
@@ -458,7 +461,7 @@
     </article>
   </main>
 
-  <dialog class="lightbox" id="lightbox">
+  <dialog class="lightbox" id="lightbox" aria-label="Image agrandie" aria-describedby="lightbox-caption">
     <button type="button" id="lightbox-close" aria-label="Fermer l’image"><svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     <button type="button" class="lightbox-nav lightbox-prev" data-lightbox-step="-1" aria-label="Image précédente" title="Image précédente" hidden><svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
     <button type="button" class="lightbox-nav lightbox-next" data-lightbox-step="1" aria-label="Image suivante" title="Image suivante" hidden><svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
@@ -481,10 +484,10 @@
     <span>Site actualisé le <time datetime="2026-09-29">29 septembre 2026</time><br>Dernière revue des données : <time id="footer-date" datetime="2026-09-27">27 septembre 2026</time></span>
   </footer>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "89b7f0d07c1344818cfa73b0e58144d9"}'></script>
   <!-- End Cloudflare Web Analytics -->
-  <script type="module" src="app.js?v=58a1082deb0d"></script>
+  <script type="module" src="app.js?v=e94a2730f563"></script>
 </body>
 </html>

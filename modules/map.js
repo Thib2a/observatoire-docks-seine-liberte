@@ -1,5 +1,5 @@
-import {escapeHtml, mediaAlt, projectHref, projectStatusLabel, statusColor, statusSymbol} from "./data.js?v=58a1082deb0d";
-import {cardVisual} from "./views.js?v=58a1082deb0d";
+import {escapeHtml, mediaAlt, projectHref, projectTerritoryLabel, projectStatusLabel, statusColor, statusSymbol} from "./data.js?v=e94a2730f563";
+import {cardVisual} from "./views.js?v=e94a2730f563";
 
 const qualityLabel = quality => ({
   VERIFIE: "Emplacement vérifié",
@@ -54,7 +54,7 @@ export class ProjectMap {
     this.map.setView([48.914, 2.326], 14);
   }
 
-  update(projects) {
+  update(projects, {preserveView = false} = {}) {
     this.projects = projects.filter(project => project.map.latitude != null && project.map.longitude != null);
     if (!this.ready) this.init();
     if (!this.map) {
@@ -92,9 +92,9 @@ export class ProjectMap {
       const popup = isGroup
         ? `<div class="map-popup map-popup-group"><span>${escapeHtml(qualityLabel(project.map.quality))} · ${group.length} projets</span><strong>${escapeHtml(project.map.sector || project.map.zone || project.territory)}</strong>${group.slice(0, 14).map(item => `<a href="${projectHref(item.id)}" data-project-link="${escapeHtml(item.id)}">${escapeHtml(item.name)}</a>`).join("")}${group.length > 14 ? `<small>+ ${group.length - 14} autres projets dans la liste</small>` : ""}</div>`
         : `<div class="map-popup">
-          ${popupVisual ? `<img class="${popupVisual.role.startsWith("PLAN_") ? "is-plan" : "is-photo"}" src="${escapeHtml(popupVisual.src)}" alt="${escapeHtml(mediaAlt(project, popupVisual))}" loading="lazy">` : ""}
-          ${popupVisual && popupPlan ? `<div class="popup-media-switch"><button type="button" data-popup-src="${escapeHtml(popupVisual.src)}" data-popup-alt="${escapeHtml(mediaAlt(project, popupVisual))}" data-popup-role="photo">Photo</button><button type="button" data-popup-src="${escapeHtml(popupPlan.src)}" data-popup-alt="${escapeHtml(mediaAlt(project, popupPlan))}" data-popup-role="plan">Plan</button></div>` : ""}
-          <span>${escapeHtml(project.territory)}${project.lot ? ` · lot ${escapeHtml(project.lot)}` : ""}</span>
+          ${popupVisual ? `<img class="${popupVisual.role.startsWith("PLAN_") ? "is-plan" : "is-photo"}" src="${escapeHtml(popupVisual.responsiveSources?.find(s => s.width >= 480)?.src || popupVisual.displaySrc || popupVisual.src)}" alt="${escapeHtml(mediaAlt(project, popupVisual))}" loading="lazy">` : ""}
+          ${popupVisual && popupPlan ? `<div class="popup-media-switch"><button type="button" data-popup-src="${escapeHtml(popupVisual.responsiveSources?.find(s => s.width >= 480)?.src || popupVisual.displaySrc || popupVisual.src)}" data-popup-alt="${escapeHtml(mediaAlt(project, popupVisual))}" data-popup-role="photo">Photo</button><button type="button" data-popup-src="${escapeHtml(popupPlan.responsiveSources?.find(s => s.width >= 480)?.src || popupPlan.displaySrc || popupPlan.src)}" data-popup-alt="${escapeHtml(mediaAlt(project, popupPlan))}" data-popup-role="plan">Plan</button></div>` : ""}
+          <span>${escapeHtml(projectTerritoryLabel(project))}${project.lot ? ` · lot ${escapeHtml(project.lot)}` : ""}</span>
           <strong>${escapeHtml(project.name)}</strong>
           <small>${isTerritory ? "Repère de quartier · " : `${escapeHtml(projectStatusLabel(project))} · `}${escapeHtml(qualityLabel(project.map.quality))}</small>
           <a href="${projectHref(project.id)}" data-project-link="${escapeHtml(project.id)}">Voir la fiche</a>
@@ -103,6 +103,7 @@ export class ProjectMap {
       marker.addTo(this.layer);
       bounds.push([project.map.latitude, project.map.longitude]);
     });
+    if (preserveView) return;
     if (bounds.length) this.map.fitBounds(bounds, {padding: [40, 40], maxZoom: 15});
     else this.map.setView([48.914, 2.326], 14);
   }
@@ -111,6 +112,16 @@ export class ProjectMap {
     if (!this.map || !this.projects.length) return;
     const bounds = this.projects.map(project => [project.map.latitude, project.map.longitude]);
     this.map.fitBounds(bounds, {padding: [40, 40], maxZoom: 15});
+  }
+
+  viewport() {
+    if (!this.map) return null;
+    const center = this.map.getCenter();
+    return {lat: center.lat, lng: center.lng, zoom: this.map.getZoom()};
+  }
+
+  restoreViewport(view) {
+    if (this.map && view) this.map.setView([view.lat, view.lng], view.zoom, {animate: false});
   }
 
   setBase(mode) {

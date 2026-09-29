@@ -94,6 +94,32 @@ export const escapeHtml = (value = "") => String(value).replace(/[&<>"']/g, char
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;",
 }[char]));
 
+export function safeLinkUrl(value = "") {
+  const url = String(value).trim();
+  if (!url || /[\\\u0000-\u0020\u007f]/.test(url) || url.startsWith("//")) return "";
+  try {
+    const parsed = new URL(url, "https://observatoire-docks-seine.org/");
+    if (!["http:", "https:"].includes(parsed.protocol) || parsed.username || parsed.password) return "";
+    if (!/^(https?:\/\/|\/(?!\/)|#|assets\/|media\/)/i.test(url)) return "";
+    return url;
+  } catch { return ""; }
+}
+
+export function projectTerritoryLabel(project) {
+  return documentaryGroup(project) === "Abords" ? "Abords" : project.territory;
+}
+
+export function sanitizePublicLinks(value) {
+  if (Array.isArray(value)) value.forEach(sanitizePublicLinks);
+  else if (value && typeof value === "object") {
+    for (const [key, child] of Object.entries(value)) {
+      if (/(?:Url|url)$/.test(key) && typeof child === "string") value[key] = safeLinkUrl(child);
+      else sanitizePublicLinks(child);
+    }
+  }
+  return value;
+}
+
 export const normalize = (value = "") => String(value)
   .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
   .toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9]+/g, " ").trim();
@@ -238,6 +264,7 @@ export async function loadData() {
   const response = await fetch(DATA_URL, {cache: "no-store"});
   if (!response.ok) throw new Error(`Chargement impossible (${response.status})`);
   const payload = await response.json();
+  sanitizePublicLinks(payload);
   sourceNames.clear();
   for (const project of payload.projects) {
     for (const source of project.sources) {

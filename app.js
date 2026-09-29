@@ -1,12 +1,12 @@
 import {
-  DATA_URL, STATUS_ORDER, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
+  DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, normalize,
   projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=58a1082deb0d";
-import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=58a1082deb0d";
-import {syncPageHeading} from "./modules/headings.js?v=58a1082deb0d";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=58a1082deb0d";
-import {ProjectMap} from "./modules/map.js?v=58a1082deb0d";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=58a1082deb0d";
+} from "./modules/data.js?v=e94a2730f563";
+import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=e94a2730f563";
+import {syncPageHeading} from "./modules/headings.js?v=e94a2730f563";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=e94a2730f563";
+import {ProjectMap} from "./modules/map.js?v=e94a2730f563";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=e94a2730f563";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -111,10 +111,20 @@ function parseRoute() {
   return resolveRoute(location.pathname, location.hash, state.data?.retiredProjectRedirects, state.data?.projects.map(p => p.id));
 }
 
+function rememberView() {
+  history.replaceState({...history.state, odsEntry: true, view: {
+    scrollY: window.scrollY, listScroll: $("#project-list")?.scrollTop || 0,
+    sidebarScroll: $(".explorer-panel")?.scrollTop || 0, map: state.map?.viewport(),
+  }}, "", location.href);
+}
+
 function navigate(route, payload = {}) {
-  const nextUrl = routeHref(route, payload, location.pathname);
+  const nextUrl = route === "explore" ? mapFilterHref(state) : routeHref(route, payload, location.pathname);
   const target = new URL(nextUrl, location.href);
-  if (location.pathname !== target.pathname || location.hash !== target.hash) history.pushState(null, "", nextUrl);
+  if (location.href !== target.href) {
+    rememberView();
+    history.pushState({odsEntry: true, internalReturn: true}, "", nextUrl);
+  }
   showRoute(parseRoute());
 }
 
@@ -132,7 +142,7 @@ function showRoute(parsed, options = {}) {
     view.hidden = !active;
     view.classList.toggle("is-active", active);
   });
-  $$(".main-nav button").forEach(button => button.removeAttribute("aria-current"));
+  $$(".main-nav [aria-current]").forEach(item => item.removeAttribute("aria-current"));
   const activeNav = parsed.route === "territory"
     ? $(`.main-nav [data-territory="${CSS.escape(parsed.territory)}"]`)
     : $(`.main-nav [data-route="${parsed.route}"]`);
@@ -154,7 +164,7 @@ function showRoute(parsed, options = {}) {
     }
     $("#project-content").innerHTML = renderProject(project);
   } else if (parsed.route === "explore") {
-    updateExplorer();
+    updateExplorer({preserveView: Boolean(options.restore)});
     state.map.invalidate();
     if (options.focusSearch) setTimeout(() => $("#project-search")?.focus(), 100);
   }
@@ -162,7 +172,15 @@ function showRoute(parsed, options = {}) {
   updateSeo(parsed, parsed.route === "project" ? state.byId.get(parsed.id) : null);
   if (parsed.route === "home") mountHomeSlides();
   $("#main-content").focus({preventScroll: true});
-  window.scrollTo({top: 0, behavior: options.instant ? "auto" : "smooth"});
+  if (options.restore) {
+    const view = options.restore;
+    requestAnimationFrame(() => {
+      window.scrollTo({top: view.scrollY || 0, behavior: "instant"});
+      if ($("#project-list")) $("#project-list").scrollTop = view.listScroll || 0;
+      if ($(".explorer-panel")) $(".explorer-panel").scrollTop = view.sidebarScroll || 0;
+      if (parsed.route === "explore") state.map.restoreViewport(view.map);
+    });
+  } else window.scrollTo({top: 0, behavior: options.instant ? "auto" : "smooth"});
   $("#menu-toggle").setAttribute("aria-expanded", "false");
   $("#main-nav").classList.remove("is-open");
 }
@@ -244,9 +262,9 @@ function mountSlides(selector, keys = [], delay = 0) {
       const caption = $("#territory-content .territory-hero-caption");
       if (caption) {
         caption.textContent = `${item.caption || item.projectName || ""} · `;
-        if (item.sourceUrl) {
+        if (safeLinkUrl(item.sourceUrl)) {
           const source = document.createElement("a");
-          source.href = item.sourceUrl;
+          source.href = safeLinkUrl(item.sourceUrl);
           source.target = "_blank";
           source.rel = "noopener";
           source.title = "Voir la source";
@@ -373,7 +391,7 @@ function restoreMapFilters() {
   $("#filter-category").value = state.category;
 }
 
-function updateExplorer() {
+function updateExplorer({preserveView = false} = {}) {
   if (!state.data) return;
   const projects = filteredProjects();
   const points = projects.filter(project => project.map.latitude != null);
@@ -383,9 +401,9 @@ function updateExplorer() {
   $("#empty-state").hidden = projects.length > 0;
   $("#clear-search").hidden = !state.search;
   updateMapLegend(projects);
-  state.map.update(projects);
+  state.map.update(projects, {preserveView});
   if (state.route === "explore") {
-    history.replaceState(null, "", mapFilterHref(state) + location.hash);
+    history.replaceState(history.state, "", mapFilterHref(state) + location.hash);
     state.renderedHash = location.pathname + location.search + location.hash;
   }
 }
@@ -505,7 +523,7 @@ function bindEvents() {
     const back = event.target.closest("[data-back]");
     if (back) {
       event.preventDefault();
-      history.length > 1 ? history.back() : navigate("explore");
+      history.state?.internalReturn ? history.back() : navigate("explore");
       return;
     }
     const lightbox = event.target.closest("[data-lightbox-src]");
@@ -629,7 +647,7 @@ function bindEvents() {
     const currentHash = location.pathname + location.search + location.hash;
     if (state.renderedHash !== currentHash) {
       if (parseRoute().route === "explore") restoreMapFilters();
-      showRoute(parseRoute());
+      showRoute(parseRoute(), {instant: true, restore: history.state?.view});
     }
   };
   window.addEventListener("hashchange", syncRoute);
@@ -643,6 +661,8 @@ function bindEvents() {
 
 async function start() {
   try {
+    history.scrollRestoration = "manual";
+    history.replaceState({...history.state, odsEntry: true}, "", location.href);
     state.data = await loadData();
     state.byId = new Map(state.data.projects.map(project => [project.id, project]));
     state.map = new ProjectMap($("#map"), state.data.projects);

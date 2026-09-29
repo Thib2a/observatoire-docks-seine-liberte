@@ -1,7 +1,7 @@
 import {
-  responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
+  safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaCreditLabel, projectHref, projectStatusLabel, statusBadge,
-} from "./data.js?v=58a1082deb0d";
+} from "./data.js?v=e94a2730f563";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -44,11 +44,11 @@ function mediaCredit(visual) {
   const creditLabel = escapeHtml(mediaCreditLabel(credit));
   const sameLabel = visual.sourceLabel?.trim() === credit.trim();
   if (visual.sourceUrl && sameLabel) {
-    return `<span><a href="${escapeHtml(visual.sourceUrl)}" target="_blank" rel="noopener" title="Voir la source">${creditLabel}</a></span>`;
+    return `<span><a href="${escapeHtml(safeLinkUrl(visual.sourceUrl))}" target="_blank" rel="noopener" title="Voir la source">${creditLabel}</a></span>`;
   }
   const sourceLabel = sourceName(visual.sourceUrl, visual.sourceLabel);
   const source = visual.sourceUrl
-    ? `<a href="${escapeHtml(visual.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(sourceLabel)}</a>`
+    ? `<a href="${escapeHtml(safeLinkUrl(visual.sourceUrl))}" target="_blank" rel="noopener">${escapeHtml(sourceLabel)}</a>`
     : (visual.sourceLabel && visual.sourceLabel !== "Source" && !sameLabel ? escapeHtml(visual.sourceLabel) : "");
   return `<span>${creditLabel}${source ? ` · ${source}` : ""}</span>`;
 }
@@ -60,7 +60,7 @@ export function projectCard(project, options = {}) {
   return `<a class="project-card${compact}" href="${projectHref(project.id)}" data-project-link="${escapeHtml(project.id)}">
     <div class="project-card-media">
       ${imageMarkup(project, visual)}
-      <span class="card-territory">${escapeHtml(project.territory)}</span>
+      <span class="card-territory">${escapeHtml(projectTerritoryLabel(project))}</span>
       ${hasCentralUncertainty(project) ? '<span class="card-progress">Statut à confirmer</span>' : ""}
     </div>
     <div class="project-card-body">
@@ -79,7 +79,7 @@ export function updateRow(update) {
     <span class="update-kind">${escapeHtml(update.title)}</span>
     <strong>${update.projectId ? `<a href="${projectHref(update.projectId)}" data-project-link="${escapeHtml(update.projectId)}">${escapeHtml(update.projectName)}</a>` : escapeHtml(update.projectName)}</strong>
     <p>${escapeHtml(update.detail)}</p>
-    ${update.sourceUrl ? `<a class="update-source" href="${escapeHtml(update.sourceUrl)}" target="_blank" rel="noopener"${update.sourceDescription ? ` aria-label="${escapeHtml(update.sourceDescription)}" title="${escapeHtml(update.sourceDescription)}"` : ""}>${escapeHtml(sourceName(update.sourceUrl, update.sourceLabel))} ${externalLinkIcon}</a>` : '<span aria-hidden="true">↗</span>'}
+    ${update.sourceUrl ? `<a class="update-source" href="${escapeHtml(safeLinkUrl(update.sourceUrl))}" target="_blank" rel="noopener"${update.sourceDescription ? ` aria-label="${escapeHtml(update.sourceDescription)}" title="${escapeHtml(update.sourceDescription)}"` : ""}>${escapeHtml(sourceName(update.sourceUrl, update.sourceLabel))} ${externalLinkIcon}</a>` : '<span aria-hidden="true">↗</span>'}
   </article>`;
 }
 
@@ -91,7 +91,7 @@ export function timelineEvent(event, projectsById) {
     <div><p class="eyebrow">${escapeHtml(event.territory)} · ${escapeHtml(event.kind.replaceAll("_", " "))}</p>
       <h2>${escapeHtml(event.title)}</h2><p>${escapeHtml(event.summary)}</p>
       ${related.length ? `<div class="event-projects">${related.map(project => `<a href="${projectHref(project.id)}" data-project-link="${escapeHtml(project.id)}">${escapeHtml(project.name)}</a>`).join("")}</div>` : ""}
-      ${event.sourceUrl ? `<a class="text-link" href="${escapeHtml(event.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(sourceName(event.sourceUrl, event.sourceLabel))} ${externalLinkIcon}</a>` : ""}
+      ${event.sourceUrl ? `<a class="text-link" href="${escapeHtml(safeLinkUrl(event.sourceUrl))}" target="_blank" rel="noopener">${escapeHtml(sourceName(event.sourceUrl, event.sourceLabel))} ${externalLinkIcon}</a>` : ""}
     </div>
   </article>`;
 }
@@ -210,7 +210,7 @@ function actorItems(project) {
 function timelineItems(project) {
   return project.milestones.map(item => `
     <li class="timeline-item ${item.type === "LIVRAISON_PREVUE" ? "is-announced" : item.type === "DEBUT_TRAVAUX" ? "is-work-start" : ""}">
-      <span></span><div><small>${escapeHtml(item.displayLabel || item.permitLabel || MILESTONE_LABELS[item.type] || "Étape")}</small><strong>${escapeHtml(formatTemporal(item.date, item.precision, item.label))}</strong>${item.permitReferences?.length ? `<small>${escapeHtml([item.permitContext, item.permitReferences.join(" · ")].filter(Boolean).join(" : "))}</small>` : ""}${(item.permitSources || []).map(source => `<a class="permit-source" href="${escapeHtml(source.url)}" target="_blank" rel="noopener" aria-label="${escapeHtml(source.label)}, source complémentaire pour ${escapeHtml(source.reference)}" title="${escapeHtml(source.label)}, source complémentaire">${escapeHtml(source.label)}${item.permitSources.length > 1 ? ` ${escapeHtml(source.reference)}` : ""} ${externalLinkIcon}</a>`).join("")}${item.source?.url ? `<a class="permit-source" href="${escapeHtml(item.source.url)}" target="_blank" rel="noopener" title="${escapeHtml(item.source.locator ? `Source du jalon : ${item.source.locator}` : "Source du jalon")}">${escapeHtml(sourceName(item.source.url, item.source.organization || item.source.title))}${item.source.locator ? ` · ${escapeHtml(item.source.locator)}` : ""} ${externalLinkIcon}</a>` : ""}</div>
+      <span></span><div><small>${escapeHtml(item.displayLabel || item.permitLabel || MILESTONE_LABELS[item.type] || "Étape")}</small><strong>${escapeHtml(formatTemporal(item.date, item.precision, item.label))}</strong>${item.permitReferences?.length ? `<small>${escapeHtml([item.permitContext, item.permitReferences.join(" · ")].filter(Boolean).join(" : "))}</small>` : ""}${(item.permitSources || []).map(source => `<a class="permit-source" href="${escapeHtml(safeLinkUrl(source.url))}" target="_blank" rel="noopener" aria-label="${escapeHtml(source.label)}, source complémentaire pour ${escapeHtml(source.reference)}" title="${escapeHtml(source.label)}, source complémentaire">${escapeHtml(source.label)}${item.permitSources.length > 1 ? ` ${escapeHtml(source.reference)}` : ""} ${externalLinkIcon}</a>`).join("")}${item.source?.url ? `<a class="permit-source" href="${escapeHtml(item.source.url)}" target="_blank" rel="noopener" title="${escapeHtml(item.source.locator ? `Source du jalon : ${item.source.locator}` : "Source du jalon")}">${escapeHtml(sourceName(item.source.url, item.source.organization || item.source.title))}${item.source.locator ? ` · ${escapeHtml(item.source.locator)}` : ""} ${externalLinkIcon}</a>` : ""}</div>
     </li>`).join("");
 }
 
@@ -260,16 +260,16 @@ export function renderProject(project) {
   const documentsSection = project.documents.length ? `<section class="detail-section documents-section">
     <div class="detail-heading"><p class="eyebrow">Pour aller plus loin</p><h2>Documents utiles</h2></div>
     <div class="document-list">${project.documents.map((document, index) => document.isPdf ? `
-      <a class="pdf-document ${index >= 5 ? "is-extra-document" : ""}" href="${escapeHtml(document.url)}" target="_blank" rel="noopener">${document.thumbnail ? `<img class="pdf-document-thumb" src="${escapeHtml(document.thumbnail)}" alt="Première page de ${escapeHtml(document.title)}" loading="lazy">` : '<span class="pdf-document-thumb pdf-thumb-fallback">PDF</span>'}<span class="pdf-document-info"><small>${escapeHtml(document.type || "PDF")}${document.date ? ` · ${escapeHtml(formatDate(document.date))}` : ""}${document.originProjectName ? ` · Dossier ${escapeHtml(document.originProjectName)}` : ""}</small><strong>${escapeHtml(document.title)}</strong><em>Consulter le PDF ${externalLinkIcon}</em></span></a>` : `
-      <a class="${index >= 5 ? "is-extra-document" : ""}" href="${escapeHtml(document.url)}" target="_blank" rel="noopener"><span>${escapeHtml(document.type || "Document")}${document.date ? ` · ${escapeHtml(formatDate(document.date))}` : ""}${document.originProjectName ? ` · Dossier ${escapeHtml(document.originProjectName)}` : ""}</span><strong>${escapeHtml(document.title)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}</div>
+      <a class="pdf-document ${index >= 5 ? "is-extra-document" : ""}" href="${escapeHtml(safeLinkUrl(document.url))}" target="_blank" rel="noopener">${document.thumbnail ? `<img class="pdf-document-thumb" src="${escapeHtml(document.thumbnail)}" alt="Première page de ${escapeHtml(document.title)}" loading="lazy">` : '<span class="pdf-document-thumb pdf-thumb-fallback">PDF</span>'}<span class="pdf-document-info"><small>${escapeHtml(document.type || "PDF")}${document.date ? ` · ${escapeHtml(formatDate(document.date))}` : ""}${document.originProjectName ? ` · Dossier ${escapeHtml(document.originProjectName)}` : ""}</small><strong>${escapeHtml(document.title)}</strong><em>Consulter le PDF ${externalLinkIcon}</em></span></a>` : `
+      <a class="${index >= 5 ? "is-extra-document" : ""}" href="${escapeHtml(safeLinkUrl(document.url))}" target="_blank" rel="noopener"><span>${escapeHtml(document.type || "Document")}${document.date ? ` · ${escapeHtml(formatDate(document.date))}` : ""}${document.originProjectName ? ` · Dossier ${escapeHtml(document.originProjectName)}` : ""}</span><strong>${escapeHtml(document.title)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}</div>
     ${project.documents.length > 5 ? `<button type="button" class="button source-more" data-doc-more>Voir les ${project.documents.length - 5} autres documents</button>` : ""}
   </section>` : "";
 
   const sourcesSection = project.sources.length || project.links.length ? `<section class="detail-section sources-section">
     <div class="detail-heading"><p class="eyebrow">Provenance</p><h2>Sources principales</h2></div>
     <div class="source-list">${project.sources.map((source, index) => `
-      <a class="${index >= 5 ? "is-extra-source" : ""}" href="${escapeHtml(source.url)}" target="_blank" rel="noopener"><span>${escapeHtml(source.organization)}${source.date ? ` · ${escapeHtml(formatDate(source.date))}` : ""}${source.originProjectName ? ` · Dossier ${escapeHtml(source.originProjectName)}` : ""}</span><strong>${escapeHtml(source.title)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}
-      ${project.links.map(link => `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener"><span>${escapeHtml(link.type)}</span><strong>${escapeHtml(link.label)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}</div>
+      <a class="${index >= 5 ? "is-extra-source" : ""}" href="${escapeHtml(safeLinkUrl(source.url))}" target="_blank" rel="noopener"><span>${escapeHtml(source.organization)}${source.date ? ` · ${escapeHtml(formatDate(source.date))}` : ""}${source.originProjectName ? ` · Dossier ${escapeHtml(source.originProjectName)}` : ""}</span><strong>${escapeHtml(source.title)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}
+      ${project.links.map(link => `<a href="${escapeHtml(safeLinkUrl(link.url))}" target="_blank" rel="noopener"><span>${escapeHtml(link.type)}</span><strong>${escapeHtml(link.label)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}</div>
     ${project.sources.length > 5 ? `<button type="button" class="button source-more" data-source-more>Voir les ${project.sources.length - 5} autres sources</button>` : ""}
   </section>` : "";
   const componentsSection = project.relatedProjects?.length ? `<section class="detail-section components-section">
@@ -282,7 +282,7 @@ export function renderProject(project) {
     <div class="project-header-shade"></div>
     <div class="project-header-content">
       <button class="back-link" type="button" data-back>← Retour</button>
-      <div class="project-kicker"><span>${escapeHtml(documentaryGroup(project) === "Abords" ? "Abords" : project.territory)}</span><span>${escapeHtml(project.category)}</span></div>
+      <div class="project-kicker"><span>${escapeHtml(projectTerritoryLabel(project))}</span><span>${escapeHtml(project.category)}</span></div>
       ${statusBadge(project)}
       <h1 class="view-title" data-page-heading>${escapeHtml(project.name)}</h1>
       ${mainDate ? `<p class="project-main-date">${escapeHtml(formatEmbeddedDates(mainDate))}</p>` : ""}
