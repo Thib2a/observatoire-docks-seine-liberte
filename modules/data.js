@@ -6,8 +6,11 @@ export function mediaCreditLabel(value) {
 }
 
 export function normalizeAttribution(value) {
-  return String(value || "").replace(/(\s(?:\/|--|—|–|-)\s+)([a-zà-ÿ])/g,
-    (_, separator, letter) => separator + letter.toLocaleUpperCase("fr-FR"));
+  return String(value || "").replace(/(\s(?:\/|--|—|–|-)\s+)([a-zà-ÿ]\S*)/g,
+    (whole, separator, label) => {
+      if (label.includes(".") || label.includes("-") || /^n[°º]/i.test(label)) return whole;
+      return separator + label[0].toLocaleUpperCase("fr-FR") + label.slice(1);
+    });
 }
 
 function attributionKey(value) {

@@ -1,11 +1,13 @@
-import {escapeHtml, mediaAlt, projectHref, projectTerritoryLabel, projectStatusLabel, statusColor, statusSymbol} from "./data.js?v=5cb708af8413";
-import {cardVisual} from "./views.js?v=5cb708af8413";
+import {escapeHtml, mediaAlt, projectHref, projectTerritoryLabel, projectStatusLabel, statusColor, statusSymbol} from "./data.js?v=6768ae5324d1";
+import {cardVisual} from "./views.js?v=6768ae5324d1";
 
 function popupPlace(project) {
   const territory = projectTerritoryLabel(project);
-  const lot = (project.lot || "").replace(/^Abords\s+/i, "").trim();
+  const originalLot = (project.lot || "").trim();
+  const isAbords = /^Abords\s+/i.test(originalLot);
+  const lot = isAbords ? originalLot.replace(/^Abords\s+/i, "").trim() : originalLot;
   if (!lot || lot.toLocaleLowerCase("fr-FR") === territory.toLocaleLowerCase("fr-FR")) return territory;
-  return `${territory} · ${lot}`;
+  return `${territory} · ${isAbords ? lot : `lot ${lot}`}`;
 }
 
 

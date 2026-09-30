@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaAttribution, projectHref, projectStatusLabel, statusBadge,
-} from "./data.js?v=5cb708af8413";
+} from "./data.js?v=6768ae5324d1";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -117,9 +117,8 @@ function territoryOverview(isSeine, items, territory, presentation = {}, present
     : `<p>La ZAC des Docks réunit plusieurs secteurs aux caractéristiques et aux stades d'aménagement différents. Certains sont déjà livrés et habités, tandis que d'autres accueillent de nouveaux chantiers ou des projets encore à l'étude.</p><p>Les plans d'ensemble, photos et autre documents permettent de comprendre l'organisation du quartier, de situer les différentes opérations et de découvrir les aménagements à venir.</p>`;
   const planCredit = plans.length ? `<p class="presentation-plan-credit" data-plan-credit>${escapeHtml(plans[0].caption || `Visuel — ${territory}`)} · ${mediaCredit(plans[0])}</p>` : "";
   return `<section class="reference-plan territory-overview" aria-labelledby="overview-title">
-    <div class="overview-copy"><p class="eyebrow">Vue d’ensemble</p><h2 id="overview-title">${isSeine ? "Découvrir le futur quartier Seine-Liberté" : "Découvrir les Docks et ses différents secteurs"}</h2>${content}</div>
-    <div class="overview-visual">${plans.length ? `<button class="plan-preview" type="button" data-lightbox-src="${escapeHtml(plans[0].src)}" data-lightbox-alt="Plan d’ensemble de ${escapeHtml(territory)}" data-lightbox-caption="${escapeHtml(plans[0].caption || "Plan d’ensemble")}" data-lightbox-credit="${escapeHtml(plans[0].credit || "")}" data-lightbox-source-url="${escapeHtml(plans[0].sourceUrl || "")}" data-lightbox-source-label="${escapeHtml(plans[0].sourceLabel || "")}"><img src="${escapeHtml(plans[0].displaySrc || plans[0].src)}"${responsiveImageAttrs(plans[0])} alt="Plan d’ensemble de ${escapeHtml(territory)}" loading="lazy"><span>Agrandir le plan d’ensemble</span></button>${planCredit}${plans.length > 1 ? `<div class="plan-pager"><button type="button" data-plan-step="-1" aria-label="Plan précédent" title="Plan précédent">${chevronIcon(-1)}</button><span data-plan-count>1 / ${plans.length}</span><button type="button" data-plan-step="1" aria-label="Plan suivant" title="Plan suivant">${chevronIcon(1)}</button></div>` : ""}` : `<div class="overview-map">Plan d’ensemble à sélectionner</div>`}</div>
-    <div class="overview-actions"><a class="button button-ghost overview-official" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${isSeine ? "Découvrir les projets urbains de Clichy" : "Consulter la carte officielle des Docks"}&nbsp;${externalLinkIcon}</a><a class="button button-primary overview-explore" href="/carte/" data-route="explore">Voir les projets sur la carte interactive →</a><a class="button button-ghost overview-fiche" href="${projectHref(isSeine ? "seine-zac" : "docks-zac")}" data-project-link="${isSeine ? "seine-zac" : "docks-zac"}">Voir la fiche ${isSeine ? "Seine-Liberté" : "des Docks"} et ses projets →</a></div>
+    <div class="overview-copy"><p class="eyebrow">Vue d’ensemble</p><h2 id="overview-title">${isSeine ? "Découvrir le futur quartier Seine-Liberté" : "Découvrir les Docks et ses différents secteurs"}</h2>${content}<a class="overview-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${isSeine ? "Découvrir les projets urbains de Clichy" : "Consulter la carte officielle des Docks"}&nbsp;${externalLinkIcon}</a></div>
+    <div class="overview-visual">${plans.length ? `<button class="plan-preview" type="button" data-lightbox-src="${escapeHtml(plans[0].src)}" data-lightbox-alt="Plan d’ensemble de ${escapeHtml(territory)}" data-lightbox-caption="${escapeHtml(plans[0].caption || "Plan d’ensemble")}" data-lightbox-credit="${escapeHtml(plans[0].credit || "")}" data-lightbox-source-url="${escapeHtml(plans[0].sourceUrl || "")}" data-lightbox-source-label="${escapeHtml(plans[0].sourceLabel || "")}"><img src="${escapeHtml(plans[0].displaySrc || plans[0].src)}"${responsiveImageAttrs(plans[0])} alt="Plan d’ensemble de ${escapeHtml(territory)}" loading="lazy"><span>Agrandir le plan d’ensemble</span></button>${planCredit}${plans.length > 1 ? `<div class="plan-pager"><button type="button" data-plan-step="-1" aria-label="Plan précédent" title="Plan précédent">${chevronIcon(-1)}</button><span data-plan-count>1 / ${plans.length}</span><button type="button" data-plan-step="1" aria-label="Plan suivant" title="Plan suivant">${chevronIcon(1)}</button></div>` : ""}` : `<div class="overview-map">Plan d’ensemble à sélectionner</div>`}<div class="overview-actions"><a class="button button-primary overview-explore" href="/carte/" data-route="explore">Voir les projets sur la carte interactive →</a><a class="button button-light overview-fiche" href="${projectHref(isSeine ? "seine-zac" : "docks-zac")}" data-project-link="${isSeine ? "seine-zac" : "docks-zac"}">Voir la fiche ${isSeine ? "Seine-Liberté" : "des Docks"} et ses projets →</a></div></div>
   </section>`;
 }
 
@@ -325,8 +324,8 @@ export function renderProject(project, projectsById = new Map()) {
   return `<header class="project-header ${hero ? "has-media" : "no-media"}">
     <div class="project-header-media">${imageMarkup(project, hero)}</div>
     <div class="project-header-shade"></div>
+    <button class="back-link" type="button" data-back>← Retour</button>
     <div class="project-header-content">
-      <button class="back-link" type="button" data-back>← Retour</button>
       <div class="project-kicker"><span>${escapeHtml(projectTerritoryLabel(project))}</span><span>${escapeHtml(project.category)}</span></div>
       ${statusBadge(project)}
       <h1 class="view-title" data-page-heading>${escapeHtml(project.name)}</h1>

@@ -193,6 +193,7 @@ img { display: block; max-width: 100%; }
 .map-popup > span, .map-popup small { color: var(--muted); font-size: 10px; }
 .map-popup strong { font: 400 19px/1.1 var(--serif); }
 .map-popup a { width: fit-content; margin-top: 6px; color: var(--green-2); font-size: 11px; font-weight: 800; }
+.map-popup > a { text-decoration: underline; text-underline-offset: 2px; }
 .map-popup .popup-media-credit { line-height: 1.4; overflow-wrap: anywhere; }
 .map-popup .popup-media-credit a { margin: 0; font-size: inherit; font-weight: 700; }
 .map-popup-group { max-height: 310px; min-width: 230px; overflow-y: auto; }
@@ -238,6 +239,7 @@ img { display: block; max-width: 100%; }
 .project-header.no-media { min-height: 540px; }
 .project-header.no-media .media-placeholder { align-content: end; justify-items: end; padding: 0 24px 18px; box-sizing: border-box; }
 .project-header-content { width: min(1100px, 88vw); }
+.project-header > .back-link { position: absolute; z-index: 5; top: 26px; left: clamp(24px, 7vw, 110px); margin: 0; }
 .project-kicker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
 .project-kicker span { padding: 7px 11px; border: 1px solid rgba(255,255,255,.35); border-radius: 99px; font-size: 12px; }
 .project-header .status-badge { color: rgba(255,255,255,.78); font-size: 13px; letter-spacing: 0; }
@@ -744,21 +746,17 @@ img { display: block; max-width: 100%; }
 }
 
 /* Cohérence des liens, des attributions et des cartes de navigation. */
-a:hover:not(.button):not(.project-card-link):not(.related-card) { text-decoration: underline; text-underline-offset: 3px; }
 .button, .button:hover, .project-card-link, .project-card-link:hover { text-decoration: none; }
-.text-link { text-decoration: none; }
-.information-body a, .method-body a { color: var(--green); font-weight: 750; text-decoration: none; border-bottom: 1px solid currentColor; }
-.information-body a:hover, .method-body a:hover { color: var(--green-2); border-bottom-width: 2px; }
-.hero-caption a, .project-hero-credit a, .territory-hero-caption a, .territory-door-caption a,
-.presentation-plan-credit a, #lightbox-credit a { font-weight: 750; text-decoration: none; border-bottom: 1px solid currentColor; }
+.text-link { text-decoration: underline; text-underline-offset: 3px; }
+.information-body a, .method-body a { color: var(--green); font-weight: 500; text-decoration: underline; text-underline-offset: 2px; }
+.information-body a:hover, .method-body a:hover { color: var(--green-2); }
 .project-card-link:hover h3 { color: var(--green-2); }
 .overview-copy { min-width: 0; }
 .overview-source { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-height: 44px; padding: 10px 16px; border: 1px solid rgba(255,255,255,.55); border-radius: 99px; font-size: 13px; text-decoration: none; }
 .overview-source:hover { color: var(--green); background: white; text-decoration: none !important; }
-.overview-visual .presentation-plan-credit { align-self: center; max-width: 100%; margin: 13px 0 0; text-align: center; overflow-wrap: anywhere; }
-.overview-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 22px; }
-.overview-actions .button { padding: 12px 18px; text-align: center; line-height: 1.3; }
-.overview-actions .button-ghost { border-color: rgba(255,255,255,.6); }
+.overview-visual .presentation-plan-credit { align-self: end; max-width: 100%; margin: 13px 0 0; text-align: right; overflow-wrap: anywhere; }
+.overview-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 20px; }
+.overview-actions .button { min-width: 0; min-height: 44px; padding: 10px 12px; text-align: center; font-size: 12px; line-height: 1.25; }
 .component-list { grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); }
 .component-list .related-card { display: flex; min-height: 96px; gap: 12px; padding: 8px; border: 1px solid var(--line); border-radius: 13px; background: #fff; color: var(--ink); text-decoration: none; transition: border-color .2s, transform .2s, box-shadow .2s; }
 .component-list .related-card:hover { transform: translateY(-2px); border-color: var(--green-2); box-shadow: 0 8px 20px rgba(20,36,31,.1); }
@@ -769,9 +767,9 @@ a:hover:not(.button):not(.project-card-link):not(.related-card) { text-decoratio
 .related-card-copy strong { margin: 3px 0; font: 600 13px/1.3 var(--sans); overflow-wrap: anywhere; }
 .related-card-copy em { color: var(--green-2); font-size: 11px; font-style: normal; font-weight: 750; }
 .project-description + .project-description { margin-top: 16px; }
-.update-item .update-source { max-width: min(100%, 320px); white-space: normal; overflow-wrap: normal; text-align: left; }
+.update-item .update-source { max-width: min(100%, 320px); white-space: normal; overflow-wrap: normal; text-align: left; text-decoration: underline; text-underline-offset: 3px; }
 .update-item .update-source .external-link-icon { white-space: nowrap; }
-.lightbox figcaption { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; align-content: center; text-align: center; }
+.lightbox figcaption { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 14px; align-content: center; text-align: left; }
 #lightbox-caption { grid-column: 1; }
 #lightbox-credit { grid-column: 1; }
 #lightbox-count { grid-column: 2; grid-row: 1 / 3; align-self: center; }
@@ -781,7 +779,7 @@ a:hover:not(.button):not(.project-card-link):not(.related-card) { text-decoratio
   .hero-caption, .territory-door-caption { left: 18px; right: 18px; bottom: 9px; max-width: none; font-size: 10px; text-align: center; }
   .territory-door { padding-bottom: 85px; }
   .reference-plan { gap: 25px; }
-  .overview-actions { display: grid; width: 100%; }
+  .overview-actions { grid-template-columns: 1fr; width: 100%; }
   .overview-actions .button { width: 100%; }
   .lightbox figcaption { padding: 12px; font-size: 11px; }
 }
@@ -908,30 +906,13 @@ a:hover:not(.button):not(.project-card-link):not(.related-card) { text-decoratio
 
 @media (max-width: 760px) {
   .home-hero-overlay { background: linear-gradient(0deg, rgba(9,36,31,.97), rgba(9,36,31,.83) 62%, rgba(9,36,31,.55)); }
-  .home-hero-content { text-align: center; }
-  .home-hero .view-title { margin-inline: auto; }
-  .home-hero .hero-intro { max-width: 600px; margin: 28px auto 22px; text-align: left; }
-  .home-hero .hero-stats { text-align: center; }
-  .page-intro, .section-heading, .detail-heading { text-align: center; }
+  .home-hero .hero-intro { max-width: 600px; margin: 28px 0 22px; }
   .page-intro > p:not(.eyebrow) { max-width: 640px; margin-inline: auto; text-align: left; }
-  .section-heading { align-items: center; }
   .section-heading > div { width: 100%; }
-  .section-heading > .text-link { align-self: center; }
-  .feature-territory > h3 { text-align: center; }
-  .territory-door-copy, .territory-hero-content, .project-header-content { text-align: center; }
   .territory-door-copy > p:not(.eyebrow), .territory-hero-content > p:not(.eyebrow) { max-width: 620px; margin-inline: auto; text-align: left; }
-  .territory-hero-content .back-link, .project-header-content .back-link { margin-inline: auto; }
-  .territory-hero dl, .project-kicker { justify-content: center; }
-  .project-header .view-title { margin-inline: auto; }
-  .project-summary h2, .overview-copy > :is(.eyebrow, h2) { text-align: center; }
-  .project-summary .readiness-note, .overview-copy .overview-source { margin-inline: auto; }
   .key-figures div { align-items: center; text-align: center; }
   .gallery-controls { justify-content: center; }
-  .community-cta > div > :is(.eyebrow, h2), .updates-block > :is(.eyebrow, h2), .information-body h2, .method-body section > :is(.eyebrow, h2, h3) { text-align: center; }
-  .community-cta > .button { justify-self: center; }
-  .static-project-heading, .static-summary h2, .static-section > h2, .static-actions h2 { text-align: center; }
   .static-actions > div { justify-content: center; }
-  .territory-hero-caption { left: 12px; right: 12px; max-width: none; font-size: 11px; text-align: center; overflow-wrap: anywhere; }
   :is(#view-method, #view-privacy, #view-legal, #view-credits) :is(.page-intro, .method-body, .information-body) p:not(.eyebrow):not(:has(br)) { text-align: left; }
 }
 
@@ -940,17 +921,17 @@ a:hover:not(.button):not(.project-card-link):not(.related-card) { text-decoratio
 .section-heading .text-link:hover { color: white; background: var(--green); text-decoration: none; }
 .section-heading .text-link:hover span { color: white; }
 
-/* Liens éditoriaux et crédits : distinguer le corps de texte des sources média. */
-.information-body a, .method-body a { font-weight: 500; }
-.information-body strong a, .method-body strong a { font-weight: 700; }
-.inline-route { font-weight: 500; }
+/* Les liens dans les textes gardent un soulignement, les attributions restent discrètes. */
+.information-body strong a, .method-body strong a, .information-body .inline-route, .method-body .inline-route { font-weight: 500; }
+.map-popup a { text-decoration: underline; text-underline-offset: 2px; }
 :is(.hero-caption, .project-hero-credit, .territory-hero-caption, .territory-door-caption,
     .presentation-plan-credit, .gallery-item figcaption, #lightbox-credit,
     .static-visual figcaption, .static-document p) a {
-  font-size: inherit;
+  font-size: .85em;
   font-weight: 500;
-  text-decoration: none;
-  border-bottom: 1px solid currentColor;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border-bottom: 0;
 }
 :is(.hero-caption, .project-hero-credit, .territory-hero-caption, .territory-door-caption,
     .presentation-plan-credit, .gallery-item figcaption, #lightbox-credit,
@@ -960,53 +941,65 @@ a:hover:not(.button):not(.project-card-link):not(.related-card) { text-decoratio
   white-space: nowrap;
 }
 .gallery-item figcaption a, .static-visual figcaption span, .static-document p { font-size: 10px; }
-.update-item .update-source { font-size: 10px; font-weight: 600; }
+.update-item .update-source { font-size: 11px; font-weight: 600; }
+.lightbox figcaption { color: rgba(255,255,255,.86); }
+#lightbox-caption { font-size: 12px; }
+#lightbox-credit { color: rgba(255,255,255,.72); font-size: 10px; }
+#lightbox-credit a { color: inherit; }
 
-/* Vue d'ensemble : crédit puis navigation des plans ; actions communes aux deux secteurs. */
-.reference-plan { align-items: start; row-gap: 28px; }
-.overview-visual .presentation-plan-credit { margin: 12px 0 0; font-size: 10px; font-weight: 400; }
+/* La source officielle reste dans la colonne de texte ; les deux actions suivent le plan. */
+.reference-plan { align-items: center; column-gap: clamp(28px, 4vw, 60px); }
+.overview-copy .overview-source { margin-top: 18px; }
+.overview-visual .presentation-plan-credit { margin: 12px 0 0; font-size: 9px; font-weight: 400; }
 .overview-visual .plan-pager { margin-top: 12px; }
 .plan-pager button { background: var(--white); color: var(--green); border-color: var(--white); }
 .plan-pager button:hover { background: var(--paper-2); color: var(--green); }
-.overview-actions { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: 12px; margin-top: 0; }
-.overview-actions .button { width: 100%; min-height: 48px; }
-.overview-actions .overview-official { color: var(--green); background: var(--white); border-color: var(--white); }
-.overview-actions .overview-official:hover { background: var(--paper-2); }
-.overview-actions .overview-explore { color: #231f1b; background: var(--orange); }
-.overview-actions .overview-fiche { grid-column: 1 / -1; justify-self: center; width: auto; }
-.overview-actions .external-link-icon { width: 13px; height: 13px; }
+.overview-actions .overview-fiche { color: var(--green); background: var(--white); }
+.overview-actions .overview-fiche:hover { background: var(--paper-2); }
 .territory-hero-content > .button-primary { color: #231f1b; }
 .section-heading .text-link { color: #231f1b; border-color: var(--orange); background: var(--orange); }
 .section-heading .text-link span { color: #231f1b; }
 .section-heading .text-link:hover { color: #231f1b; background: #f08a67; }
 .section-heading .text-link:hover span { color: #231f1b; }
+@media (min-width: 761px) {
+  .home-hero-content { transform: translateY(-38px); }
+}
 
 @media (max-width: 760px) {
+  .page-intro .view-title { font-size: clamp(36px, 11vw, 50px); overflow-wrap: anywhere; }
   .brand small { display: block; font-size: 10px; margin-top: 2px; }
   .brand strong { font-size: 10px; }
   .brand { gap: 9px; }
   .home-hero-content, .territory-door-copy, .territory-hero-content, .project-header-content { text-align: left; }
   .home-hero .view-title, .territory-hero .view-title, .project-header .view-title { margin-inline: 0; text-align: left; }
-  .page-intro, .section-heading, .detail-heading, .feature-territory > h3,
-  .project-summary h2, .overview-copy > :is(.eyebrow, h2),
-  .community-cta > div > :is(.eyebrow, h2), .updates-block > :is(.eyebrow, h2),
+  .page-intro, .detail-heading, .feature-territory > h3, .project-summary h2,
   .information-body h2, .method-body section > :is(.eyebrow, h2, h3),
   .static-project-heading, .static-summary h2, .static-section > h2, .static-actions h2 { text-align: left; }
-  .section-heading { align-items: stretch; }
+  .territory-overview .overview-copy > h2 { text-align: left; }
+  .home-section .section-heading, .territory-section .section-heading, .updates-block > :is(.eyebrow, h2), .community-cta > div > :is(.eyebrow, h2), .overview-copy > .eyebrow { text-align: center; }
+  .home-section .section-heading, .territory-section .section-heading { align-items: center; }
   .section-heading > .text-link { align-self: center; text-align: center; }
   .territory-hero-content .back-link, .project-header-content .back-link { margin-inline: 0; }
-  .home-hero .hero-stats { width: 100%; max-width: 420px; margin: 35px auto 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 14px; }
-  .home-hero .hero-stats > div { display: flex; flex-direction: column; align-items: center; min-width: 0; text-align: center; }
-  .home-hero .hero-stats dt, .territory-hero dt { line-height: 1; }
-  .home-hero .hero-stats dd, .territory-hero dd { margin-top: 3px; line-height: 1.25; white-space: normal; }
-  .territory-hero dl { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-inline: auto; }
-  .territory-hero dl > div { justify-items: center; text-align: center; }
-  .territory-hero dt { font-size: 32px; }
-  .territory-hero dd { font-size: 10px; }
+  .home-hero .hero-actions { display: flex; flex-direction: column; align-items: flex-start; }
+  .home-hero .hero-actions .button { width: auto; }
+  .home-hero .hero-stats { width: 100%; margin: 35px 0 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px 12px; }
+  .home-hero .hero-stats > div { display: flex; align-items: center; gap: 8px; min-width: 0; text-align: left; }
+  .home-hero .hero-stats dt, .territory-hero dt { font-size: 30px; line-height: 1; }
+  .home-hero .hero-stats dd, .territory-hero dd { margin: 0; line-height: 1.25; white-space: normal; }
+  .home-hero .hero-stats dd { font-size: 10px; }
+  .territory-hero dl { width: fit-content; display: grid; grid-template-columns: 1fr; gap: 11px; margin-inline: 0; }
+  .territory-hero dl > div { display: grid; grid-template-columns: 42px minmax(0, 1fr); align-items: center; gap: 10px; text-align: left; }
+  .territory-hero dd { font-size: 11px; }
   .territory-door-copy { width: 100%; }
   .door-slide-controls { width: 100%; justify-content: center; }
   .overview-actions { grid-template-columns: 1fr; }
-  .overview-actions .overview-fiche { grid-column: 1; width: 100%; }
+  .overview-copy .overview-source { margin-inline: 0; }
+  .overview-visual .presentation-plan-credit { font-size: 9px; }
+  .community-cta > .button { justify-self: center; }
+  .project-kicker { justify-content: flex-start; }
+  .project-header > .back-link { top: 22px; left: 20px; }
+  .hero-caption, .territory-door-caption, .territory-hero-caption { left: auto; right: 12px; max-width: min(82vw, 360px); font-size: 9px; text-align: right; }
+  .territory-hero-caption { overflow-wrap: anywhere; }
   .site-footer { align-items: center; text-align: center; }
   .site-footer > div { justify-items: center; }
   .footer-links { justify-content: center; }
