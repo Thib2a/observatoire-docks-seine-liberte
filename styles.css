@@ -939,3 +939,76 @@ a:hover:not(.button):not(.project-card-link):not(.related-card) { text-decoratio
 .section-heading .text-link { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 10px 17px; border: 1px solid var(--green); border-radius: 99px; color: var(--green); background: transparent; font-size: 13px; text-decoration: none; }
 .section-heading .text-link:hover { color: white; background: var(--green); text-decoration: none; }
 .section-heading .text-link:hover span { color: white; }
+
+/* Liens éditoriaux et crédits : distinguer le corps de texte des sources média. */
+.information-body a, .method-body a { font-weight: 500; }
+.information-body strong a, .method-body strong a { font-weight: 700; }
+.inline-route { font-weight: 500; }
+:is(.hero-caption, .project-hero-credit, .territory-hero-caption, .territory-door-caption,
+    .presentation-plan-credit, .gallery-item figcaption, #lightbox-credit,
+    .static-visual figcaption, .static-document p) a {
+  font-size: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+:is(.hero-caption, .project-hero-credit, .territory-hero-caption, .territory-door-caption,
+    .presentation-plan-credit, .gallery-item figcaption, #lightbox-credit,
+    .static-visual figcaption, .static-document p) a[target="_blank"]::after {
+  content: " ↗";
+  font-size: .9em;
+  white-space: nowrap;
+}
+.gallery-item figcaption a, .static-visual figcaption span, .static-document p { font-size: 10px; }
+.update-item .update-source { font-size: 10px; font-weight: 600; }
+
+/* Vue d'ensemble : crédit puis navigation des plans ; actions communes aux deux secteurs. */
+.reference-plan { align-items: start; row-gap: 28px; }
+.overview-visual .presentation-plan-credit { margin: 12px 0 0; font-size: 10px; font-weight: 400; }
+.overview-visual .plan-pager { margin-top: 12px; }
+.plan-pager button { background: var(--white); color: var(--green); border-color: var(--white); }
+.plan-pager button:hover { background: var(--paper-2); color: var(--green); }
+.overview-actions { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: 12px; margin-top: 0; }
+.overview-actions .button { width: 100%; min-height: 48px; }
+.overview-actions .overview-official { color: var(--green); background: var(--white); border-color: var(--white); }
+.overview-actions .overview-official:hover { background: var(--paper-2); }
+.overview-actions .overview-explore { color: #231f1b; background: var(--orange); }
+.overview-actions .overview-fiche { grid-column: 1 / -1; justify-self: center; width: auto; }
+.overview-actions .external-link-icon { width: 13px; height: 13px; }
+.territory-hero-content > .button-primary { color: #231f1b; }
+.section-heading .text-link { color: #231f1b; border-color: var(--orange); background: var(--orange); }
+.section-heading .text-link span { color: #231f1b; }
+.section-heading .text-link:hover { color: #231f1b; background: #f08a67; }
+.section-heading .text-link:hover span { color: #231f1b; }
+
+@media (max-width: 760px) {
+  .brand small { display: block; font-size: 10px; margin-top: 2px; }
+  .brand strong { font-size: 10px; }
+  .brand { gap: 9px; }
+  .home-hero-content, .territory-door-copy, .territory-hero-content, .project-header-content { text-align: left; }
+  .home-hero .view-title, .territory-hero .view-title, .project-header .view-title { margin-inline: 0; text-align: left; }
+  .page-intro, .section-heading, .detail-heading, .feature-territory > h3,
+  .project-summary h2, .overview-copy > :is(.eyebrow, h2),
+  .community-cta > div > :is(.eyebrow, h2), .updates-block > :is(.eyebrow, h2),
+  .information-body h2, .method-body section > :is(.eyebrow, h2, h3),
+  .static-project-heading, .static-summary h2, .static-section > h2, .static-actions h2 { text-align: left; }
+  .section-heading { align-items: stretch; }
+  .section-heading > .text-link { align-self: center; text-align: center; }
+  .territory-hero-content .back-link, .project-header-content .back-link { margin-inline: 0; }
+  .home-hero .hero-stats { width: 100%; max-width: 420px; margin: 35px auto 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 14px; }
+  .home-hero .hero-stats > div { display: flex; flex-direction: column; align-items: center; min-width: 0; text-align: center; }
+  .home-hero .hero-stats dt, .territory-hero dt { line-height: 1; }
+  .home-hero .hero-stats dd, .territory-hero dd { margin-top: 3px; line-height: 1.25; white-space: normal; }
+  .territory-hero dl { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-inline: auto; }
+  .territory-hero dl > div { justify-items: center; text-align: center; }
+  .territory-hero dt { font-size: 32px; }
+  .territory-hero dd { font-size: 10px; }
+  .territory-door-copy { width: 100%; }
+  .door-slide-controls { width: 100%; justify-content: center; }
+  .overview-actions { grid-template-columns: 1fr; }
+  .overview-actions .overview-fiche { grid-column: 1; width: 100%; }
+  .site-footer { align-items: center; text-align: center; }
+  .site-footer > div { justify-items: center; }
+  .footer-links { justify-content: center; }
+  .site-footer button { text-align: center; }
+}

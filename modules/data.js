@@ -2,7 +2,7 @@ export const DATA_URL = "./data/app-data.json";
 
 export function mediaCreditLabel(value) {
   const credit = String(value || "").trim();
-  return `Crédit/Source : ${normalizeAttribution(credit || "Non précisé")}`;
+  return normalizeAttribution(credit || "Non précisé");
 }
 
 export function normalizeAttribution(value) {
