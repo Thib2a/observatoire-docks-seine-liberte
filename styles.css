@@ -912,6 +912,25 @@ a:hover:not(.button):not(.project-card-link):not(.related-card) { text-decoratio
   .home-hero .view-title { margin-inline: auto; }
   .home-hero .hero-intro { max-width: 600px; margin: 28px auto 22px; text-align: left; }
   .home-hero .hero-stats { text-align: center; }
+  .page-intro, .section-heading, .detail-heading { text-align: center; }
+  .page-intro > p:not(.eyebrow) { max-width: 640px; margin-inline: auto; text-align: left; }
+  .section-heading { align-items: center; }
+  .section-heading > div { width: 100%; }
+  .section-heading > .text-link { align-self: center; }
+  .feature-territory > h3 { text-align: center; }
+  .territory-door-copy, .territory-hero-content, .project-header-content { text-align: center; }
+  .territory-door-copy > p:not(.eyebrow), .territory-hero-content > p:not(.eyebrow) { max-width: 620px; margin-inline: auto; text-align: left; }
+  .territory-hero-content .back-link, .project-header-content .back-link { margin-inline: auto; }
+  .territory-hero dl, .project-kicker { justify-content: center; }
+  .project-header .view-title { margin-inline: auto; }
+  .project-summary h2, .overview-copy > :is(.eyebrow, h2) { text-align: center; }
+  .project-summary .readiness-note, .overview-copy .overview-source { margin-inline: auto; }
+  .key-figures div { align-items: center; text-align: center; }
+  .gallery-controls { justify-content: center; }
+  .community-cta > div > :is(.eyebrow, h2), .updates-block > :is(.eyebrow, h2), .information-body h2, .method-body section > :is(.eyebrow, h2, h3) { text-align: center; }
+  .community-cta > .button { justify-self: center; }
+  .static-project-heading, .static-summary h2, .static-section > h2, .static-actions h2 { text-align: center; }
+  .static-actions > div { justify-content: center; }
   .territory-hero-caption { left: 12px; right: 12px; max-width: none; font-size: 11px; text-align: center; overflow-wrap: anywhere; }
   :is(#view-method, #view-privacy, #view-legal, #view-credits) :is(.page-intro, .method-body, .information-body) p:not(.eyebrow):not(:has(br)) { text-align: left; }
 }

@@ -1,5 +1,5 @@
-import {escapeHtml, mediaAlt, projectHref, projectTerritoryLabel, projectStatusLabel, statusColor, statusSymbol} from "./data.js?v=d228314077b1";
-import {cardVisual} from "./views.js?v=d228314077b1";
+import {escapeHtml, mediaAlt, projectHref, projectTerritoryLabel, projectStatusLabel, statusColor, statusSymbol} from "./data.js?v=9c249f67731e";
+import {cardVisual} from "./views.js?v=9c249f67731e";
 
 function popupPlace(project) {
   const territory = projectTerritoryLabel(project);
