@@ -1,12 +1,12 @@
 import {
-  DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaCreditLabel, sourceName, normalize,
+  DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, normalize,
   projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=840beca40b83";
-import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=840beca40b83";
-import {syncPageHeading} from "./modules/headings.js?v=840beca40b83";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=840beca40b83";
-import {ProjectMap} from "./modules/map.js?v=840beca40b83";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=840beca40b83";
+} from "./modules/data.js?v=d228314077b1";
+import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=d228314077b1";
+import {syncPageHeading} from "./modules/headings.js?v=d228314077b1";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=d228314077b1";
+import {ProjectMap} from "./modules/map.js?v=d228314077b1";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=d228314077b1";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -232,15 +232,16 @@ function renderHome() {
 
 function setPresentationCredit(container, item, includeCaption = true) {
   if (!container || !item) return;
-  container.textContent = `${includeCaption ? `${item.caption || item.projectName || "Visuel"} · ` : ""}${mediaCreditLabel(item.credit)}`;
+  container.textContent = includeCaption ? `${item.caption || item.projectName || "Visuel"} · ` : "";
   const url = safeLinkUrl(item.sourceUrl);
-  if (!url) return;
+  const label = mediaAttribution(item);
+  if (!url) { container.append(document.createTextNode(label)); return; }
   const source = document.createElement("a");
   source.href = url;
   source.target = "_blank";
   source.rel = "noopener noreferrer";
-  source.textContent = sourceName(url, item.sourceLabel);
-  container.append(document.createTextNode(" · "), source);
+  source.textContent = label;
+  container.append(source);
 }
 
 function mountSlides(selector, keys = [], delay = 0) {

@@ -2,11 +2,25 @@ export const DATA_URL = "./data/app-data.json";
 
 export function mediaCreditLabel(value) {
   const credit = String(value || "").trim();
-  if (!credit) return "Crédit non précisé";
-  if (credit.startsWith("©")) return credit;
-  if (/^(Dossier de création|Rapport d’activité|Inventaire citoyen)/i.test(credit)) return `Document : ${credit}`;
-  if (/^(Séquano \/ site officiel des Docks|Google (?:Maps - )?Street View|Caue Observatoire)/i.test(credit) || credit.includes("copie du site citoyen")) return `Source : ${credit}`;
-  return `Crédit : ${credit}`;
+  return `Crédit/Source : ${normalizeAttribution(credit || "Non précisé")}`;
+}
+
+export function normalizeAttribution(value) {
+  return String(value || "").replace(/(\s(?:\/|--|—|–|-)\s+)([a-zà-ÿ])/g,
+    (_, separator, letter) => separator + letter.toLocaleUpperCase("fr-FR"));
+}
+
+function attributionKey(value) {
+  return String(value || "").toLocaleLowerCase("fr-FR").normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "").replace(/\bet\b/g, "&")
+    .replace(/[^a-z0-9&]/g, "");
+}
+
+export function mediaAttribution(visual) {
+  const credit = normalizeAttribution(visual?.credit || visual?.sourceLabel || "Non précisé");
+  const source = sourceName(visual?.sourceUrl, visual?.sourceLabel);
+  const repeated = attributionKey(credit).includes(attributionKey(source));
+  return mediaCreditLabel(credit + (visual?.sourceUrl && source && !repeated ? ` · ${source}` : ""));
 }
 
 export const STATUS_ORDER = [
@@ -151,9 +165,9 @@ function sourceKey(value) {
 
 export function sourceName(url, label = "") {
   const name = String(label || "").trim();
-  if (name && !/^(source|consulter la source)$/i.test(name)) return name;
+  if (name && !/^(source|consulter la source)$/i.test(name)) return normalizeAttribution(name);
   const recorded = sourceNames.get(sourceKey(url));
-  if (recorded) return recorded;
+  if (recorded) return normalizeAttribution(recorded);
   try { return new URL(url).hostname.replace(/^www\./, ""); }
   catch { return "Source"; }
 }

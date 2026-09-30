@@ -1,19 +1,11 @@
-import {escapeHtml, mediaAlt, mediaCreditLabel, projectHref, projectTerritoryLabel, projectStatusLabel, safeLinkUrl, sourceName, statusColor, statusSymbol} from "./data.js?v=840beca40b83";
-import {cardVisual} from "./views.js?v=840beca40b83";
+import {escapeHtml, mediaAlt, projectHref, projectTerritoryLabel, projectStatusLabel, statusColor, statusSymbol} from "./data.js?v=d228314077b1";
+import {cardVisual} from "./views.js?v=d228314077b1";
 
-const qualityLabel = quality => ({
-  VERIFIE: "Emplacement vérifié",
-  APPROX: "Emplacement vérifié",
-  APPROXIMATIF: "Emplacement vérifié",
-  SECTEUR: "Emplacement vérifié",
-  GLOBAL: "Emplacement vérifié",
-  EXACT: "Emplacement vérifié",
-})[quality] || "Emplacement vérifié";
-
-function popupMediaCredit(visual) {
-  const url = safeLinkUrl(visual?.sourceUrl);
-  const credit = escapeHtml(mediaCreditLabel(visual?.credit));
-  return `${credit}${url ? ` · <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceName(url, visual?.sourceLabel))}</a>` : ""}`;
+function popupPlace(project) {
+  const territory = projectTerritoryLabel(project);
+  const lot = (project.lot || "").replace(/^Abords\s+/i, "").trim();
+  if (!lot || lot.toLocaleLowerCase("fr-FR") === territory.toLocaleLowerCase("fr-FR")) return territory;
+  return `${territory} · ${lot}`;
 }
 
 
@@ -36,8 +28,6 @@ export class ProjectMap {
       image.src = button.dataset.popupSrc;
       image.alt = button.dataset.popupAlt || "";
       image.className = button.dataset.popupRole === "plan" ? "is-plan" : "is-photo";
-      const credit = button.closest(".map-popup")?.querySelector(".popup-media-credit");
-      if (credit) credit.innerHTML = popupMediaCredit({credit: button.dataset.popupCredit, sourceUrl: button.dataset.popupSourceUrl, sourceLabel: button.dataset.popupSourceLabel});
     });
   }
 
@@ -95,17 +85,16 @@ export class ProjectMap {
           iconSize: isGroup ? [36, 36] : isTerritory ? [32, 32] : [30, 30],
           iconAnchor: isGroup ? [18, 18] : isTerritory ? [16, 16] : [15, 15],
         }),
-        title: isGroup ? `${group.length} projets — ${qualityLabel(project.map.quality).toLowerCase()}` : project.name,
+        title: isGroup ? `${group.length} projets` : project.name,
       });
       const popup = isGroup
-        ? `<div class="map-popup map-popup-group"><span>${escapeHtml(qualityLabel(project.map.quality))} · ${group.length} projets</span><strong>${escapeHtml(project.map.sector || project.map.zone || project.territory)}</strong>${group.slice(0, 14).map(item => `<a href="${projectHref(item.id)}" data-project-link="${escapeHtml(item.id)}">${escapeHtml(item.name)}</a>`).join("")}${group.length > 14 ? `<small>+ ${group.length - 14} autres projets dans la liste</small>` : ""}</div>`
+        ? `<div class="map-popup map-popup-group"><span>${group.length} projets</span><strong>${escapeHtml(project.map.sector || project.map.zone || project.territory)}</strong>${group.slice(0, 14).map(item => `<a href="${projectHref(item.id)}" data-project-link="${escapeHtml(item.id)}">${escapeHtml(item.name)}</a>`).join("")}${group.length > 14 ? `<small>+ ${group.length - 14} autres projets dans la liste</small>` : ""}</div>`
         : `<div class="map-popup">
           ${popupVisual ? `<img class="${popupVisual.role.startsWith("PLAN_") ? "is-plan" : "is-photo"}" src="${escapeHtml(popupVisual.responsiveSources?.find(s => s.width >= 480)?.src || popupVisual.displaySrc || popupVisual.src)}" alt="${escapeHtml(mediaAlt(project, popupVisual))}" loading="lazy">` : ""}
           ${popupVisual && popupPlan ? `<div class="popup-media-switch"><button type="button" data-popup-src="${escapeHtml(popupVisual.responsiveSources?.find(s => s.width >= 480)?.src || popupVisual.displaySrc || popupVisual.src)}" data-popup-alt="${escapeHtml(mediaAlt(project, popupVisual))}" data-popup-role="photo" data-popup-credit="${escapeHtml(popupVisual.credit || "")}" data-popup-source-url="${escapeHtml(popupVisual.sourceUrl || "")}" data-popup-source-label="${escapeHtml(popupVisual.sourceLabel || "")}">Photo</button><button type="button" data-popup-src="${escapeHtml(popupPlan.responsiveSources?.find(s => s.width >= 480)?.src || popupPlan.displaySrc || popupPlan.src)}" data-popup-alt="${escapeHtml(mediaAlt(project, popupPlan))}" data-popup-role="plan" data-popup-credit="${escapeHtml(popupPlan.credit || "")}" data-popup-source-url="${escapeHtml(popupPlan.sourceUrl || "")}" data-popup-source-label="${escapeHtml(popupPlan.sourceLabel || "")}">Plan</button></div>` : ""}
-          ${popupVisual ? `<small class="popup-media-credit">${popupMediaCredit(popupVisual)}</small>` : ""}
-          <span>${escapeHtml(projectTerritoryLabel(project))}${project.lot ? ` · lot ${escapeHtml(project.lot)}` : ""}</span>
+          <span>${escapeHtml(popupPlace(project))}</span>
           <strong>${escapeHtml(project.name)}</strong>
-          <small>${isTerritory ? "Repère de quartier · " : `${escapeHtml(projectStatusLabel(project))} · `}${escapeHtml(qualityLabel(project.map.quality))}</small>
+          <small>${isTerritory ? "Repère de quartier" : escapeHtml(projectStatusLabel(project))}</small>
           <a href="${projectHref(project.id)}" data-project-link="${escapeHtml(project.id)}">Voir la fiche</a>
         </div>`;
       marker.bindPopup(popup);
