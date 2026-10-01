@@ -1,12 +1,12 @@
 import {
   DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution, normalize,
   projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=c70c9c584bd3";
-import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=c70c9c584bd3";
-import {syncPageHeading} from "./modules/headings.js?v=c70c9c584bd3";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=c70c9c584bd3";
-import {ProjectMap} from "./modules/map.js?v=c70c9c584bd3";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=c70c9c584bd3";
+} from "./modules/data.js?v=f6d1cc8a1bd2";
+import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=f6d1cc8a1bd2";
+import {syncPageHeading} from "./modules/headings.js?v=f6d1cc8a1bd2";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=f6d1cc8a1bd2";
+import {ProjectMap} from "./modules/map.js?v=f6d1cc8a1bd2";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=f6d1cc8a1bd2";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -180,7 +180,7 @@ function showRoute(parsed, options = {}) {
       if ($(".explorer-panel")) $(".explorer-panel").scrollTop = view.sidebarScroll || 0;
       if (parsed.route === "explore") state.map.restoreViewport(view.map);
     });
-  } else window.scrollTo({top: 0, behavior: options.instant ? "auto" : "smooth"});
+  } else window.scrollTo({top: 0, behavior: options.instant || window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
   $("#menu-toggle").setAttribute("aria-expanded", "false");
   $("#main-nav").classList.remove("is-open");
 }
@@ -234,7 +234,7 @@ function renderLimitedUpdates(selector, rows, label, emptyMessage) {
   const first = rows.slice(0, 10).map(updateRow).join("");
   const rest = rows.slice(10);
   const more = rest.length
-    ? `<details class="updates-more"><summary><span class="updates-more-closed">Afficher les ${rest.length} autres ${label}</span><span class="updates-more-open">Masquer les autres ${label}</span></summary><div class="update-list">${rest.map(updateRow).join("")}</div></details>`
+    ? `<details class="updates-more related-group"><summary><span class="updates-more-closed">Afficher les ${rest.length} autres ${label}</span><span class="updates-more-open">Masquer les autres ${label}</span></summary><div class="update-list">${rest.map(updateRow).join("")}</div></details>`
     : "";
   $(selector).innerHTML = first + more || `<div class="empty-state"><strong>${emptyMessage}</strong></div>`;
 }
