@@ -1,12 +1,12 @@
 import {
-  DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, normalize,
+  DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution, normalize,
   projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=6768ae5324d1";
-import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=6768ae5324d1";
-import {syncPageHeading} from "./modules/headings.js?v=6768ae5324d1";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=6768ae5324d1";
-import {ProjectMap} from "./modules/map.js?v=6768ae5324d1";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=6768ae5324d1";
+} from "./modules/data.js?v=5f1603f6be60";
+import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=5f1603f6be60";
+import {syncPageHeading} from "./modules/headings.js?v=5f1603f6be60";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=5f1603f6be60";
+import {ProjectMap} from "./modules/map.js?v=5f1603f6be60";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=5f1603f6be60";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -225,22 +225,35 @@ function renderHome() {
 
   const updates = state.data.territoryNews.filter(update => state.byId.get(update.projectId)?.readiness !== "NON_PRET");
   $("#home-updates").innerHTML = updates.slice(0, 5).map(updateRow).join("");
-  $("#territory-news-list").innerHTML = updates.map(updateRow).join("") || '<div class="empty-state"><strong>Aucune actualité datée</strong></div>';
-  $("#observatory-journal-list").innerHTML = state.data.observatoryJournal.map(updateRow).join("") || '<div class="empty-state"><strong>Aucune mise à jour documentée</strong></div>';
+  renderLimitedUpdates("#territory-news-list", updates, "actualités", "Aucune actualité datée");
+  renderLimitedUpdates("#observatory-journal-list", state.data.observatoryJournal, "entrées du journal", "Aucune mise à jour documentée");
   renderTimeline();
+}
+
+function renderLimitedUpdates(selector, rows, label, emptyMessage) {
+  const first = rows.slice(0, 10).map(updateRow).join("");
+  const rest = rows.slice(10);
+  const more = rest.length
+    ? `<details class="updates-more"><summary><span class="updates-more-closed">Afficher les ${rest.length} autres ${label}</span><span class="updates-more-open">Masquer les autres ${label}</span></summary><div class="update-list">${rest.map(updateRow).join("")}</div></details>`
+    : "";
+  $(selector).innerHTML = first + more || `<div class="empty-state"><strong>${emptyMessage}</strong></div>`;
 }
 
 function setPresentationCredit(container, item, includeCaption = true) {
   if (!container || !item) return;
   container.textContent = includeCaption ? `${item.caption || item.projectName || "Visuel"} · ` : "";
+  container.removeAttribute("title");
   const url = safeLinkUrl(item.sourceUrl);
-  const label = mediaAttribution(item);
-  if (!url) { container.append(document.createTextNode(label)); return; }
+  const label = mediaDisplayAttribution(item);
+  const full = mediaAttribution(item);
+  if (!url) { container.title = full; container.append(document.createTextNode(label)); return; }
   const source = document.createElement("a");
   source.href = url;
   source.target = "_blank";
   source.rel = "noopener noreferrer";
   source.textContent = label;
+  source.title = full;
+  source.setAttribute("aria-label", full);
   container.append(source);
 }
 
@@ -497,7 +510,7 @@ function bindEvents() {
     }
     const scrollButton = event.target.closest("[data-scroll-target], [data-timeline-target]");
     if (scrollButton) {
-      document.getElementById(scrollButton.dataset.scrollTarget || scrollButton.dataset.timelineTarget)?.scrollIntoView({behavior: "smooth", block: "start"});
+      document.getElementById(scrollButton.dataset.scrollTarget || scrollButton.dataset.timelineTarget)?.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
       return;
     }
     const projectLink = event.target.closest("[data-project-link]");

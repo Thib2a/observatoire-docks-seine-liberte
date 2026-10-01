@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
-  chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaAttribution, projectHref, projectStatusLabel, statusBadge,
-} from "./data.js?v=6768ae5324d1";
+  chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaAttribution, mediaDisplayAttribution, projectHref, projectStatusLabel, statusBadge,
+} from "./data.js?v=5f1603f6be60";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -55,8 +55,9 @@ function imageMarkup(project, visual, className = "") {
 
 function mediaCredit(visual) {
   if (!visual) return "";
-  const label = escapeHtml(mediaAttribution(visual));
-  return visual.sourceUrl ? `<a href="${escapeHtml(safeLinkUrl(visual.sourceUrl))}" target="_blank" rel="noopener">${label}</a>` : `<span>${label}</span>`;
+  const label = escapeHtml(mediaDisplayAttribution(visual));
+  const full = escapeHtml(mediaAttribution(visual));
+  return visual.sourceUrl ? `<a href="${escapeHtml(safeLinkUrl(visual.sourceUrl))}" target="_blank" rel="noopener" aria-label="${full}" title="${full}">${label}</a>` : `<span title="${full}">${label}</span>`;
 }
 
 
@@ -160,6 +161,7 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
       <button class="button button-primary" type="button" data-explore-territory="${escapeHtml(territory)}">Explorer la carte</button>
       <dl><div><dt>${operations.length}</dt><dd>Opérations suivies</dd></div><div><dt>${current.length}</dt><dd>En cours / à venir</dd></div><div><dt>${delivered.length}</dt><dd>Opérations livrées</dd></div></dl>
     </div>
+    <button class="swipe-hint" type="button" data-scroll-target="overview-title" aria-label="Descendre vers la vue d’ensemble"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg><span>Glisser vers le haut</span></button>
     <div class="territory-hero-caption">${isSeine ? (contextVisual ? `Vue de contexte du site, non rendu du projet final · ${mediaCredit(contextVisual)}` : "") : (visual ? `${escapeHtml(visual.caption)} · ${mediaCredit(visual)}` : "")}</div>
   </header>
   <div class="territory-body">

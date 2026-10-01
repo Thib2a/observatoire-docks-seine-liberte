@@ -962,8 +962,22 @@ img { display: block; max-width: 100%; }
 .section-heading .text-link:hover { color: #231f1b; background: #f08a67; }
 .section-heading .text-link:hover span { color: #231f1b; }
 @media (min-width: 761px) {
-  .home-hero-content { transform: translateY(-38px); }
+  .home-hero-content { transform: translateY(-90px); }
 }
+
+/* Une seule ligne sous les liens de provenance de la chronologie. */
+.history-event .text-link { border-bottom: 0; }
+
+.updates-more { margin-top: 20px; }
+.updates-more summary { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 9px 16px; border: 1px solid var(--line); border-radius: 99px; color: var(--green); font-size: 13px; font-weight: 700; cursor: pointer; list-style: none; }
+.updates-more summary::-webkit-details-marker { display: none; }
+.updates-more summary::after { content: "⌄"; font-size: 19px; line-height: 1; transition: transform .2s; }
+.updates-more[open] summary::after { transform: rotate(180deg); }
+.updates-more-open, .updates-more[open] .updates-more-closed { display: none; }
+.updates-more[open] .updates-more-open { display: inline; }
+.updates-more > .update-list { margin-top: 18px; }
+.swipe-hint { display: none; }
+@keyframes swipe-up { 0%, 100% { transform: translateY(3px); opacity: .6; } 50% { transform: translateY(-4px); opacity: 1; } }
 
 @media (max-width: 760px) {
   .page-intro .view-title { font-size: clamp(36px, 11vw, 50px); overflow-wrap: anywhere; }
@@ -971,32 +985,43 @@ img { display: block; max-width: 100%; }
   .brand strong { font-size: 10px; }
   .brand { gap: 9px; }
   .home-hero-content, .territory-door-copy, .territory-hero-content, .project-header-content { text-align: left; }
+  .home-hero-content { width: 100%; }
   .home-hero .view-title, .territory-hero .view-title, .project-header .view-title { margin-inline: 0; text-align: left; }
   .page-intro, .detail-heading, .feature-territory > h3, .project-summary h2,
   .information-body h2, .method-body section > :is(.eyebrow, h2, h3),
   .static-project-heading, .static-summary h2, .static-section > h2, .static-actions h2 { text-align: left; }
   .territory-overview .overview-copy > h2 { text-align: left; }
-  .home-section .section-heading, .territory-section .section-heading, .updates-block > :is(.eyebrow, h2), .community-cta > div > :is(.eyebrow, h2), .overview-copy > .eyebrow { text-align: center; }
+  .home-section .section-heading, .territory-section .section-heading, .updates-block > :is(.eyebrow, h2), .community-cta > div > .eyebrow, .overview-copy > .eyebrow { text-align: center; }
   .home-section .section-heading, .territory-section .section-heading { align-items: center; }
   .section-heading > .text-link { align-self: center; text-align: center; }
   .territory-hero-content .back-link, .project-header-content .back-link { margin-inline: 0; }
-  .home-hero .hero-actions { display: flex; flex-direction: column; align-items: flex-start; }
+  .home-hero .hero-actions { display: flex; flex-direction: column; align-items: center; }
   .home-hero .hero-actions .button { width: auto; }
-  .home-hero .hero-stats { width: 100%; margin: 35px 0 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px 12px; }
+  .home-hero .hero-stats { width: fit-content; max-width: 100%; margin: 35px auto 0; grid-template-columns: repeat(2, max-content); gap: 17px 18px; justify-content: center; }
   .home-hero .hero-stats > div { display: flex; align-items: center; gap: 8px; min-width: 0; text-align: left; }
   .home-hero .hero-stats dt, .territory-hero dt { font-size: 30px; line-height: 1; }
   .home-hero .hero-stats dd, .territory-hero dd { margin: 0; line-height: 1.25; white-space: normal; }
   .home-hero .hero-stats dd { font-size: 10px; }
-  .territory-hero dl { width: fit-content; display: grid; grid-template-columns: 1fr; gap: 11px; margin-inline: 0; }
+  .territory-hero dl { width: fit-content; display: grid; grid-template-columns: 1fr; gap: 11px; margin-inline: auto; }
   .territory-hero dl > div { display: grid; grid-template-columns: 42px minmax(0, 1fr); align-items: center; gap: 10px; text-align: left; }
   .territory-hero dd { font-size: 11px; }
   .territory-door-copy { width: 100%; }
+  .feature-territory > h3 { text-align: center; }
+  .territory-door-copy > .button { display: flex; width: fit-content; margin-inline: auto; }
+  .territory-hero-content > .button-primary { display: flex; width: fit-content; margin-inline: auto; }
+  .community-cta > div > h2 { text-align: left; }
+  .project-header-content { text-align: center; }
+  .project-header .view-title { margin-inline: auto; text-align: center; }
+  .project-kicker { justify-content: center; }
+  .swipe-hint { position: absolute; z-index: 5; top: calc(100svh - 132px); right: 10px; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; color: #fff; background: rgba(8,40,33,.78); backdrop-filter: blur(8px); cursor: pointer; }
+  .swipe-hint span { display: none; }
+  .swipe-hint svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; animation: swipe-up 1.8s ease-in-out infinite; }
+  .territory-hero-content { padding-bottom: 115px; }
   .door-slide-controls { width: 100%; justify-content: center; }
   .overview-actions { grid-template-columns: 1fr; }
   .overview-copy .overview-source { margin-inline: 0; }
   .overview-visual .presentation-plan-credit { font-size: 9px; }
   .community-cta > .button { justify-self: center; }
-  .project-kicker { justify-content: flex-start; }
   .project-header > .back-link { top: 22px; left: 20px; }
   .hero-caption, .territory-door-caption, .territory-hero-caption { left: auto; right: 12px; max-width: min(82vw, 360px); font-size: 9px; text-align: right; }
   .territory-hero-caption { overflow-wrap: anywhere; }

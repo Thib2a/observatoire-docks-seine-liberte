@@ -26,6 +26,24 @@ export function mediaAttribution(visual) {
   return mediaCreditLabel(credit + (visual?.sourceUrl && source && !repeated ? ` · ${source}` : ""));
 }
 
+export function mediaDisplayAttribution(visual) {
+  const credit = normalizeAttribution(visual?.credit || visual?.sourceLabel || "Non précisé");
+  const source = sourceName(visual?.sourceUrl, visual?.sourceLabel);
+  let short = credit;
+  if (/^MG-AU avec /i.test(credit)) short = "MG-AU et partenaires";
+  else if (/^AP-HP \/ Équipe de maîtrise/i.test(credit)) short = "AP-HP · équipe du campus";
+  else if (/^Pétitionnaire non lisible/i.test(credit)) short = "Plans VPEAS / Theop / Wild Trees";
+  else if (/^Rapport d’activité Séquano 2025.*FévrierCarré/i.test(credit)) short = "Séquano · FévrierCarré";
+  else if (/^Urban & City \/ Equator Paris Architecture/i.test(credit)) short = "Urban & City · Equator Paris Architecture";
+  else if (/^Constructa \/ Sinteo/i.test(credit)) short = "Constructa · plans JBPA / Studio Montazami";
+  else if (/^Dossier de création (?:de la )?ZAC Seine-Liberté/i.test(credit)) short = credit.replace(/^Dossier de création (?:de la )?ZAC Seine-Liberté/i, "Dossier ZAC Seine-Liberté").replace(/page (\d+)/i, "p. $1");
+  else if (/^Campus Hospitalo-Universitaire Saint-Ouen Grand Paris-Nord/i.test(credit)) short = "Campus Grand Paris Nord";
+  else if (/^Ville de Clichy \/ Séquano; copie du site citoyen/i.test(credit)) short = "Ville de Clichy / Séquano";
+  else if (/^Séquano \/ Site officiel des Docks$/i.test(credit)) short = "Séquano / Docks";
+  const repeated = attributionKey(short).includes(attributionKey(source)) || (/^Google (?:Maps|Street View)/i.test(short) && /^Google Street View$/i.test(source));
+  return mediaCreditLabel(short + (visual?.sourceUrl && source && !repeated && short.length + source.length < 46 ? ` · ${source}` : ""));
+}
+
 export const STATUS_ORDER = [
   "EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES",
   "SUSPENDU / RETARDÉ", "LIVRÉ / TERMINÉ", "ABANDONNÉ", "STATUT INCONNU",
