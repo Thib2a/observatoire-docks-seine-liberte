@@ -33,7 +33,7 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" sizes="180x180">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=5f1603f6be60">
+  <link rel="stylesheet" href="styles.css?v=c70c9c584bd3">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -47,7 +47,7 @@
   </script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Carte des projets | Docks de Saint-Ouen & Seine-Liberté", "description": "Explorez sur la carte les projets et opérations des Docks de Saint-Ouen et de la ZAC Seine-Liberté à Clichy : emplacement, avancement et fiches documentées.", "url": "https://observatoire-docks-seine.org/carte/", "inLanguage": "fr", "isPartOf": {"@type": "WebSite", "name": "Observatoire Docks & Seine-Liberté", "url": "https://observatoire-docks-seine.org/"}}</script>
 </head>
-<body>
+<body id="page-top">
   <a class="skip-link" href="/carte/#main-content">Aller au contenu</a>
 
   <header class="site-header" id="site-header">
@@ -80,8 +80,7 @@
             <p>Explorez les projets, les chantiers et les aménagements de ces secteurs, avec leurs informations, leurs évolutions et leurs sources.</p>
           </div>
           <div class="hero-actions">
-            <a href="/carte/" class="button button-primary" data-route="explore">Explorer la carte</a>
-            <a href="/carte/" class="button button-ghost" data-route="explore" data-focus-search>Rechercher un projet</a>
+            <a href="/carte/" class="button button-primary" data-route="explore">Explorer la carte et les projets</a>
           </div>
           <dl class="hero-stats">
             <div><dt id="stat-territories">—</dt><dd>Quartiers</dd></div>
@@ -89,8 +88,8 @@
             <div><dt id="stat-active">—</dt><dd>En cours / à venir</dd></div>
             <div><dt id="stat-delivered">—</dt><dd>Opérations livrées</dd></div>
           </dl>
+          <button class="swipe-hint" type="button" data-scroll-target="now-title" aria-label="Descendre vers les transformations à suivre"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 8 8 8 8-8"/></svg></button>
         </div>
-        <button class="swipe-hint" type="button" data-scroll-target="now-title" aria-label="Descendre vers les transformations à suivre"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg><span>Glisser vers le haut</span></button>
         <div class="hero-caption" id="home-hero-caption"></div>
       </div>
 
@@ -618,6 +617,7 @@
   <div class="loading-screen" id="loading-screen" role="status"><img class="brand-icon" src="/assets/favicon.svg" alt="" width="32" height="32" aria-hidden="true"><p>Ouverture des quartiers…</p></div>
     <div class="fatal-error" id="fatal-error" hidden><strong>Impossible de charger les fiches.</strong><p>Actualisez la page. Si le problème persiste, utilisez le contact indiqué dans les mentions légales.</p></div>
 
+  <a class="back-to-top" href="#page-top" aria-label="Retour en haut de page" title="Retour en haut de page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 14 7-7 7 7"/></svg></a>
   <footer class="site-footer">
     <div><strong>Observatoire Docks & Seine-Liberté</strong><span>Créé et édité par Thib2a · Observatoire citoyen indépendant · V1.2.5</span></div>
     <nav class="footer-links" aria-label="Informations et contact">
@@ -635,6 +635,6 @@
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "89b7f0d07c1344818cfa73b0e58144d9"}'></script>
   <!-- End Cloudflare Web Analytics -->
-  <script type="module" src="app.js?v=5f1603f6be60"></script>
+  <script type="module" src="app.js?v=c70c9c584bd3"></script>
 </body>
 </html>

@@ -1,12 +1,12 @@
 import {
   DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution, normalize,
   projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=5f1603f6be60";
-import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=5f1603f6be60";
-import {syncPageHeading} from "./modules/headings.js?v=5f1603f6be60";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=5f1603f6be60";
-import {ProjectMap} from "./modules/map.js?v=5f1603f6be60";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=5f1603f6be60";
+} from "./modules/data.js?v=c70c9c584bd3";
+import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=c70c9c584bd3";
+import {syncPageHeading} from "./modules/headings.js?v=c70c9c584bd3";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=c70c9c584bd3";
+import {ProjectMap} from "./modules/map.js?v=c70c9c584bd3";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=c70c9c584bd3";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -461,6 +461,14 @@ function normalizeSourceInput(input) {
 }
 
 function bindEvents() {
+  const backToTop = $(".back-to-top");
+  const updateBackToTop = () => backToTop.classList.toggle("is-visible", window.scrollY > 500);
+  window.addEventListener("scroll", updateBackToTop, {passive: true});
+  updateBackToTop();
+  backToTop.addEventListener("click", event => {
+    event.preventDefault();
+    window.scrollTo({top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  });
   document.addEventListener("click", event => {
     const slideStep = event.target.closest("[data-carousel-step]");
     if (slideStep) { state.slideControllers[slideStep.dataset.carouselTarget]?.(Number(slideStep.dataset.carouselStep)); return; }

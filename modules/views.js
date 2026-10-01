@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaAttribution, mediaDisplayAttribution, projectHref, projectStatusLabel, statusBadge,
-} from "./data.js?v=5f1603f6be60";
+} from "./data.js?v=c70c9c584bd3";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -141,8 +141,8 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
   const contextProject = isSeine ? items.find(project => project.projectType === "ENSEMBLE") : null;
   const contextVisual = contextProject?.visuals.find(item => item.role === "GALERIE" && item.caption.includes("Perspective urbaine Seine-Liberté"));
   const intro = isSeine
-    ? "À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, la ZAC Seine-Liberté prend progressivement forme. Cette page rassemble les projets de Seine-Liberté ainsi que certains projets situés à ses abords immédiats lorsqu’ils participent directement aux transformations du secteur."
-    : "La ZAC des Docks de Saint-Ouen-sur-Seine, ancien territoire industriel devenu un quartier de vie, poursuit sa transformation. Cette page rassemble les projets suivis dans les Docks de Saint-Ouen ainsi que certains projets situés à leurs abords immédiats lorsqu’ils participent directement aux transformations du secteur.";
+    ? ["À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, la ZAC Seine-Liberté prend progressivement forme.", "Cette page rassemble les projets de Seine-Liberté ainsi que certains projets situés à ses abords immédiats lorsqu’ils participent directement aux transformations du secteur."]
+    : ["La ZAC des Docks de Saint-Ouen-sur-Seine, ancien territoire industriel devenu un quartier de vie, poursuit sa transformation.", "Cette page rassemble les projets suivis dans les Docks de Saint-Ouen ainsi que certains projets situés à leurs abords immédiats lorsqu’ils participent directement aux transformations du secteur."];
   const eyebrow = isSeine ? "Clichy · bord de Seine" : "Saint-Ouen-sur-Seine";
 
   const projectStrip = (title, subtitle, rows) => rows.length ? `<section class="territory-section">
@@ -157,11 +157,11 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
       <button class="back-link" type="button" data-route="home">← Accueil</button>
       <p class="eyebrow">${escapeHtml(eyebrow)}</p>
       <h1 class="view-title" data-page-heading>${escapeHtml(territory)}</h1>
-      <p>${escapeHtml(intro)}</p>
-      <button class="button button-primary" type="button" data-explore-territory="${escapeHtml(territory)}">Explorer la carte</button>
+      ${intro.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+      <button class="button button-primary" type="button" data-explore-territory="${escapeHtml(territory)}">Explorer la carte et les projets</button>
       <dl><div><dt>${operations.length}</dt><dd>Opérations suivies</dd></div><div><dt>${current.length}</dt><dd>En cours / à venir</dd></div><div><dt>${delivered.length}</dt><dd>Opérations livrées</dd></div></dl>
+      <button class="swipe-hint" type="button" data-scroll-target="overview-title" aria-label="Descendre vers la vue d’ensemble"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 8 8 8 8-8"/></svg></button>
     </div>
-    <button class="swipe-hint" type="button" data-scroll-target="overview-title" aria-label="Descendre vers la vue d’ensemble"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg><span>Glisser vers le haut</span></button>
     <div class="territory-hero-caption">${isSeine ? (contextVisual ? `Vue de contexte du site, non rendu du projet final · ${mediaCredit(contextVisual)}` : "") : (visual ? `${escapeHtml(visual.caption)} · ${mediaCredit(visual)}` : "")}</div>
   </header>
   <div class="territory-body">

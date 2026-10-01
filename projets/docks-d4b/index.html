@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; base-uri &#x27;self&#x27;; object-src &#x27;none&#x27;; frame-src &#x27;none&#x27;; script-src &#x27;self&#x27; https://unpkg.com/leaflet@1.9.4/dist/leaflet.js https://static.cloudflareinsights.com &#x27;sha256-odkBsW1uRMhbmIXodmDQ3qKyQyEc0owD22BJ3UB5rgg=&#x27; &#x27;sha256-OdnhEIFyIw24TCNKpA8zU2Lh9wxNh6+Dx4BNBh4hL3M=&#x27;; style-src &#x27;self&#x27; &#x27;unsafe-inline&#x27; https://unpkg.com/leaflet@1.9.4/dist/leaflet.css; img-src &#x27;self&#x27; data: https://*.tile.openstreetmap.org https://data.geopf.fr https://unpkg.com; connect-src &#x27;self&#x27; https://formspree.io https://cloudflareinsights.com https://*.cloudflareinsights.com; form-action https://formspree.io/f/mkjgroep; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; base-uri &#x27;self&#x27;; object-src &#x27;none&#x27;; frame-src &#x27;none&#x27;; script-src &#x27;self&#x27; https://unpkg.com/leaflet@1.9.4/dist/leaflet.js https://static.cloudflareinsights.com &#x27;sha256-odkBsW1uRMhbmIXodmDQ3qKyQyEc0owD22BJ3UB5rgg=&#x27; &#x27;sha256-OdnhEIFyIw24TCNKpA8zU2Lh9wxNh6+Dx4BNBh4hL3M=&#x27; &#x27;sha256-8gTJ+hz4LbfUqD1bMv5yNHZqbkcgKbpzo/PIJQsg/oo=&#x27;; style-src &#x27;self&#x27; &#x27;unsafe-inline&#x27; https://unpkg.com/leaflet@1.9.4/dist/leaflet.css; img-src &#x27;self&#x27; data: https://*.tile.openstreetmap.org https://data.geopf.fr https://unpkg.com; connect-src &#x27;self&#x27; https://formspree.io https://cloudflareinsights.com https://*.cloudflareinsights.com; form-action https://formspree.io/f/mkjgroep; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,11 +25,11 @@
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/assets/favicon-48.png" type="image/png" sizes="48x48">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
-  <link rel="stylesheet" href="/styles.css?v=5f1603f6be60">
+  <link rel="stylesheet" href="/styles.css?v=c70c9c584bd3">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Kroma (Îlot D4b)","description":"Le programme D4b associe 205 logements en accession, 38 logements sociaux et 950 m² de commerces dans les Docks de Saint-Ouen. L’ensemble est achevé.","url":"https://observatoire-docks-seine.org/projets/docks-d4b/","inLanguage":"fr","isPartOf":{"@type":"WebSite","name":"Observatoire Docks & Seine-Liberté","url":"https://observatoire-docks-seine.org/"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","@id":"https://observatoire-docks-seine.org/projets/docks-d4b/#fil-ariane","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://observatoire-docks-seine.org/"},{"@type":"ListItem","position":2,"name":"Docks de Saint-Ouen","item":"https://observatoire-docks-seine.org/projets/docks-zac/"},{"@type":"ListItem","position":3,"name":"Kroma (Îlot D4b)","item":"https://observatoire-docks-seine.org/projets/docks-d4b/"}]}</script>
 </head>
-<body class="static-project-page">
+<body class="static-project-page" id="page-top">
   <a class="skip-link" href="#fiche">Aller au contenu</a>
   <header class="site-header static-site-header">
     <a class="brand" href="/" aria-label="Accueil de l’Observatoire">
@@ -69,6 +69,8 @@
       </div>
     </article>
   </main>
+  <a class="back-to-top" href="#page-top" aria-label="Retour en haut de page" title="Retour en haut de page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 14 7-7 7 7"/></svg></a>
   <footer class="static-project-footer"><p>Observatoire citoyen indépendant des Docks de Saint-Ouen et de Seine-Liberté à Clichy.</p><p><a href="/#credits">Crédits, droits &amp; remerciements</a> · <a href="/#contribuer">Contact et signalements</a></p></footer>
+  <script>const backToTop = document.querySelector('.back-to-top'); const updateBackToTop = () => backToTop.classList.toggle('is-visible', window.scrollY > 500); window.addEventListener('scroll', updateBackToTop, {passive: true}); updateBackToTop();</script>
 </body>
 </html>
