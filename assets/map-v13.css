@@ -148,6 +148,7 @@
   .map-hint, .map-footnote, .help, .results-heading > strong { display: none; }
   .list-view { padding: 18px 16px 28px; }
   .results-heading { margin-bottom: 14px; }
+  :host([data-mode="list"]) .reset-filters-desktop:not([hidden]) { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; max-width: 132px; min-height: 44px; padding: 6px 9px; line-height: 1.15; text-align: center; }
   .selected { position: absolute; top: 120px; bottom: auto; max-height: 330px; }
   .project-preview .selected-image { height: 110px; }
   .project-popup .leaflet-popup-content { max-height: 290px; overflow-y: auto; }
