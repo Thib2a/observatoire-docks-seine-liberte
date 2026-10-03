@@ -1,16 +1,25 @@
 export function resolveRoute(pathname, hash, redirects = {}, currentIds = []) {
+  const decodeRoutePart = value => {
+    try { return decodeURIComponent(value); }
+    catch { return null; }
+  };
   const fragment = hash.replace(/^#\/?/, "");
   const value = (!fragment || fragment === "main-content")
     ? (/^\/carte\/?$/.test(pathname) ? "explorer" : "accueil") : fragment;
   if (value.startsWith("fiche/")) {
-    const id = decodeURIComponent(value.slice(6));
+    const id = decodeRoutePart(value.slice(6));
+    if (id === null) return {route: "home"};
     return {route: "project", id: currentIds.includes(id) ? id : (redirects[id] || id)};
   }
   if (value.startsWith("projet/")) {
-    const id = decodeURIComponent(value.slice(7));
+    const id = decodeRoutePart(value.slice(7));
+    if (id === null) return {route: "home"};
     return {route: "project", id: redirects[id] || id};
   }
-  if (value.startsWith("territoire/")) return {route: "territory", territory: decodeURIComponent(value.slice(11))};
+  if (value.startsWith("territoire/")) {
+    const territory = decodeRoutePart(value.slice(11));
+    return territory === null ? {route: "home"} : {route: "territory", territory};
+  }
   if (["carte", "projets", "explorer"].includes(value)) return {route: "explore"};
   if (["evolutions", "actualites"].includes(value)) return {route: "updates"};
   if (["chronologie", "timeline"].includes(value)) return {route: "timeline"};

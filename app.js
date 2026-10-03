@@ -1,12 +1,12 @@
 import {
-  DATA_URL, STATUS_ORDER, safeLinkUrl, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution, normalize,
-  projectHref, projectStatusLabel, matchesSearch, searchText, statusColor, statusLabel, statusSymbol,
-} from "./modules/data.js?v=f6d1cc8a1bd2";
-import {readMapFilters, mapFilterHref} from "./modules/map_filters.js?v=f6d1cc8a1bd2";
-import {syncPageHeading} from "./modules/headings.js?v=f6d1cc8a1bd2";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=f6d1cc8a1bd2";
-import {ProjectMap} from "./modules/map.js?v=f6d1cc8a1bd2";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=f6d1cc8a1bd2";
+  DATA_URL, safeLinkUrl, responsiveImageAttrs, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution,
+  projectHref, searchText,
+} from "./modules/data.js?v=263a50b2f67c";
+import {mapFilterHref} from "./modules/map_filters.js?v=263a50b2f67c";
+import {syncPageHeading} from "./modules/headings.js?v=263a50b2f67c";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=263a50b2f67c";
+import {mountExplorer} from "./modules/map_v13.js?v=263a50b2f67c";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=263a50b2f67c";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -47,6 +47,7 @@ const state = {
   category: "",
   map: null,
   carouselTimers: [],
+  slideGeneration: 0,
   slideControllers: {},
   planIndex: 0,
   renderedHash: null,
@@ -113,8 +114,8 @@ function parseRoute() {
 
 function rememberView() {
   history.replaceState({...history.state, odsEntry: true, view: {
-    scrollY: window.scrollY, listScroll: $("#project-list")?.scrollTop || 0,
-    sidebarScroll: $(".explorer-panel")?.scrollTop || 0, map: state.map?.viewport(),
+    scrollY: window.scrollY, listScroll: state.map?.listScroll() || 0,
+    map: state.map?.viewport(),
   }}, "", location.href);
 }
 
@@ -131,6 +132,7 @@ function navigate(route, payload = {}) {
 
 function showRoute(parsed, options = {}) {
   state.renderedHash = location.pathname + location.search + location.hash;
+  state.slideGeneration += 1;
   state.carouselTimers.forEach(clearInterval);
   state.carouselTimers = [];
   state.slideControllers = {};
@@ -164,11 +166,11 @@ function showRoute(parsed, options = {}) {
     }
     $("#project-content").innerHTML = renderProject(project, state.byId);
   } else if (parsed.route === "explore") {
-    updateExplorer({preserveView: Boolean(options.restore)});
-    state.map.invalidate();
-    if (options.focusSearch) setTimeout(() => $("#project-search")?.focus(), 100);
+    state.map.enter();
+    if (options.focusSearch) setTimeout(() => state.map.focusSearch(), 100);
   }
   syncPageHeading(document, parsed.route);
+  state.map?.setHeading(parsed.route === "explore");
   updateSeo(parsed, parsed.route === "project" ? state.byId.get(parsed.id) : null);
   if (parsed.route === "home") mountHomeSlides();
   $("#main-content").focus({preventScroll: true});
@@ -176,9 +178,10 @@ function showRoute(parsed, options = {}) {
     const view = options.restore;
     requestAnimationFrame(() => {
       window.scrollTo({top: view.scrollY || 0, behavior: "instant"});
-      if ($("#project-list")) $("#project-list").scrollTop = view.listScroll || 0;
-      if ($(".explorer-panel")) $(".explorer-panel").scrollTop = view.sidebarScroll || 0;
-      if (parsed.route === "explore") state.map.restoreViewport(view.map);
+      if (parsed.route === "explore") {
+        state.map.restoreListScroll(view.listScroll || 0);
+        state.map.restoreViewport(view.map);
+      }
     });
   } else window.scrollTo({top: 0, behavior: options.instant || window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
   $("#menu-toggle").setAttribute("aria-expanded", "false");
@@ -264,6 +267,7 @@ function mountSlides(selector, keys = [], delay = 0) {
   if (!media.length) return;
   let index = 0;
   let paintSerial = 0;
+  const generation = state.slideGeneration;
   const paint = () => {
     const serial = ++paintSerial;
     const item = media[index];
@@ -278,7 +282,8 @@ function mountSlides(selector, keys = [], delay = 0) {
     next.alt = item.caption || item.projectName || "";
     next.className = "crossfade-slide";
     const show = () => {
-      if (serial !== paintSerial) return;
+      if (serial !== paintSerial || generation !== state.slideGeneration || !target.isConnected || !next.naturalWidth) return;
+      target.querySelector(".media-loading-error")?.remove();
       const previous = [...target.children];
       target.append(next);
       requestAnimationFrame(() => next.classList.add("is-visible"));
@@ -290,11 +295,16 @@ function mountSlides(selector, keys = [], delay = 0) {
         "#territory-content .territory-hero-media": "#territory-content .territory-hero-caption",
       }[selector];
       if (captionSelector) setPresentationCredit($(captionSelector), item);
+      target.dataset.slideIndex = String(index);
+      const counter = document.querySelector(`[data-carousel-count="${selector}"]`);
+      if (counter) counter.textContent = `${index + 1} / ${media.length}`;
     };
-    if (next.complete) show(); else next.addEventListener("load", show, {once:true});
-    target.dataset.slideIndex = String(index);
-    const counter = document.querySelector(`[data-carousel-count="${selector}"]`);
-    if (counter) counter.textContent = `${index + 1} / ${media.length}`;
+    const fail = () => {
+      if (serial !== paintSerial || generation !== state.slideGeneration || !target.isConnected) return;
+      if (!target.querySelector(".media-loading-error")) target.insertAdjacentHTML("beforeend", '<span class="media-loading-error">Visuel momentanément indisponible</span>');
+    };
+    if (next.complete) { if (next.naturalWidth) show(); else fail(); }
+    else { next.addEventListener("load", show, {once:true}); next.addEventListener("error", fail, {once:true}); }
   };
   paint();
   state.slideControllers[selector] = step => { index = (index + step + media.length) % media.length; paint(); };
@@ -341,88 +351,6 @@ function goToToday() {
   const now = Date.now();
   const nearest = events.reduce((best, event) => Math.abs(Date.parse(event.date) - now) < Math.abs(Date.parse(best.date) - now) ? event : best);
   $(`#timeline-${CSS.escape(nearest.id)}`)?.scrollIntoView({behavior: "smooth", block: "center"});
-}
-
-
-function populateFilters() {
-  const projects = state.data.projects.filter(project => project.additive);
-  const addOptions = (selector, values) => {
-    $(selector).insertAdjacentHTML("beforeend", values.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join(""));
-  };
-  const statuses = STATUS_ORDER.filter(status => projects.some(project => project.status === status)).map(status => ({value: status, label: statusLabel(status)}));
-  $("#filter-status").insertAdjacentHTML("beforeend", statuses.map(({value, label}) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join(""));
-  addOptions("#filter-territory", [...new Set(state.data.projects.map(documentaryGroup))].sort((a, b) => a.localeCompare(b, "fr")));
-  addOptions("#filter-category", [...new Set(projects.map(project => project.category).filter(Boolean))].sort((a, b) => a.localeCompare(b, "fr")));
-}
-
-
-function filteredProjects() {
-  const query = normalize(state.search);
-  let projects = state.data.projects.filter(project => {
-    if (!matchesSearch(project, query)) return false;
-    return true;
-  });
-  if (state.status) projects = projects.filter(project => project.status === state.status);
-  projects = filterDocumentaryGroup(projects, state.territory);
-  if (state.category) projects = projects.filter(project => project.category === state.category);
-  projects.sort((a, b) =>
-    STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status) ||
-    a.name.localeCompare(b.name, "fr")
-  );
-  return projects;
-}
-
-
-function listRow(project) {
-  const visual = project.visuals[0];
-  const locationQuality = project.id === "docks-zac" || project.id === "seine-zac" ? "repère de quartier" : "emplacement vérifié";
-  return `<a class="project-row" href="/projets/${encodeURIComponent(project.id)}/" data-project-link="${escapeHtml(project.id)}">
-    <span class="row-thumb">${visual ? `<img src="${escapeHtml(visual.thumbnail || visual.src)}" alt="" loading="lazy" decoding="async">` : '<i aria-hidden="true"></i>'}</span>
-    <span class="row-content"><small>${escapeHtml(documentaryGroup(project))}${project.lot ? ` · Lot ${escapeHtml(project.lot)}` : ""}</small><strong>${escapeHtml(project.name)}</strong><span>${escapeHtml(project.category)} · ${escapeHtml(locationQuality)}</span></span>
-    <span class="row-status" style="--status:${statusColor(project.status)}">${escapeHtml(projectStatusLabel(project))}</span>
-  </a>`;
-}
-
-
-function updateMapLegend(projects) {
-  const counts = new Map();
-  projects.forEach(project => counts.set(project.status, (counts.get(project.status) || 0) + 1));
-  $("#map-legend-items").innerHTML = STATUS_ORDER
-    .filter(status => counts.has(status))
-    .map(status => `<span class="map-legend-item">
-      <i style="--legend:${statusColor(status)}" aria-hidden="true"><em>${statusSymbol(status)}</em></i>
-      <span>${escapeHtml(statusLabel(status))}</span><b>${counts.get(status)}</b>
-    </span>`).join("");
-}
-
-
-function restoreMapFilters() {
-  const choices = {};
-  for (const [field, selector] of [["status", "#filter-status"], ["territory", "#filter-territory"], ["category", "#filter-category"]]) {
-    choices[field] = [...$(selector).options].map(option => option.value);
-  }
-  Object.assign(state, readMapFilters(location.search, choices));
-  $("#project-search").value = state.search;
-  $("#filter-status").value = state.status;
-  $("#filter-territory").value = state.territory;
-  $("#filter-category").value = state.category;
-}
-
-function updateExplorer({preserveView = false} = {}) {
-  if (!state.data) return;
-  const projects = filteredProjects();
-  const points = projects.filter(project => project.map.latitude != null);
-  $("#project-list").innerHTML = projects.map(listRow).join("");
-  $("#result-count").textContent = projects.length;
-  $("#point-count").textContent = `${points.length} sur la carte`;
-  $("#empty-state").hidden = projects.length > 0;
-  $("#clear-search").hidden = !state.search;
-  updateMapLegend(projects);
-  state.map.update(projects, {preserveView});
-  if (state.route === "explore") {
-    history.replaceState(history.state, "", mapFilterHref(state) + location.hash);
-    state.renderedHash = location.pathname + location.search + location.hash;
-  }
 }
 
 
@@ -490,9 +418,12 @@ function bindEvents() {
       const planKey = parseRoute().territory === "Seine-Liberté" ? "seineSlides" : "docksSlides";
       const plans = (state.data.presentation?.[planKey] || []).map(key => state.data.presentationMedia?.[key]).filter(Boolean);
       if (!plans.length) return;
-      state.planIndex = (state.planIndex + Number(planStep.dataset.planStep) + plans.length) % plans.length;
-      const item = plans[state.planIndex], root = planStep.closest(".overview-visual");
+      const nextIndex = (state.planIndex + Number(planStep.dataset.planStep) + plans.length) % plans.length;
+      const item = plans[nextIndex], root = planStep.closest(".overview-visual");
       const button = $(".plan-preview", root), next = new Image();
+      const generation = state.slideGeneration;
+      const serial = Number(root.dataset.planRequest || 0) + 1;
+      root.dataset.planRequest = String(serial);
       next.src = item.displaySrc || item.src; next.alt = item.caption || "Plan d’ensemble";
       if (item.responsiveSources?.length) {
         next.srcset = item.responsiveSources.map(source => `${source.src} ${source.width}w`).join(", ");
@@ -501,7 +432,8 @@ function bindEvents() {
       }
       next.className = "plan-crossfade";
       const show = () => {
-        if (plans[state.planIndex]?.src !== item.src) return;
+        if (generation !== state.slideGeneration || !root.isConnected || Number(root.dataset.planRequest) !== serial || !next.naturalWidth) return;
+        $("[data-plan-error]", root).hidden = true;
         const previous = $$('img', button);
         button.append(next);
         requestAnimationFrame(() => next.classList.add("is-visible"));
@@ -510,10 +442,15 @@ function bindEvents() {
         button.dataset.lightboxCredit = item.credit || "";
         button.dataset.lightboxSourceUrl = item.sourceUrl || "";
         button.dataset.lightboxSourceLabel = item.sourceLabel || "";
+        state.planIndex = nextIndex;
+        $("[data-plan-count]", root).textContent = `${nextIndex + 1} / ${plans.length}`;
+        setPresentationCredit($("[data-plan-credit]", root), item);
       };
-      if (next.complete) show(); else next.addEventListener("load", show, {once:true});
-      $("[data-plan-count]", root).textContent = `${state.planIndex + 1} / ${plans.length}`;
-      setPresentationCredit($("[data-plan-credit]", root), item);
+      const fail = () => {
+        if (generation === state.slideGeneration && root.isConnected && Number(root.dataset.planRequest) === serial) $("[data-plan-error]", root).hidden = false;
+      };
+      if (next.complete) { if (next.naturalWidth) show(); else fail(); }
+      else { next.addEventListener("load", show, {once:true}); next.addEventListener("error", fail, {once:true}); }
       return;
     }
     const scrollButton = event.target.closest("[data-scroll-target], [data-timeline-target]");
@@ -534,7 +471,7 @@ function bindEvents() {
       const contributionProject = routeButton.dataset.contributionProject;
       navigate(routeButton.dataset.route);
       if (routeButton.dataset.route === "contribute") $("#contribution-project").value = contributionProject || "";
-      if (focusSearch) setTimeout(() => $("#project-search")?.focus(), 150);
+      if (focusSearch) setTimeout(() => state.map.focusSearch(), 150);
       return;
     }
     const territoryButton = event.target.closest("[data-territory]");
@@ -545,8 +482,11 @@ function bindEvents() {
     }
     const exploreTerritory = event.target.closest("[data-explore-territory]");
     if (exploreTerritory) {
+      state.search = "";
+      state.status = "";
+      state.category = "";
       state.territory = groupValue(exploreTerritory.dataset.exploreTerritory);
-      $("#filter-territory").value = state.territory;
+      state.map.setTerritory(state.territory);
       navigate("explore");
       return;
     }
@@ -574,23 +514,14 @@ function bindEvents() {
     }
   });
 
-  $("#project-search").addEventListener("input", event => { state.search = event.target.value; updateExplorer(); });
-  $("#clear-search").addEventListener("click", () => { state.search = ""; $("#project-search").value = ""; updateExplorer(); $("#project-search").focus(); });
-  $("#filter-status").addEventListener("change", event => { state.status = event.target.value; updateExplorer(); });
-  $("#filter-territory").addEventListener("change", event => { state.territory = event.target.value; updateExplorer(); });
-  $("#filter-category").addEventListener("change", event => { state.category = event.target.value; updateExplorer(); });
-  $("#share-map").addEventListener("click", async () => {
-    const button = $("#share-map");
-    try {
-      await navigator.clipboard.writeText(new URL(mapFilterHref(state), location.origin).href);
-      button.textContent = "Lien copié";
-    } catch {
-      button.textContent = "Copiez le lien dans la barre d’adresse";
+  $("#map-v13-host").addEventListener("ods:project", event => navigate("project", {id: event.detail}));
+  $("#map-v13-host").addEventListener("ods:filters", event => {
+    Object.assign(state, event.detail);
+    if (state.route === "explore") {
+      history.replaceState(history.state, "", mapFilterHref(state) + location.hash);
+      state.renderedHash = location.pathname + location.search + location.hash;
     }
-    setTimeout(() => { button.textContent = "Copier le lien"; }, 3000);
   });
-  $("#fit-map").addEventListener("click", () => state.map.fit());
-  $("#map-base").addEventListener("change", event => state.map.setBase(event.target.value));
   $("#timeline-territory").addEventListener("change", renderTimeline);
   $("#timeline-order").addEventListener("change", renderTimeline);
   $("#timeline-today").addEventListener("click", goToToday);
@@ -679,7 +610,7 @@ function bindEvents() {
   const syncRoute = () => {
     const currentHash = location.pathname + location.search + location.hash;
     if (state.renderedHash !== currentHash) {
-      if (parseRoute().route === "explore") restoreMapFilters();
+      if (parseRoute().route === "explore") state.map.syncUrlFilters();
       showRoute(parseRoute(), {instant: true, restore: history.state?.view});
     }
   };
@@ -698,15 +629,19 @@ async function start() {
     history.replaceState({...history.state, odsEntry: true}, "", location.href);
     state.data = await loadData();
     state.byId = new Map(state.data.projects.map(project => [project.id, project]));
-    state.map = new ProjectMap($("#map"), state.data.projects);
-    if (window.matchMedia("(max-width: 760px)").matches) $("#map-legend").open = false;
+    state.map = mountExplorer($("#map-v13-host"), state.data);
+    Object.assign(state, state.map.filters());
     if (window.matchMedia("(max-width: 760px)").matches) $("#timeline-order").value = "newest";
-    populateFilters();
-    restoreMapFilters();
     $("#contribution-project").insertAdjacentHTML("beforeend", state.data.projects
-      .filter(project => project.additive)
       .sort((a, b) => a.name.localeCompare(b.name, "fr"))
       .map(project => `<option value="${escapeHtml(project.id)}">${escapeHtml(project.name)}</option>`).join(""));
+    const initialContribution = new URLSearchParams(location.search).get("contribution");
+    if (initialContribution && state.byId.has(initialContribution)) {
+      $("#contribution-project").value = initialContribution;
+      const cleanUrl = new URL(location.href);
+      cleanUrl.searchParams.delete("contribution");
+      history.replaceState(history.state, "", cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+    }
     renderHome();
     bindEvents();
     $("#loading-screen").classList.add("is-hidden");

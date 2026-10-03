@@ -295,6 +295,17 @@ export function mediaAlt(project, visual) {
   return `${kind} — ${project.name}`;
 }
 
+export function visualRoleLabel(role) {
+  return {
+    HERO: "Image de présentation", GALERIE: "Photo et perspective",
+    PLAN_SITUATION: "Plan de situation", PLAN_MASSE: "Plan de masse",
+    DOCUMENT: "Document graphique", PHOTO_CHANTIER: "Photo du chantier",
+    PHOTO_LIVRE: "Photo du projet livré", CONTEXTE: "Vue du quartier",
+    PHOTO_CONTEXTE: "Vue du quartier", HISTORIQUE: "Image d’archive",
+    RENDU: "Perspective du projet", SCHEMA: "Schéma explicatif",
+  }[role] || "Visuel du projet";
+}
+
 export async function loadData() {
   const response = await fetch(DATA_URL, {cache: "no-store"});
   if (!response.ok) throw new Error(`Chargement impossible (${response.status})`);
