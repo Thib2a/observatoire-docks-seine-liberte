@@ -992,6 +992,8 @@ img { display: block; max-width: 100%; }
 @media (min-width: 761px) {
   .home-hero-content { width: min(1040px, 90vw); padding: 36px clamp(24px, 5vw, 80px) 100px; transform: none; }
   .home-hero .view-title { font-size: clamp(50px, min(6vw, 9svh), 88px); }
+  .home-hero-title-pair { white-space: nowrap; }
+  .home-hero-title-pair br { display: none; }
   .home-hero .hero-intro { margin: 20px 0; font-size: clamp(16px, 1.4vw, 20px); line-height: 1.4; }
   .home-hero .hero-stats { margin-top: 24px; }
 }
