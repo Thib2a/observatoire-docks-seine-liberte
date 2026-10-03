@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaAttribution, mediaDisplayAttribution, projectHref, projectStatusLabel, statusBadge, visualRoleLabel,
-} from "./data.js?v=8914d49831fa";
+} from "./data.js?v=55fcce595a09";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);

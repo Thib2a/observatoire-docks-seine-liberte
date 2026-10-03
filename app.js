@@ -1,12 +1,12 @@
 import {
   DATA_URL, safeLinkUrl, responsiveImageAttrs, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution,
   projectHref, searchText,
-} from "./modules/data.js?v=8914d49831fa";
-import {mapFilterHref} from "./modules/map_filters.js?v=8914d49831fa";
-import {syncPageHeading} from "./modules/headings.js?v=8914d49831fa";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=8914d49831fa";
-import {mountExplorer} from "./modules/map_v13.js?v=8914d49831fa";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=8914d49831fa";
+} from "./modules/data.js?v=55fcce595a09";
+import {mapFilterHref} from "./modules/map_filters.js?v=55fcce595a09";
+import {syncPageHeading} from "./modules/headings.js?v=55fcce595a09";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=55fcce595a09";
+import {mountExplorer} from "./modules/map_v13.js?v=55fcce595a09";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=55fcce595a09";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);

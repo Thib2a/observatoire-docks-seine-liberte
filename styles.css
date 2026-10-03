@@ -990,7 +990,7 @@ img { display: block; max-width: 100%; }
 .overview-actions .overview-fiche:hover { background: var(--paper-2); }
 .territory-hero-content > .button-primary { color: #231f1b; }
 @media (min-width: 761px) {
-  .home-hero-content { width: min(1040px, 90vw); padding: 36px clamp(24px, 5vw, 80px) 100px; transform: none; }
+  .home-hero-content { width: min(1040px, 90vw); padding: 36px clamp(24px, 5vw, 80px) 100px; transform: translateY(-24px); }
   .home-hero .view-title { width: min(1200px, 90vw); font-size: clamp(50px, min(6vw, 9svh), 88px); text-wrap: balance; }
   .home-hero-title-break { display: none; }
   .home-hero .hero-intro { margin: 20px 0; font-size: clamp(16px, 1.4vw, 20px); line-height: 1.4; }
