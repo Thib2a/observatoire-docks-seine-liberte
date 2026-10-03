@@ -1005,6 +1005,15 @@ img { display: block; max-width: 100%; }
 .updates-more[open] .updates-more-open { display: inline; }
 .updates-more > .update-list { padding: 0 18px; }
 .swipe-hint { display: none; }
+.home-discover-button, .desktop-hero-chevron { display: none; }
+@media (min-width: 761px) {
+  .home-hero .home-discover-button { display: inline-flex; border-color: rgba(255,255,255,.9); }
+  :is(.home-hero, .territory-hero) .desktop-hero-chevron { position: absolute; z-index: 5; left: 50%; bottom: 20px; display: grid; place-items: center; width: 56px; height: 52px; padding: 0; border: 0; background: transparent; color: white; cursor: pointer; transform: translateX(-50%); }
+  :is(.home-hero, .territory-hero) .desktop-hero-chevron svg { width: 42px; height: 42px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 2px 6px rgba(0,0,0,.8)); animation: desktop-hero-bounce 2.4s ease-in-out infinite; }
+  .home-view .now-section { padding-top: 76px; }
+}
+@keyframes desktop-hero-bounce { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { :is(.home-hero, .territory-hero) .desktop-hero-chevron svg { animation: none; } }
 .back-to-top { position: fixed; z-index: 40; right: 20px; bottom: 20px; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,.48); border-radius: 50%; color: white; background: rgba(18,60,52,.86); box-shadow: 0 5px 20px rgba(0,0,0,.16); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .2s, transform .2s, visibility .2s; }
 .back-to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
 .back-to-top:hover { background: var(--green-2); }
