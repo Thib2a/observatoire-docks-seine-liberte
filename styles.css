@@ -382,7 +382,7 @@ img { display: block; max-width: 100%; }
 .loading-screen.is-hidden { opacity: 0; visibility: hidden; }
 .fatal-error { min-height: 65vh; padding: 100px 24px; text-align: center; }
 .fatal-error strong { font: 400 32px var(--serif); }
-.site-footer { min-height: 120px; padding: 30px clamp(24px, 6vw, 90px); display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 24px; color: rgba(255,255,255,.68); background: #0c2822; font-size: 11px; }
+.site-footer { min-height: 120px; padding: 30px clamp(24px, 6vw, 90px); display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 1.8fr) minmax(220px, 1fr); align-items: center; gap: 24px; color: rgba(255,255,255,.68); background: #0c2822; font-size: 11px; }
 .site-footer > div { display: grid; }
 .site-footer > span:last-child { justify-self: end; }
 .site-footer strong { color: white; text-transform: uppercase; letter-spacing: .13em; }
@@ -1004,6 +1004,16 @@ img { display: block; max-width: 100%; }
   .home-hero .hero-stats dt { font-size: 28px; }
   .home-hero .hero-stats dd { margin-top: 3px; }
 }
+
+/* Identite du quartier et lien vers le compte Instagram. */
+.brand-icon.brand-symbol { width: 88px; height: 44px; object-fit: contain; border-radius: 0; }
+.instagram-link { display: inline-flex; align-items: center; gap: 7px; text-underline-offset: 3px; }
+.instagram-link svg { width: 17px; height: 17px; flex: none; }
+.site-footer .footer-instagram { justify-self: start; margin-top: 14px; padding-block: 4px; }
+@media (max-width: 760px) { .site-footer .footer-instagram { justify-self: center; } }
+.method-body .instagram-link { padding-block: 8px; color: var(--green); font-weight: 700; text-decoration: underline; }
+@media (max-width: 1120px) { .brand-icon.brand-symbol { width: 72px; height: 36px; } }
+@media (max-width: 360px) { .brand-icon.brand-symbol { width: 58px; height: 30px; } .site-header .brand { gap: 7px; } .site-header .brand small { font-size: 10px; } }
 
 /* Une seule ligne sous les liens de provenance de la chronologie. */
 .history-event .text-link { border-bottom: 0; }

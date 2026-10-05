@@ -1,12 +1,12 @@
 import {
   DATA_URL, safeLinkUrl, responsiveImageAttrs, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution,
   projectHref, searchText,
-} from "./modules/data.js?v=b0e302a08470";
-import {mapFilterHref} from "./modules/map_filters.js?v=b0e302a08470";
-import {syncPageHeading} from "./modules/headings.js?v=b0e302a08470";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=b0e302a08470";
-import {mountExplorer} from "./modules/map_v13.js?v=b0e302a08470";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=b0e302a08470";
+} from "./modules/data.js?v=952feeaa0ea6";
+import {mapFilterHref} from "./modules/map_filters.js?v=952feeaa0ea6";
+import {syncPageHeading} from "./modules/headings.js?v=952feeaa0ea6";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=952feeaa0ea6";
+import {mountExplorer} from "./modules/map_v13.js?v=952feeaa0ea6";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=952feeaa0ea6";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -28,7 +28,7 @@ const ROUTE_SEO = {
     description: "Parcourez les étapes documentées des projets urbains et des transformations des Docks de Saint-Ouen, de Seine-Liberté à Clichy et de leurs abords immédiats.",
   },
   method: {
-    title: "À propos de l’Observatoire | Observatoire Docks & Seine-Liberté",
+    title: "À propos & FAQ | Observatoire Docks & Seine-Liberté",
     description: "Découvrez la démarche citoyenne et indépendante de l’Observatoire des Docks de Saint-Ouen, de Seine-Liberté à Clichy et de leurs abords immédiats.",
   },
   contribute: {title: "Contact & signalements | Observatoire Docks & Seine-Liberté", description: "Signalez une correction, proposez une information ou contactez l’Observatoire Docks & Seine-Liberté."},
@@ -628,6 +628,8 @@ async function start() {
     history.scrollRestoration = "manual";
     history.replaceState({...history.state, odsEntry: true}, "", location.href);
     state.data = await loadData();
+    $("#faqTotal").textContent = state.data.meta.publicFicheCount;
+    $("#faqOperations").textContent = state.data.meta.operationCount;
     state.byId = new Map(state.data.projects.map(project => [project.id, project]));
     state.map = mountExplorer($("#map-v13-host"), state.data);
     Object.assign(state, state.map.filters());

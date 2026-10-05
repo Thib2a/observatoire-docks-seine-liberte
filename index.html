@@ -28,12 +28,12 @@
   <meta name="twitter:image:alt" content="Vue aérienne des berges de Seine entre les Docks de Saint-Ouen et Seine-Liberté">
   <title>Docks de Saint-Ouen &amp; ZAC Seine-Liberté à Clichy | Observatoire</title>
   <link rel="canonical" href="https://observatoire-docks-seine.org/">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="assets/favicon-48.png" type="image/png" sizes="48x48">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" sizes="180x180">
+  <link rel="icon" href="assets/favicon.svg?v=paysage-rond-20261005" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-48.png?v=paysage-rond-20261005" type="image/png" sizes="48x48">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=paysage-rond-20261005" sizes="180x180">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=b0e302a08470">
+  <link rel="stylesheet" href="styles.css?v=952feeaa0ea6">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -51,7 +51,7 @@
 
   <header class="site-header" id="site-header">
     <a class="brand" href="/" data-route="home" aria-label="Accueil de l’Observatoire">
-      <img class="brand-icon" src="/assets/favicon.svg" alt="" width="32" height="32" aria-hidden="true">
+      <img class="brand-icon brand-symbol" src="/assets/logo-quartier-transparent.png" alt="" width="88" height="44" aria-hidden="true">
       <span><strong>Observatoire</strong><small>Docks & Seine-Liberté</small></span>
     </a>
     <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
@@ -62,7 +62,7 @@
       <a href="/projets/seine-zac/" data-territory="Seine-Liberté">Seine-Liberté</a>
       <button type="button" data-route="updates">Actualités & évolutions</button>
       <button type="button" data-route="timeline">Chronologie</button>
-      <button type="button" data-route="method">À propos</button>
+      <button type="button" data-route="method">À propos &amp; FAQ</button>
     </nav>
   </header>
 
@@ -143,8 +143,8 @@
       <div id="map-v13-host"></div>
       <template id="map-v13-template">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-        <link rel="stylesheet" href="/assets/map-v13-base.css?v=b0e302a08470">
-        <link rel="stylesheet" href="/assets/map-v13.css?v=b0e302a08470">
+        <link rel="stylesheet" href="/assets/map-v13-base.css?v=952feeaa0ea6">
+        <link rel="stylesheet" href="/assets/map-v13.css?v=952feeaa0ea6">
         <div class="app">
     <header class="page-intro">
       <p class="eyebrow">Carte & projets</p>
@@ -226,7 +226,7 @@
     <section class="view method-view" id="view-method" data-view="method" hidden>
       <header class="page-intro method-intro">
         <p class="eyebrow">UN PROJET CITOYEN ET INDÉPENDANT</p>
-        <h2 class="view-title" data-page-heading>À propos de l’Observatoire</h2>
+        <h2 class="view-title" data-page-heading>À propos &amp; FAQ</h2>
         <p>Comprendre ce qui se construit près de chez soi, suivre les projets en cours et découvrir les futurs aménagements des Docks de Saint-Ouen, de Seine-Liberté à Clichy et de leurs abords immédiats.</p>
         <p>L’Observatoire rassemble les informations sur les transformations de ces deux quartiers et sur certains projets de leurs abords immédiats lorsqu’ils participent directement à l’évolution du secteur.</p>
       </header>
@@ -266,6 +266,8 @@
           <p>Le site est librement accessible. Il ne bénéficie actuellement d’aucun partenaire, financement institutionnel ou revenu publicitaire.</p>
           <p>Sa version publique est accessible sur GitHub.</p>
           <p><a href="https://github.com/thib2a/observatoire-docks-seine-liberte" target="_blank" rel="noopener noreferrer">Consulter le projet sur GitHub ↗</a></p>
+          <p>Retrouvez aussi l’Observatoire sur Instagram : projets, vues du quartier et nouvelles publications.</p>
+          <p><a class="instagram-link" href="https://www.instagram.com/observatoire.docks.seine/" target="_blank" rel="noopener noreferrer">Voir le compte Instagram ↗</a></p>
         </section>
         <section>
           <p class="eyebrow">SOURCES ET CRÉDITS</p>
@@ -279,7 +281,7 @@
           <p class="eyebrow">QUESTIONS FRÉQUENTES</p>
           <h2>Comprendre les fiches et les chiffres</h2>
           <div class="faq-list">
-            <details><summary>Que recouvrent les 132 fiches de l’Observatoire ?</summary><p>L’Observatoire rassemble <strong>130 opérations suivies</strong> dans les Docks, à Seine-Liberté et à leurs abords immédiats : programmes immobiliers, équipements, infrastructures, espaces publics, commerces et autres projets d’aménagement.</p><p>Deux fiches supplémentaires, appelées <strong>« repères de quartier »</strong>, présentent une vue d’ensemble de chacun des deux quartiers.</p></details>
+            <details><summary>Que recouvrent les <span id="faqTotal">132</span> fiches de l’Observatoire ?</summary><p>L’Observatoire rassemble <strong><span id="faqOperations">130</span> opérations suivies</strong> dans les Docks, à Seine-Liberté et à leurs abords immédiats : programmes immobiliers, équipements, infrastructures, espaces publics, commerces et autres projets d’aménagement.</p><p>Deux fiches supplémentaires, appelées <strong>« repères de quartier »</strong>, présentent une vue d’ensemble de chacun des deux quartiers.</p></details>
             <details><summary>Que signifient les différents statuts ?</summary><p><strong>« En études »</strong> désigne un projet encore en définition ; <strong>« Programmé »</strong>, une opération annoncée ou autorisée sans chantier principal documenté ; <strong>« Travaux préparatoires »</strong>, les interventions préalables ; <strong>« En chantier »</strong>, des travaux engagés ; et <strong>« Livré / terminé »</strong>, une réalisation achevée ou mise en service.</p><p>Un projet peut également avoir un statut à confirmer.</p></details>
             <details><summary>Pourquoi certaines dates ou certains chiffres diffèrent-ils selon les sources ?</summary><p>Un projet peut évoluer entre sa conception, son autorisation et sa réalisation. L’Observatoire conserve l’historique des informations et privilégie les éléments les plus pertinents pour l’état actuel du projet, tout en signalant les divergences importantes.</p></details>
             <details><summary>Pourquoi certaines informations sont-elles absentes ou indiquées comme étant à confirmer ?</summary><p>Certains projets sont encore à l’étude ou font l’objet de publications incomplètes. Leurs caractéristiques, leurs dates ou leurs emplacements peuvent évoluer, et toutes les informations ne sont pas nécessairement accessibles au public.</p><p>L’Observatoire distingue les éléments vérifiés des informations encore incertaines. Lorsqu’une donnée ne peut pas être établie, elle reste à préciser plutôt que d’être remplacée par une estimation non vérifiée.</p></details>
@@ -476,7 +478,7 @@
         <section><h2>Crédits par média</h2><p>Chaque image publiée doit, lorsque l’information est disponible, indiquer son auteur ou son organisme d’origine et proposer un lien vers la source. Un lien de provenance sert à vérifier le contexte ; il ne constitue pas à lui seul une licence de réutilisation.</p></section>
         <section><h2>Réutilisation des contenus propres</h2><p>Les textes originaux dont l’Observatoire est l’auteur sont mis à disposition sous <a href="https://creativecommons.org/licenses/by/4.0/deed.fr" target="_blank" rel="noreferrer">licence Creative Commons Attribution 4.0</a>. Les données structurées produites par l’Observatoire et dont l’éditeur peut autoriser la réutilisation sont proposées sous <a href="https://www.etalab.gouv.fr/licence-ouverte-open-licence/" target="_blank" rel="noreferrer">Licence Ouverte 2.0</a>. Leur réutilisation doit mentionner l’Observatoire Docks & Seine-Liberté, la source et la date de mise à jour. Ces licences ouvertes ne s’appliquent à aucune image, aucun plan, rendu, document ou autre contenu de tiers.</p></section>
         <section><h2>Images et documents de tiers</h2><p>Les photos, rendus, plans et documents de tiers restent soumis aux droits et conditions fixés par leurs titulaires. Avant toute réutilisation, consultez la source et demandez l’autorisation nécessaire. Une photographie reçue comme simple piste documentaire n’est pas publiée sans autorisation ou base de réutilisation établie.</p></section>
-        <section><h2>Demande de correction ou de retrait</h2><p>Un auteur ou titulaire de droits peut demander la correction d’un crédit, le remplacement d’un lien ou le retrait d’un média via le formulaire <button class="inline-route" type="button" data-route="contribute">Contact & signalements</button>. La section « Sources, crédits et demandes de retrait » de la page <button class="inline-route" type="button" data-route="method">À propos</button> précise cette démarche. Une source ou un crédit affiché, comme l'existence de ce formulaire, ne constitue pas une autorisation de republication. Une réponse est apportée, en principe, sous une semaine.</p></section>
+        <section><h2>Demande de correction ou de retrait</h2><p>Un auteur ou titulaire de droits peut demander la correction d’un crédit, le remplacement d’un lien ou le retrait d’un média via le formulaire <button class="inline-route" type="button" data-route="contribute">Contact & signalements</button>. La section « Sources, crédits et demandes de retrait » de la page <button class="inline-route" type="button" data-route="method">À propos &amp; FAQ</button> précise cette démarche. Une source ou un crédit affiché, comme l'existence de ce formulaire, ne constitue pas une autorisation de republication. Une réponse est apportée, en principe, sous une semaine.</p></section>
         <section><h2>Principales familles de sources</h2><p>Les fiches s’appuient notamment sur les publications des collectivités, services de l’État, aménageurs, maîtres d’ouvrage, promoteurs, architectes, bureaux d’études et sites spécialisés, ainsi que sur des observations de terrain. Les crédits et liens précis figurent sur chaque fiche et chaque média lorsque l’information est disponible.</p></section>
         <section><h2>Cartographie</h2><p>Le fond « Plan » utilise des données © contributeurs OpenStreetMap. La vue « Aérienne » utilise des données orthophotographiques de l’IGN diffusées via la Géoplateforme, soumises aux conditions de réutilisation applicables.</p></section>
       </div>
@@ -494,27 +496,27 @@
     <figure><img id="lightbox-image" alt=""><figcaption aria-live="polite"><span id="lightbox-caption"></span><span id="lightbox-credit"></span><span id="lightbox-count"></span></figcaption></figure>
   </dialog>
 
-  <div class="loading-screen" id="loading-screen" role="status"><img class="brand-icon" src="/assets/favicon.svg" alt="" width="32" height="32" aria-hidden="true"><p>Ouverture des quartiers…</p></div>
+  <div class="loading-screen" id="loading-screen" role="status"><img class="brand-icon" src="/assets/favicon.svg?v=paysage-rond-20261005" alt="" width="32" height="32" aria-hidden="true"><p>Ouverture des quartiers…</p></div>
     <div class="fatal-error" id="fatal-error" hidden><strong>Impossible de charger les fiches.</strong><p>Actualisez la page. Si le problème persiste, utilisez le contact indiqué dans les mentions légales.</p></div>
 
   <a class="back-to-top" href="#page-top" aria-label="Retour en haut de page" title="Retour en haut de page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 14 7-7 7 7"/></svg></a>
   <footer class="site-footer">
-    <div><strong>Observatoire Docks & Seine-Liberté</strong><span>Créé et édité par Thib2a · Observatoire citoyen indépendant · V1.3</span></div>
+    <div><strong>Observatoire Docks & Seine-Liberté</strong><span>Créé et édité par Thib2a · Observatoire citoyen indépendant · V1.3</span><a class="instagram-link footer-instagram" href="https://www.instagram.com/observatoire.docks.seine/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>Suivre l’Observatoire sur Instagram ↗</a></div>
     <nav class="footer-links" aria-label="Informations et contact">
-      <button type="button" data-route="method">À propos</button>
+      <button type="button" data-route="method">À propos &amp; FAQ</button>
       <button type="button" data-route="contribute">Contact & signalements</button>
       <button type="button" data-route="legal">Mentions légales</button>
       <button type="button" data-route="privacy">Confidentialité &amp; données personnelles</button>
       <button type="button" data-route="credits">Crédits, droits & remerciements</button>
     </nav>
     <!-- The preparation batch updates this date after the publication files are synchronized. -->
-    <span>Site actualisé le <time datetime="2026-10-04">4 octobre 2026</time><br>Dernière revue des données : <time id="footer-date" datetime="2026-10-03">3 octobre 2026</time></span>
+    <span>Site actualisé le <time datetime="2026-10-05">5 octobre 2026</time><br>Dernière revue des données : <time id="footer-date" datetime="2026-10-03">3 octobre 2026</time></span>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "89b7f0d07c1344818cfa73b0e58144d9"}'></script>
   <!-- End Cloudflare Web Analytics -->
-  <script type="module" src="app.js?v=b0e302a08470"></script>
+  <script type="module" src="app.js?v=952feeaa0ea6"></script>
 </body>
 </html>
