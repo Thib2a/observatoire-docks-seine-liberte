@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaAttribution, mediaDisplayAttribution, projectHref, projectStatusLabel, statusBadge, visualRoleLabel,
-} from "./data.js?v=952feeaa0ea6";
+} from "./data.js?v=6f40b43dded9";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -255,6 +255,38 @@ export function groupTerritoryRelations(project, projectsById = new Map()) {
   });
 }
 
+export function projectInteractiveVisits(project) {
+  const seen = new Set();
+  return (project.interactiveVisits || []).filter(visit => {
+    const url = safeLinkUrl(visit.url);
+    if (!/^https?:\/\//i.test(url) || !String(visit.title || "").trim() || seen.has(url)) return false;
+    seen.add(url);
+    return true;
+  });
+}
+
+
+export function renderInteractiveVisits(project) {
+  const visits = projectInteractiveVisits(project);
+  if (!visits.length) return "";
+  const mainVisits = visits.filter(visit => visit.kind !== "QUARTIER_360");
+  const neighborhoodVisits = visits.filter(visit => visit.kind === "QUARTIER_360");
+  const main = mainVisits.length ? `<section class="project-explore" aria-labelledby="project-explore-title">
+    <div class="project-explore-heading"><p class="eyebrow">Maquettes et panoramas</p><h2 id="project-explore-title">Explorer le projet</h2><p>Découvrez le projet et son environnement dans les visites interactives proposées par leurs éditeurs.</p></div>
+    <div class="project-explore-visits">${mainVisits.map(visit => `<article class="project-explore-visit">
+      <a class="button button-primary" href="${escapeHtml(safeLinkUrl(visit.url))}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(visit.title)}</span>${externalLinkIcon}<span class="sr-only"> (nouvel onglet)</span></a>
+      ${visit.description ? `<p>${escapeHtml(visit.description)}</p>` : ""}
+      <small>Source : ${escapeHtml(visit.sourceLabel || sourceName(visit.url))} · Site externe</small>
+    </article>`).join("")}</div>
+  </section>` : "";
+  const neighborhood = neighborhoodVisits.length ? `<div class="project-neighborhood" aria-label="Explorer le quartier">${neighborhoodVisits.map(visit => `<div class="project-neighborhood-visit">
+    <a href="${escapeHtml(safeLinkUrl(visit.url))}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(visit.title + " (nouvel onglet)")}">${escapeHtml(visit.title)}${externalLinkIcon}</a>
+    <small>Vue ancienne · Source : ${escapeHtml(visit.sourceLabel || sourceName(visit.url))} · Site externe</small>
+  </div>`).join("")}</div>` : "";
+  return main + neighborhood;
+}
+
+
 export function renderProject(project, projectsById = new Map()) {
   const hero = project.visuals.find(item => item.role === "HERO") || project.visuals[0];
   const seenVisuals = new Set();
@@ -297,6 +329,10 @@ export function renderProject(project, projectsById = new Map()) {
     mediaGroup("Plans de situation et de masse", "plans", gallery.filter(item => ["PLAN_SITUATION", "PLAN_MASSE"].includes(item.role))),
   ].join("");
 
+  const visitUrls = new Set(projectInteractiveVisits(project).map(visit => safeLinkUrl(visit.url)));
+  const sources = project.sources.filter(source => !visitUrls.has(safeLinkUrl(source.url)));
+  const links = project.links.filter(link => !visitUrls.has(safeLinkUrl(link.url)));
+
   const documentsSection = project.documents.length ? `<section class="detail-section documents-section">
     <div class="detail-heading"><p class="eyebrow">Pour aller plus loin</p><h2>Documents utiles</h2></div>
     <div class="document-list">${project.documents.map((document, index) => document.isPdf ? `
@@ -305,12 +341,12 @@ export function renderProject(project, projectsById = new Map()) {
     ${project.documents.length > 5 ? `<button type="button" class="button source-more" data-doc-more>Voir les ${project.documents.length - 5} autres documents</button>` : ""}
   </section>` : "";
 
-  const sourcesSection = project.sources.length || project.links.length ? `<section class="detail-section sources-section">
+  const sourcesSection = sources.length || links.length ? `<section class="detail-section sources-section">
     <div class="detail-heading"><p class="eyebrow">Provenance</p><h2>Sources principales</h2></div>
-    <div class="source-list">${project.sources.map((source, index) => `
+    <div class="source-list">${sources.map((source, index) => `
       <a class="${index >= 5 ? "is-extra-source" : ""}" href="${escapeHtml(safeLinkUrl(source.url))}" target="_blank" rel="noopener"><span>${escapeHtml(source.organization)}${source.date ? ` · ${escapeHtml(formatDate(source.date))}` : ""}${source.originProjectName ? ` · Dossier ${escapeHtml(source.originProjectName)}` : ""}</span><strong>${escapeHtml(source.title)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}
-      ${project.links.map(link => `<a href="${escapeHtml(safeLinkUrl(link.url))}" target="_blank" rel="noopener"><span>${escapeHtml(link.type)}</span><strong>${escapeHtml(link.label)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}</div>
-    ${project.sources.length > 5 ? `<button type="button" class="button source-more" data-source-more>Voir les ${project.sources.length - 5} autres sources</button>` : ""}
+      ${links.map(link => `<a href="${escapeHtml(safeLinkUrl(link.url))}" target="_blank" rel="noopener"><span>${escapeHtml(link.type)}</span><strong>${escapeHtml(link.label)}</strong><i aria-hidden="true">${externalLinkIcon}</i></a>`).join("")}</div>
+    ${sources.length > 5 ? `<button type="button" class="button source-more" data-source-more>Voir les ${sources.length - 5} autres sources</button>` : ""}
   </section>` : "";
   const relatedCard = related => {
     const target = projectsById.get(related.id);
@@ -350,7 +386,7 @@ export function renderProject(project, projectsById = new Map()) {
     </section>
     ${figures ? `<section class="key-figures" aria-label="Chiffres clés">${figures}</section>` : ""}
     ${timeline ? `<section class="detail-section timeline-section"><div class="detail-heading"><p class="eyebrow">Calendrier</p><h2>Les grandes étapes</h2></div><ol>${timeline}</ol></section>` : ""}
-    ${gallerySection}
+    ${renderInteractiveVisits(project)}${gallerySection}
     ${actors ? `<section class="detail-section actors-section"><div class="detail-heading"><p class="eyebrow">Équipe</p><h2>Qui porte le projet ?</h2></div><div class="actor-list">${actors}</div></section>` : ""}
     ${documentsSection}
     ${sourcesSection}

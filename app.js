@@ -1,12 +1,12 @@
 import {
   DATA_URL, safeLinkUrl, responsiveImageAttrs, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution,
   projectHref, searchText,
-} from "./modules/data.js?v=952feeaa0ea6";
-import {mapFilterHref} from "./modules/map_filters.js?v=952feeaa0ea6";
-import {syncPageHeading} from "./modules/headings.js?v=952feeaa0ea6";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=952feeaa0ea6";
-import {mountExplorer} from "./modules/map_v13.js?v=952feeaa0ea6";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=952feeaa0ea6";
+} from "./modules/data.js?v=6f40b43dded9";
+import {mapFilterHref} from "./modules/map_filters.js?v=6f40b43dded9";
+import {syncPageHeading} from "./modules/headings.js?v=6f40b43dded9";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=6f40b43dded9";
+import {mountExplorer} from "./modules/map_v13.js?v=6f40b43dded9";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=6f40b43dded9";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);

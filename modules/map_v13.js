@@ -1,7 +1,21 @@
 export function mountExplorer(host, data) {
   "use strict";
   const root = host.attachShadow({mode: "open"});
-  root.append(document.getElementById("map-v13-template").content.cloneNode(true));
+  const content = document.getElementById("map-v13-template").content.cloneNode(true);
+  const originalVisibility = host.style.visibility;
+  // Shadow styles do not block first paint. Preserve layout but hide the unstyled
+  // content until each sheet loads or fails, without delaying the home page.
+  const stylesReady = Promise.all([...content.querySelectorAll('link[rel="stylesheet"]')].map(link => new Promise(resolve => {
+    const settle = () => {
+      link.removeEventListener("load", settle);
+      link.removeEventListener("error", settle);
+      resolve();
+    };
+    link.addEventListener("load", settle, {once: true});
+    link.addEventListener("error", settle, {once: true});
+  })));
+  host.style.visibility = "hidden";
+  root.append(content);
   const STATUS_ORDER = ["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES", "SUSPENDU / RETARDÉ", "LIVRÉ / TERMINÉ", "ABANDONNÉ", "STATUT INCONNU"];
   const STATUS_LABELS = { "EN CHANTIER": "En chantier", "TRAVAUX PRÉPARATOIRES": "Travaux préparatoires", "PROGRAMMÉ": "Programmé", "EN ÉTUDES": "En études", "SUSPENDU / RETARDÉ": "Suspendu / retardé", "LIVRÉ / TERMINÉ": "Livré / terminé", "ABANDONNÉ": "Abandonné", "STATUT INCONNU": "Statut à préciser" };
   const STATUS_COLORS = { "EN CHANTIER": "#e0643a", "TRAVAUX PRÉPARATOIRES": "#c28a12", "PROGRAMMÉ": "#1565b0", "EN ÉTUDES": "#a32679", "SUSPENDU / RETARDÉ": "#a94452", "LIVRÉ / TERMINÉ": "#52b38a", "ABANDONNÉ": "#555d5a", "STATUT INCONNU": "#98a09c" };
@@ -259,6 +273,16 @@ export function mountExplorer(host, data) {
     renderList();
     setMode(desktopQuery.matches ? "map" : "list");
   }
+  const revealExplorer = () => {
+    host.style.visibility = originalVisibility;
+    requestAnimationFrame(() => { if (state.map) { state.map.invalidateSize(); fitProjects(); } });
+  };
+  // Keep a stalled stylesheet request from leaving the explorer invisible forever.
+  const visibilityDeadline = setTimeout(revealExplorer, 8000);
+  stylesReady.then(() => {
+    clearTimeout(visibilityDeadline);
+    revealExplorer();
+  });
   return {
     enter() {
       if (state.mode !== "map" && !desktopQuery.matches) return;

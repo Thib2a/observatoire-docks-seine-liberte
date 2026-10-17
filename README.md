@@ -13,7 +13,7 @@ et filtres, des fiches de projets, des photographies, perspectives et plans,
 des documents, une chronologie et des actualités avec leurs sources disponibles.
 Chaque fiche dispose également d'une page HTML dédiée.
 
-La **V1.3** rassemble **132 fiches publiques : 130 projets et 2 repères de
+La **V1.3.1** rassemble **132 fiches publiques : 130 projets et 2 repères de
 quartier**. Il s'agit du périmètre de cette version, qui pourra évoluer.
 La revue humaine complète est terminée ; la préparation technique de la BÊTA
 ne préjuge pas de la validation finale des essais en ligne.
@@ -21,6 +21,10 @@ ne préjuge pas de la validation finale des essais en ligne.
 Cette version intègre la nouvelle carte sur ordinateur et mobile : recherche,
 filtres, repères, fonds de carte, aperçus et accès aux fiches interactives.
 Les fiches HTML dédiées restent accessibles directement et sans JavaScript.
+
+La V1.3.1 complète les sources municipales, les photographies et les plans,
+précise les calendriers du collège des Docks et des Bateliers et ajoute des
+liens vers les maquettes 3D et panoramas sur les trois fiches concernées.
 
 ## Une démarche documentaire
 
