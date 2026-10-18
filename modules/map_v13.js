@@ -49,9 +49,11 @@ export function mountExplorer(host, data) {
   const projectHref = (project) => `/#fiche/${encodeURIComponent(project.id)}`;
   const groupLabel = (project) => project.documentaryGroup || (territoryOf(project) === "abords" ? "Abords" : territoryOf(project) === "seine" ? "Seine-Liberté" : "Docks");
   const projectStatus = (project) => isMarker(project) ? "Repère de quartier" : statusLabel(project.status);
-  const imageUrl = (project) => {
+  const imageUrl = (project, thumbnail = true) => {
     const visual = project.visuals?.find((item) => item.role === "HERO") || project.visuals?.[0];
-    const src = visual?.thumbnail || visual?.displaySrc || visual?.src;
+    const src = thumbnail
+      ? visual?.thumbnail || visual?.displaySrc || visual?.src
+      : visual?.displaySrc || visual?.src || visual?.thumbnail;
     return src ? (src.startsWith("/") ? src : `/${src}`) : "";
   };
   const renderLegend = (rows) => {
@@ -82,7 +84,7 @@ export function mountExplorer(host, data) {
   const showSelection = (project, offsetX = 0, offsetY = 0) => {
     clearSelection();
     state.selected = project.id;
-    const image = imageUrl(project);
+    const image = imageUrl(project, false);
     const place = [groupLabel(project), project.lot ? `Lot ${project.lot}` : ""].filter(Boolean).join(" · ");
     const role = isMarker(project) ? `<span class="badge marker-kind">Repère de quartier</span>` : "";
     const status = isMarker(project) ? "" : `<span class="badge" style="--status:${statusColor(project.status)}">${projectStatus(project)}</span>`;

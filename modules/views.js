@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaAttribution, mediaDisplayAttribution, projectHref, projectStatusLabel, statusBadge, visualRoleLabel,
-} from "./data.js?v=6f40b43dded9";
+} from "./data.js?v=afa9d053751c";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -47,9 +47,9 @@ export function cardVisual(project) {
   return project.visuals.find(visual => ["HERO", "GALERIE"].includes(visual.role) && !visual.src.includes("_ARCHIVES_TECHNIQUES/APERÇUS_PDF")) || null;
 }
 
-function imageMarkup(project, visual, className = "") {
+function imageMarkup(project, visual, className = "", sizes) {
   if (!visual) return `<div class="media-placeholder ${className}"><span>Aucun visuel disponible</span></div>`;
-  return `<img class="${className}" src="${escapeHtml(visual.displaySrc || visual.src)}"${responsiveImageAttrs(visual)} alt="${escapeHtml(mediaAlt(project, visual))}" loading="lazy" decoding="async">`;
+  return `<img class="${className}" src="${escapeHtml(visual.displaySrc || visual.src)}"${responsiveImageAttrs(visual, sizes)} alt="${escapeHtml(mediaAlt(project, visual))}" loading="lazy" decoding="async">`;
 }
 
 
@@ -141,8 +141,8 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
   const contextProject = isSeine ? items.find(project => project.projectType === "ENSEMBLE") : null;
   const contextVisual = contextProject?.visuals.find(item => item.role === "GALERIE" && item.caption.includes("Perspective urbaine Seine-Liberté"));
   const intro = isSeine
-    ? ["À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, la ZAC Seine-Liberté prend progressivement forme.", "Cette page rassemble les projets de Seine-Liberté ainsi que certains projets situés à ses abords immédiats lorsqu’ils participent directement aux transformations du secteur."]
-    : ["La ZAC des Docks de Saint-Ouen-sur-Seine, ancien territoire industriel devenu un quartier de vie, poursuit sa transformation.", "Cette page rassemble les projets suivis dans les Docks de Saint-Ouen ainsi que certains projets situés à leurs abords immédiats lorsqu’ils participent directement aux transformations du secteur."];
+    ? ["À Clichy, en bord de Seine et dans le prolongement des Docks de Saint-Ouen, la ZAC Seine-Liberté prend progressivement forme.", "Cette page rassemble les projets de Seine-Liberté ainsi que certains projets situés à ses abords immédiats lorsqu’ils participent directement aux transformations du secteur. Les liens d’exploration disponibles sont regroupés dans les fiches : maquettes, visites et vidéos."]
+    : ["La ZAC des Docks de Saint-Ouen-sur-Seine, ancien territoire industriel devenu un quartier de vie, poursuit sa transformation.", "Cette page rassemble les projets suivis dans les Docks de Saint-Ouen ainsi que certains projets situés à leurs abords immédiats lorsqu’ils participent directement aux transformations du secteur. Les liens d’exploration disponibles sont regroupés dans les fiches : maquettes, visites et vidéos."];
   const eyebrow = isSeine ? "Clichy · bord de Seine" : "Saint-Ouen-sur-Seine";
 
   const projectStrip = (title, subtitle, rows) => rows.length ? `<section class="territory-section">
@@ -255,12 +255,33 @@ export function groupTerritoryRelations(project, projectsById = new Map()) {
   });
 }
 
+function visitUrlIdentity(value) {
+  const url = safeLinkUrl(value);
+  if (!/^https?:\/\//i.test(url)) return url;
+  const parsed = new URL(url);
+  const host = parsed.hostname.replace(/^www\./, "");
+  let identifier = "";
+  if (host === "youtu.be") identifier = parsed.pathname.split("/").filter(Boolean)[0] || "";
+  else if (["youtube.com", "m.youtube.com", "youtube-nocookie.com"].includes(host)) {
+    const match = parsed.pathname.match(/^\/(?:embed|shorts|live)\/([A-Za-z0-9_-]{11})\/?$/);
+    identifier = match?.[1] || (parsed.pathname === "/watch" ? parsed.searchParams.get("v") : "") || "";
+  }
+  if (/^[A-Za-z0-9_-]{11}$/.test(identifier)) return `https://www.youtube.com/watch?v=${identifier}`;
+  if (["vimeo.com", "player.vimeo.com"].includes(host)) {
+    const match = parsed.pathname.match(/^\/(?:video\/)?(\d+)(?:\/|$)/);
+    if (match) return `https://vimeo.com/${match[1]}`;
+  }
+  return url;
+}
+
+
 export function projectInteractiveVisits(project) {
   const seen = new Set();
   return (project.interactiveVisits || []).filter(visit => {
     const url = safeLinkUrl(visit.url);
-    if (!/^https?:\/\//i.test(url) || !String(visit.title || "").trim() || seen.has(url)) return false;
-    seen.add(url);
+    const identity = visitUrlIdentity(url);
+    if (!/^https?:\/\//i.test(url) || !String(visit.title || "").trim() || seen.has(identity)) return false;
+    seen.add(identity);
     return true;
   });
 }
@@ -269,15 +290,26 @@ export function projectInteractiveVisits(project) {
 export function renderInteractiveVisits(project) {
   const visits = projectInteractiveVisits(project);
   if (!visits.length) return "";
-  const mainVisits = visits.filter(visit => visit.kind !== "QUARTIER_360");
+  const mainVisits = visits.filter(visit => !["QUARTIER_360", "VIDEO"].includes(visit.kind));
+  const videoVisits = visits.filter(visit => visit.kind === "VIDEO");
   const neighborhoodVisits = visits.filter(visit => visit.kind === "QUARTIER_360");
-  const main = mainVisits.length ? `<section class="project-explore" aria-labelledby="project-explore-title">
-    <div class="project-explore-heading"><p class="eyebrow">Maquettes et panoramas</p><h2 id="project-explore-title">Explorer le projet</h2><p>Découvrez le projet et son environnement dans les visites interactives proposées par leurs éditeurs.</p></div>
-    <div class="project-explore-visits">${mainVisits.map(visit => `<article class="project-explore-visit">
+  const videos = videoVisits.length ? `<div class="project-explore-videos" aria-labelledby="project-films-title"><h3 id="project-films-title">Films du projet</h3><div class="project-explore-film-list">${videoVisits.map(visit => `<article class="project-explore-film">
+      <a class="button" href="${escapeHtml(safeLinkUrl(visit.url))}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(visit.title)}</span>${externalLinkIcon}<span class="sr-only"> (nouvel onglet)</span></a>
+      ${visit.description ? `<p>${escapeHtml(visit.description)}</p>` : ""}
+      <small>Source : ${escapeHtml(visit.sourceLabel || sourceName(visit.url))} · Site externe</small>
+    </article>`).join("")}</div></div>` : "";
+  const eyebrow = videoVisits.length ? (mainVisits.length ? "Maquettes, panoramas et films" : "Films du projet") : "Maquettes et panoramas";
+  const introduction = videoVisits.length
+    ? (mainVisits.length ? "Découvrez le projet et son environnement dans les visites interactives et les films proposés par leurs éditeurs." : "Découvrez le projet dans les films proposés par leurs éditeurs.")
+    : "Découvrez le projet et son environnement dans les visites interactives proposées par leurs éditeurs.";
+  const main = mainVisits.length || videoVisits.length ? `<section class="project-explore" aria-labelledby="project-explore-title">
+    <div class="project-explore-heading${mainVisits.length ? "" : " project-explore-heading-wide"}"><p class="eyebrow">${eyebrow}</p><h2 id="project-explore-title">Explorer le projet</h2><p>${introduction}</p></div>
+    ${mainVisits.length ? `<div class="project-explore-visits">${mainVisits.map(visit => `<article class="project-explore-visit">
       <a class="button button-primary" href="${escapeHtml(safeLinkUrl(visit.url))}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(visit.title)}</span>${externalLinkIcon}<span class="sr-only"> (nouvel onglet)</span></a>
       ${visit.description ? `<p>${escapeHtml(visit.description)}</p>` : ""}
       <small>Source : ${escapeHtml(visit.sourceLabel || sourceName(visit.url))} · Site externe</small>
-    </article>`).join("")}</div>
+    </article>`).join("")}</div>` : ""}
+    ${videos}
   </section>` : "";
   const neighborhood = neighborhoodVisits.length ? `<div class="project-neighborhood" aria-label="Explorer le quartier">${neighborhoodVisits.map(visit => `<div class="project-neighborhood-visit">
     <a href="${escapeHtml(safeLinkUrl(visit.url))}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(visit.title + " (nouvel onglet)")}">${escapeHtml(visit.title)}${externalLinkIcon}</a>
@@ -329,9 +361,9 @@ export function renderProject(project, projectsById = new Map()) {
     mediaGroup("Plans de situation et de masse", "plans", gallery.filter(item => ["PLAN_SITUATION", "PLAN_MASSE"].includes(item.role))),
   ].join("");
 
-  const visitUrls = new Set(projectInteractiveVisits(project).map(visit => safeLinkUrl(visit.url)));
-  const sources = project.sources.filter(source => !visitUrls.has(safeLinkUrl(source.url)));
-  const links = project.links.filter(link => !visitUrls.has(safeLinkUrl(link.url)));
+  const visitUrls = new Set(projectInteractiveVisits(project).map(visit => visitUrlIdentity(visit.url)));
+  const sources = project.sources.filter(source => !visitUrls.has(visitUrlIdentity(source.url)));
+  const links = project.links.filter(link => !visitUrls.has(visitUrlIdentity(link.url)));
 
   const documentsSection = project.documents.length ? `<section class="detail-section documents-section">
     <div class="detail-heading"><p class="eyebrow">Pour aller plus loin</p><h2>Documents utiles</h2></div>
@@ -361,7 +393,7 @@ export function renderProject(project, projectsById = new Map()) {
   </section>` : "";
 
   return `<header class="project-header ${hero ? "has-media" : "no-media"}">
-    <div class="project-header-media">${imageMarkup(project, hero)}</div>
+    <div class="project-header-media">${imageMarkup(project, hero, "", hero?.width && hero?.height ? `max(100vw, ${Math.ceil(100 * hero.width / hero.height)}vh)` : "100vw")}</div>
     <div class="project-header-shade"></div>
     <button class="back-link" type="button" data-back>← Retour</button>
     <div class="project-header-content">

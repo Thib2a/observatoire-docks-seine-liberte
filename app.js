@@ -1,12 +1,12 @@
 import {
   DATA_URL, safeLinkUrl, responsiveImageAttrs, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution,
   projectHref, searchText,
-} from "./modules/data.js?v=6f40b43dded9";
-import {mapFilterHref} from "./modules/map_filters.js?v=6f40b43dded9";
-import {syncPageHeading} from "./modules/headings.js?v=6f40b43dded9";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=6f40b43dded9";
-import {mountExplorer} from "./modules/map_v13.js?v=6f40b43dded9";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=6f40b43dded9";
+} from "./modules/data.js?v=afa9d053751c";
+import {mapFilterHref} from "./modules/map_filters.js?v=afa9d053751c";
+import {syncPageHeading} from "./modules/headings.js?v=afa9d053751c";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=afa9d053751c";
+import {mountExplorer} from "./modules/map_v13.js?v=afa9d053751c";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=afa9d053751c";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -229,7 +229,8 @@ function renderHome() {
   const updates = state.data.territoryNews.filter(update => state.byId.get(update.projectId)?.readiness !== "NON_PRET");
   $("#home-updates").innerHTML = updates.slice(0, 5).map(updateRow).join("");
   renderLimitedUpdates("#territory-news-list", updates, "actualités", "Aucune actualité datée");
-  renderLimitedUpdates("#observatory-journal-list", state.data.observatoryJournal, "entrées du journal", "Aucune mise à jour documentée");
+  const publicJournal = state.data.observatoryJournal.filter(entry => entry.kind !== "STATUS_REVIEW" && !String(entry.kind).startsWith("PUBLICATION_"));
+  renderLimitedUpdates("#observatory-journal-list", publicJournal, "entrées du journal", "Aucune mise à jour documentée");
   renderTimeline();
 }
 
