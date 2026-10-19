@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaAttribution, mediaDisplayAttribution, projectHref, projectStatusLabel, statusBadge, visualRoleLabel,
-} from "./data.js?v=848cd23c4ad9";
+} from "./data.js?v=774f1b0cd9f9";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -165,7 +165,6 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
       <button class="swipe-hint" type="button" data-scroll-target="overview-title" aria-label="Descendre vers la vue d’ensemble"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 8 8 8 8-8"/></svg></button>
     </div>
     <button class="desktop-hero-chevron" type="button" data-scroll-target="overview-title" aria-label="Descendre vers la vue d’ensemble"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 8 8 8 8-8"/></svg></button>
-    <button class="carousel-pause" type="button" data-carousel-pause="#territory-content .territory-hero-media" aria-controls="territory-hero-media" aria-label="Mettre en pause le défilement des images" hidden><span aria-hidden="true">Ⅱ</span></button>
     <div class="territory-hero-caption">${isSeine ? (contextVisual ? `Vue de contexte du site, non rendu du projet final · ${mediaCredit(contextVisual)}` : "") : (visual ? `${escapeHtml(visual.caption)} · ${mediaCredit(visual)}` : "")}</div>
   </header>
   <div class="territory-body">

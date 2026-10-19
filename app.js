@@ -1,12 +1,12 @@
 import {
   DATA_URL, safeLinkUrl, responsiveImageAttrs, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution,
   projectHref, searchText,
-} from "./modules/data.js?v=848cd23c4ad9";
-import {mapFilterHref} from "./modules/map_filters.js?v=848cd23c4ad9";
-import {syncPageHeading} from "./modules/headings.js?v=848cd23c4ad9";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=848cd23c4ad9";
-import {mountExplorer} from "./modules/map_v13.js?v=848cd23c4ad9";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=848cd23c4ad9";
+} from "./modules/data.js?v=774f1b0cd9f9";
+import {mapFilterHref} from "./modules/map_filters.js?v=774f1b0cd9f9";
+import {syncPageHeading} from "./modules/headings.js?v=774f1b0cd9f9";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=774f1b0cd9f9";
+import {mountExplorer} from "./modules/map_v13.js?v=774f1b0cd9f9";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=774f1b0cd9f9";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -126,12 +126,15 @@ function rememberView() {
   }}, "", location.href);
 }
 
-function navigate(route, payload = {}) {
+function navigate(route, payload = {}, options = {}) {
   const nextUrl = route === "explore" ? mapFilterHref(state) : routeHref(route, payload, location.pathname);
   const target = new URL(nextUrl, location.href);
   if (location.href !== target.href) {
-    rememberView();
-    history.pushState({odsEntry: true, internalReturn: true}, "", nextUrl);
+    if (options.replace) history.replaceState({odsEntry: true}, "", nextUrl);
+    else {
+      rememberView();
+      history.pushState({odsEntry: true, internalReturn: true}, "", nextUrl);
+    }
   }
   showRoute(parseRoute());
 }
@@ -167,8 +170,8 @@ function showRoute(parsed, options = {}) {
     const project = state.byId.get(parsed.id);
     if (!project) {
       const successor = state.data.retiredProjectRedirects?.[parsed.id];
-      if (successor) navigate("project", {id: successor});
-      else navigate("explore");
+      if (successor) navigate("project", {id: successor}, {replace: true});
+      else navigate("explore", {}, {replace: true});
       return;
     }
     $("#project-content").innerHTML = renderProject(project, state.byId);
@@ -276,25 +279,12 @@ function mountSlides(selector, keys = [], delay = 0) {
   let index = 0;
   let displayedIndex = 0;
   let paintSerial = 0;
-  let manuallyPaused = false;
   const generation = state.slideGeneration;
   const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
   const scope = target.closest(".home-hero, .territory-hero") || target;
-  const pauseButton = document.querySelector(`[data-carousel-pause="${selector}"]`);
   const automatic = delay > 0 && media.length > 1;
-  const isPaused = () => manuallyPaused || document.hidden || motionQuery.matches
-    || (scope.contains(document.activeElement) && !pauseButton?.contains(document.activeElement));
-  const updatePauseButton = () => {
-    if (!pauseButton) return;
-    pauseButton.hidden = !automatic || motionQuery.matches;
-    const label = manuallyPaused ? "Reprendre le défilement des images" : "Mettre en pause le défilement des images";
-    pauseButton.setAttribute("aria-label", label);
-    pauseButton.title = label;
-    pauseButton.innerHTML = manuallyPaused
-      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z"/></svg>'
-      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>';
-    scope.classList.toggle("has-carousel-playback", !pauseButton.hidden);
-  };
+  const isPaused = () => document.hidden || motionQuery.matches
+    || scope.contains(document.activeElement);
   const paint = (automaticChange = false) => {
     const serial = ++paintSerial;
     const itemIndex = index;
@@ -313,6 +303,7 @@ function mountSlides(selector, keys = [], delay = 0) {
       if (serial !== paintSerial || generation !== state.slideGeneration || !target.isConnected || !next.naturalWidth) return;
       // Focus or pause can change while the next image is still downloading.
       if (automaticChange && isPaused()) { index = displayedIndex; return; }
+      target.classList.remove("image-missing");
       target.querySelector(".media-loading-error")?.remove();
       const previous = [...target.children];
       target.append(next);
@@ -338,10 +329,8 @@ function mountSlides(selector, keys = [], delay = 0) {
     else { next.addEventListener("load", show, {once:true}); next.addEventListener("error", fail, {once:true}); }
   };
   paint();
-  updatePauseButton();
   state.slideControllers[selector] = {
     step(step) { index = (index + step + media.length) % media.length; paint(); },
-    togglePause() { manuallyPaused = !manuallyPaused; updatePauseButton(); },
   };
   if (automatic && !motionQuery.matches) {
     const timer = setInterval(() => { if (!isPaused()) { index = (index + 1) % media.length; paint(true); } }, delay);
@@ -394,6 +383,7 @@ function showLightboxItem(index) {
   if (!items.length) return;
   state.lightboxIndex = (index + items.length) % items.length;
   const item = items[state.lightboxIndex];
+  $("#lightbox-image").closest("figure")?.classList.remove("image-missing");
   $("#lightbox-image").src = item.src;
   $("#lightbox-image").alt = item.alt;
   $("#lightbox-caption").textContent = item.caption;
@@ -433,13 +423,12 @@ function bindEvents() {
     window.scrollTo({top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
   });
   document.addEventListener("click", event => {
-    const skipLink = event.target.closest('.skip-link[href="#main-content"]');
+    // The map shell keeps its original skip-link URL after opening another SPA view.
+    const skipLink = event.target.closest('.skip-link[href="#main-content"], .skip-link[href="/#main-content"], .skip-link[href="/carte/#main-content"]');
     if (skipLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) {
       focusMainContent(event);
       return;
     }
-    const carouselPause = event.target.closest("[data-carousel-pause]");
-    if (carouselPause) { state.slideControllers[carouselPause.dataset.carouselPause]?.togglePause(); return; }
     const slideStep = event.target.closest("[data-carousel-step]");
     if (slideStep) { state.slideControllers[slideStep.dataset.carouselTarget]?.step(Number(slideStep.dataset.carouselStep)); return; }
     const galleryStep = event.target.closest("[data-gallery-step]");
@@ -475,6 +464,7 @@ function bindEvents() {
       next.className = "plan-crossfade";
       const show = () => {
         if (generation !== state.slideGeneration || !root.isConnected || Number(root.dataset.planRequest) !== serial || !next.naturalWidth) return;
+        button.classList.remove("image-missing");
         $("[data-plan-error]", root).hidden = true;
         const previous = $$('img', button);
         button.append(next);

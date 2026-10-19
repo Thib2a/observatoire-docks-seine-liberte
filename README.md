@@ -1,17 +1,18 @@
 # Observatoire Docks & Seine-Liberté
 
-**État au 19 octobre 2026 : correctifs locaux de la V1.3.2 après audit ; aucune nouvelle préparation BAT ni publication par l’agent.**
+**État au 19 octobre 2026 : V1.3.2 publiée ; complément d’audit transversal conservé localement.**
 
-La V1.3.2 a été observée le 18 octobre sur l’accueil public et la page directe de Fahrenheit. Ce contrôle représentatif ne vaut pas comparaison intégrale de la production ni confirmation de réception Cloudflare. Le paquet préparé par le propriétaire le 18 octobre reste conservé à l’identique.
+Le propriétaire a publié la V1.3.2 après le BAT du 19 octobre terminé avec le code 0. Le lot courant `AUDIT_TRANSVERSAL_20261019` reprend les correctifs d’affichage et le retrait des boutons Lecture/Pause du lot précédent `CORRECTIFS_AFFICHAGE_20261019`. Il ajoute des corrections de recherche par alias, de retour navigateur depuis une fiche inconnue, de reprise des galeries et un durcissement des chemins de l’éditeur local.
 
-L’audit transversal du 18 octobre a identifié des corrections complémentaires de chiffres, de provenance, d’images principales, d’accessibilité et des outils locaux. Le lot du 19 octobre est distinct du paquet préparé précédemment. Son état et ses contrôles font foi dans le bilan des correctifs ; les résultats du 18 octobre ci-dessous restent des preuves datées.
+Deux libellés de logements, pour R2A et Capella, sont précisés à partir de descriptions déjà validées ; les nombres et statuts restent identiques. Les dates de revue de ces deux fiches accompagnent cette qualification. La version reste V1.3.2. La recette finale et ses limites sont à lire dans le dossier courant. Le BAT et la publication de ce complément restent à effectuer par le propriétaire ; l’agent ne publie pas.
 
-Les compteurs médias désignent des notions distinctes : 523 identifiants médias uniques dans tout le JSON, 558 rattachements de visuels aux fiches et 440 fichiers originaux uniques dans le paquet de référence du 18 octobre. Le champ historique « mediaAssociationCount » du manifeste désigne des IDs, pas le nombre de rattachements.
-
-Le bilan des correctifs locaux et l’audit initial sont conservés dans l’espace
-de travail source ; ces documents internes ne sont pas copiés dans ce dépôt public.
+Les dossiers de contrôle des étapes successives restent dans l’espace de travail source et ne sont pas copiés dans ce dépôt public.
 
 ## Référence de préparation du 18 octobre 2026
+
+L’inventaire de référence distingue 523 identifiants médias, 558 rattachements
+aux fiches et 440 fichiers originaux uniques. Le champ historique
+« mediaAssociationCount » du manifeste compte les identifiants, pas les rattachements.
 
 Complément validé le 18 octobre 2026 : six films historiques ajoutent onze
 liens sur huit fiches. Le catalogue atteint 160 liens d’exploration sur
@@ -44,27 +45,27 @@ et crédités : 11 de la sélection initiale et le héros de Réciproque. Le der
 complément apporte 16 liens sur 13 fiches : deux maquettes, sept films et sept
 visites ou panoramas. Il n’ajoute aucune autre nouvelle photo.
 Les 111 liens municipaux corrigés et les visites ARPEJ/Liberté et PRYSM sont inclus.
-Contrôles finaux confirmés : 31 tests Python distincts et 8 suites JavaScript réussis ;
+Contrôles confirmés lors de la préparation du 18 octobre : 31 tests Python distincts et 8 suites JavaScript réussis ;
 119 contrôles du paquet, avec 3 avertissements d’inventaire attendus et 0 erreur ;
 64 contrôles de données et 48 contrôles de compteurs favorables.
 Sur les parcours contrôlés en 375 × 812, 390 × 844 et 1280 × 720, aucun débordement
 n’a été observé ; les boutons contrôlés mesurent au moins 44 px.
 Le signalement Google Pixel n’est pas reproduit. Ces essais ne garantissent
-pas le CLS réel. La V1.3.2 est prête pour préparation via
-PREPARER_DIST_GITHUB.bat et n’est pas publiée.
-Dernière recette confirmée : les 26 textes appliqués correspondent aux textes
+pas le CLS réel. À cette étape du 18 octobre, la V1.3.2 était prête pour préparation ; la
+publication ultérieure du propriétaire est consignée dans l’état courant en tête.
+Lors de cette recette du 18 octobre, les 26 textes appliqués correspondaient aux textes
 validés sur ordinateur (1280 px) et mobile (375 px). Les cinq noms de programmes
 et les cinq numéros d’îlot retrouvent les fiches ; cinq fiches ont été contrôlées
 à nouveau à 390 px sans débordement. À 375 px, les boutons Carte/Liste défilent
 jusqu’à sortir de l’écran ; le signalement sur le Pixel réel reste non reproduit.
-128 fiches portent désormais la date de revue du 18 octobre et six celle du
+À l’issue de cette préparation du 18 octobre, 128 fiches portaient cette date de revue et six celle du
 2 octobre. Sept dates ont réellement changé lors de cette dernière passe ;
 une date de revue ne signifie pas que tous les faits de la fiche ont changé.
 
 
 L’édition V1.3.1 publiée le **17 octobre 2026** comptait 132 fiches et
-130 opérations. La présence de ces enrichissements dans le site en ligne
-n’est pas confirmée par leur préparation locale.
+130 opérations. La publication de la V1.3.2 et des correctifs après audit a
+été confirmée ensuite par le propriétaire ; les états précédents restent historiques.
 
 Un observatoire citoyen et indépendant pour comprendre et suivre les
 transformations des **Docks de Saint-Ouen**, de **Seine-Liberté à Clichy**
@@ -79,10 +80,9 @@ et filtres, des fiches de projets, des photographies, perspectives et plans,
 des documents, une chronologie et des actualités avec leurs sources disponibles.
 Chaque fiche dispose également d'une page HTML dédiée.
 
-La **V1.3.2 a été observée en ligne le 18 octobre 2026**. Les correctifs locaux
-du 19 octobre restent en attente d'une nouvelle préparation par
-`PREPARER_DIST_GITHUB.bat` et d'une publication par le propriétaire. Les contrôles
-locaux restent distincts des vérifications du site en ligne.
+La **V1.3.2, avec les correctifs après audit, a été publiée par le propriétaire
+le 19 octobre 2026**. Le complément transversal préparé ensuite reste local.
+Les contrôles locaux restent distincts des vérifications du site en ligne.
 
 Cette version intègre la nouvelle carte sur ordinateur et mobile : recherche,
 filtres, repères, fonds de carte, aperçus et accès aux fiches interactives.

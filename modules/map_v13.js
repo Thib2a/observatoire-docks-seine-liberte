@@ -1,3 +1,5 @@
+import {matchesSearch} from "./data.js?v=774f1b0cd9f9";
+
 export function mountExplorer(host, data) {
   "use strict";
   const root = host.attachShadow({mode: "open"});
@@ -38,8 +40,7 @@ export function mountExplorer(host, data) {
     if (state.territory !== "all" && territoryOf(project) !== state.territory) return false;
     if (state.status !== "all" && project.status !== state.status) return false;
     if (state.category !== "all" && project.category !== state.category) return false;
-    const haystack = [project.name, project.officialName, project.lot, project.commune, project.zone, project.sector, project.map?.address].filter(Boolean).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    return haystack.includes(state.query);
+    return matchesSearch(project, state.query);
   };
   const filtered = () => state.projects.filter(matches);
   const sorted = (projects) => [...projects].sort((a, b) => Number(isMarker(a)) - Number(isMarker(b)) || STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status) || a.name.localeCompare(b.name, "fr"));
