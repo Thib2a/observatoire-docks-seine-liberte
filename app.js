@@ -1,12 +1,12 @@
 import {
   DATA_URL, safeLinkUrl, responsiveImageAttrs, groupValue, chevronIcon, escapeHtml, formatDate, formatTemporal, loadData, mediaAttribution, mediaDisplayAttribution,
   projectHref, searchText,
-} from "./modules/data.js?v=afa9d053751c";
-import {mapFilterHref} from "./modules/map_filters.js?v=afa9d053751c";
-import {syncPageHeading} from "./modules/headings.js?v=afa9d053751c";
-import {resolveRoute, routeHref} from "./modules/routes.js?v=afa9d053751c";
-import {mountExplorer} from "./modules/map_v13.js?v=afa9d053751c";
-import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=afa9d053751c";
+} from "./modules/data.js?v=848cd23c4ad9";
+import {mapFilterHref} from "./modules/map_filters.js?v=848cd23c4ad9";
+import {syncPageHeading} from "./modules/headings.js?v=848cd23c4ad9";
+import {resolveRoute, routeHref} from "./modules/routes.js?v=848cd23c4ad9";
+import {mountExplorer} from "./modules/map_v13.js?v=848cd23c4ad9";
+import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=848cd23c4ad9";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -110,6 +110,13 @@ function updateSeo(parsed, project = null) {
 
 function parseRoute() {
   return resolveRoute(location.pathname, location.hash, state.data?.retiredProjectRedirects, state.data?.projects.map(p => p.id));
+}
+
+function focusMainContent(event) {
+  event.preventDefault();
+  const main = $("#main-content");
+  main.focus({preventScroll: true});
+  main.scrollIntoView({block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
 }
 
 function rememberView() {
@@ -267,11 +274,31 @@ function mountSlides(selector, keys = [], delay = 0) {
   const media = (keys || []).map(key => state.data.presentationMedia?.[key]).filter(Boolean);
   if (!media.length) return;
   let index = 0;
+  let displayedIndex = 0;
   let paintSerial = 0;
+  let manuallyPaused = false;
   const generation = state.slideGeneration;
-  const paint = () => {
+  const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  const scope = target.closest(".home-hero, .territory-hero") || target;
+  const pauseButton = document.querySelector(`[data-carousel-pause="${selector}"]`);
+  const automatic = delay > 0 && media.length > 1;
+  const isPaused = () => manuallyPaused || document.hidden || motionQuery.matches
+    || (scope.contains(document.activeElement) && !pauseButton?.contains(document.activeElement));
+  const updatePauseButton = () => {
+    if (!pauseButton) return;
+    pauseButton.hidden = !automatic || motionQuery.matches;
+    const label = manuallyPaused ? "Reprendre le défilement des images" : "Mettre en pause le défilement des images";
+    pauseButton.setAttribute("aria-label", label);
+    pauseButton.title = label;
+    pauseButton.innerHTML = manuallyPaused
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z"/></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>';
+    scope.classList.toggle("has-carousel-playback", !pauseButton.hidden);
+  };
+  const paint = (automaticChange = false) => {
     const serial = ++paintSerial;
-    const item = media[index];
+    const itemIndex = index;
+    const item = media[itemIndex];
     const next = new Image();
     next.src = item.displaySrc || item.src;
     if (item.responsiveSources?.length) {
@@ -284,6 +311,8 @@ function mountSlides(selector, keys = [], delay = 0) {
     next.className = "crossfade-slide";
     const show = () => {
       if (serial !== paintSerial || generation !== state.slideGeneration || !target.isConnected || !next.naturalWidth) return;
+      // Focus or pause can change while the next image is still downloading.
+      if (automaticChange && isPaused()) { index = displayedIndex; return; }
       target.querySelector(".media-loading-error")?.remove();
       const previous = [...target.children];
       target.append(next);
@@ -296,9 +325,10 @@ function mountSlides(selector, keys = [], delay = 0) {
         "#territory-content .territory-hero-media": "#territory-content .territory-hero-caption",
       }[selector];
       if (captionSelector) setPresentationCredit($(captionSelector), item);
-      target.dataset.slideIndex = String(index);
+      displayedIndex = itemIndex;
+      target.dataset.slideIndex = String(itemIndex);
       const counter = document.querySelector(`[data-carousel-count="${selector}"]`);
-      if (counter) counter.textContent = `${index + 1} / ${media.length}`;
+      if (counter) counter.textContent = `${itemIndex + 1} / ${media.length}`;
     };
     const fail = () => {
       if (serial !== paintSerial || generation !== state.slideGeneration || !target.isConnected) return;
@@ -308,9 +338,13 @@ function mountSlides(selector, keys = [], delay = 0) {
     else { next.addEventListener("load", show, {once:true}); next.addEventListener("error", fail, {once:true}); }
   };
   paint();
-  state.slideControllers[selector] = step => { index = (index + step + media.length) % media.length; paint(); };
-  if (delay > 0 && media.length > 1 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const timer = setInterval(() => { if (!document.hidden) { index = (index + 1) % media.length; paint(); } }, delay);
+  updatePauseButton();
+  state.slideControllers[selector] = {
+    step(step) { index = (index + step + media.length) % media.length; paint(); },
+    togglePause() { manuallyPaused = !manuallyPaused; updatePauseButton(); },
+  };
+  if (automatic && !motionQuery.matches) {
+    const timer = setInterval(() => { if (!isPaused()) { index = (index + 1) % media.length; paint(true); } }, delay);
     state.carouselTimers.push(timer);
   }
 }
@@ -399,8 +433,15 @@ function bindEvents() {
     window.scrollTo({top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
   });
   document.addEventListener("click", event => {
+    const skipLink = event.target.closest('.skip-link[href="#main-content"]');
+    if (skipLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) {
+      focusMainContent(event);
+      return;
+    }
+    const carouselPause = event.target.closest("[data-carousel-pause]");
+    if (carouselPause) { state.slideControllers[carouselPause.dataset.carouselPause]?.togglePause(); return; }
     const slideStep = event.target.closest("[data-carousel-step]");
-    if (slideStep) { state.slideControllers[slideStep.dataset.carouselTarget]?.(Number(slideStep.dataset.carouselStep)); return; }
+    if (slideStep) { state.slideControllers[slideStep.dataset.carouselTarget]?.step(Number(slideStep.dataset.carouselStep)); return; }
     const galleryStep = event.target.closest("[data-gallery-step]");
     if (galleryStep) {
       const track = galleryStep.closest(".gallery-content").querySelector("[data-gallery-scroll]");

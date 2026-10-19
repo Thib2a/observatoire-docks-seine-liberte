@@ -1,7 +1,7 @@
 import {
   safeLinkUrl, projectTerritoryLabel, responsiveImageAttrs, documentaryGroup, filterDocumentaryGroup, CONFIDENCE_HELP, MILESTONE_LABELS, READINESS_LABELS, ROLE_LABELS,
   chevronIcon, externalLinkIcon, sourceName, escapeHtml, formatDate, formatEmbeddedDates, formatTemporal, mediaAlt, mediaAttribution, mediaDisplayAttribution, projectHref, projectStatusLabel, statusBadge, visualRoleLabel,
-} from "./data.js?v=afa9d053751c";
+} from "./data.js?v=848cd23c4ad9";
 
 
 const ACTIVE_STATUSES = new Set(["EN CHANTIER", "TRAVAUX PRÉPARATOIRES", "PROGRAMMÉ", "EN ÉTUDES"]);
@@ -44,7 +44,9 @@ function descriptionParagraphs(value) {
 
 
 export function cardVisual(project) {
-  return project.visuals.find(visual => ["HERO", "GALERIE"].includes(visual.role) && !visual.src.includes("_ARCHIVES_TECHNIQUES/APERÇUS_PDF")) || null;
+  const eligible = visual => !visual.src.includes("_ARCHIVES_TECHNIQUES/APERÇUS_PDF");
+  return project.visuals.find(visual => visual.role === "HERO" && eligible(visual))
+    || project.visuals.find(visual => visual.role === "GALERIE" && eligible(visual)) || null;
 }
 
 function imageMarkup(project, visual, className = "", sizes) {
@@ -151,7 +153,7 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
   </section>` : "";
 
   return `<header class="territory-hero ${isSeine ? "is-seine" : "is-docks"}">
-    <div class="territory-hero-media">${isSeine ? imageMarkup(contextProject || {name: territory}, contextVisual) : imageMarkup(visualProject || {name: territory, map: items[0]?.map}, visual)}</div>
+    <div class="territory-hero-media" id="territory-hero-media">${isSeine ? imageMarkup(contextProject || {name: territory}, contextVisual) : imageMarkup(visualProject || {name: territory, map: items[0]?.map}, visual)}</div>
     <div class="territory-hero-shade"></div>
     <div class="territory-hero-content">
       <button class="back-link" type="button" data-route="home">← Accueil</button>
@@ -163,6 +165,7 @@ export function renderTerritory(territory, projects, presentation = {}, presenta
       <button class="swipe-hint" type="button" data-scroll-target="overview-title" aria-label="Descendre vers la vue d’ensemble"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 8 8 8 8-8"/></svg></button>
     </div>
     <button class="desktop-hero-chevron" type="button" data-scroll-target="overview-title" aria-label="Descendre vers la vue d’ensemble"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 8 8 8 8-8"/></svg></button>
+    <button class="carousel-pause" type="button" data-carousel-pause="#territory-content .territory-hero-media" aria-controls="territory-hero-media" aria-label="Mettre en pause le défilement des images" hidden><span aria-hidden="true">Ⅱ</span></button>
     <div class="territory-hero-caption">${isSeine ? (contextVisual ? `Vue de contexte du site, non rendu du projet final · ${mediaCredit(contextVisual)}` : "") : (visual ? `${escapeHtml(visual.caption)} · ${mediaCredit(visual)}` : "")}</div>
   </header>
   <div class="territory-body">
@@ -185,6 +188,8 @@ function figureItems(project) {
     .filter(([key, value]) => value && !(key === "housing" && value === project.figures.socialHousing))
     .map(([key, value]) => {
       const label = labels[key] || key;
+      const housing = key === "housing" && String(value).trim().match(/^(\d+(?:[ \u00a0\u202f]\d{3})*)\s+(logements? (?:en accession|à loyer intermédiaire)(?=\s|$).*)$/iu);
+      if (housing) return `<div><strong>${escapeHtml(housing[1])}</strong><span>${escapeHtml(housing[2])}</span></div>`;
       const alreadyLabeled = /[a-zà-ÿ]/i.test(String(value).replace(/m²|m2|\bSDP\b/gi, ""));
       const longValue = String(value).trim().length > 28;
       return `<div class="${longValue ? "is-long" : ""}"><strong>${escapeHtml(value)}</strong>${alreadyLabeled ? "" : `<span>${escapeHtml(label)}</span>`}</div>`;
@@ -383,7 +388,7 @@ export function renderProject(project, projectsById = new Map()) {
   const relatedCard = related => {
     const target = projectsById.get(related.id);
     const thumb = target && cardVisual(target);
-    return `<a class="related-card" href="${projectHref(related.id)}" data-project-link="${escapeHtml(related.id)}">${thumb ? `<img src="${escapeHtml(thumb.displaySrc || thumb.src)}" alt="" loading="lazy">` : '<span class="related-thumb-placeholder" aria-hidden="true">↗</span>'}<span class="related-card-copy"><small>${escapeHtml(related.relation)}</small><strong>${escapeHtml(related.name)}</strong><em>Découvrir la fiche <span aria-hidden="true">→</span></em></span></a>`;
+    return `<a class="related-card" href="${projectHref(related.id)}" data-project-link="${escapeHtml(related.id)}">${thumb ? `<img src="${escapeHtml(thumb.thumbnail || thumb.displaySrc || thumb.src)}"${responsiveImageAttrs(thumb, "70px")} alt="" loading="lazy" decoding="async">` : '<span class="related-thumb-placeholder" aria-hidden="true">↗</span>'}<span class="related-card-copy"><small>${escapeHtml(related.relation)}</small><strong>${escapeHtml(related.name)}</strong><em>Découvrir la fiche <span aria-hidden="true">→</span></em></span></a>`;
   };
   const componentsSection = project.relatedProjects?.length ? `<section class="detail-section components-section">
     <div class="detail-heading"><p class="eyebrow">Pour explorer les projets</p><h2>Opérations liées</h2></div>

@@ -1,6 +1,17 @@
 # Observatoire Docks & Seine-Liberté
 
-**V1.3.2 prête pour préparation via PREPARER_DIST_GITHUB.bat au 18 octobre 2026 — NON PUBLIÉE.**
+**État au 19 octobre 2026 : correctifs locaux de la V1.3.2 après audit ; aucune nouvelle préparation BAT ni publication par l’agent.**
+
+La V1.3.2 a été observée le 18 octobre sur l’accueil public et la page directe de Fahrenheit. Ce contrôle représentatif ne vaut pas comparaison intégrale de la production ni confirmation de réception Cloudflare. Le paquet préparé par le propriétaire le 18 octobre reste conservé à l’identique.
+
+L’audit transversal du 18 octobre a identifié des corrections complémentaires de chiffres, de provenance, d’images principales, d’accessibilité et des outils locaux. Le lot du 19 octobre est distinct du paquet préparé précédemment. Son état et ses contrôles font foi dans le bilan des correctifs ; les résultats du 18 octobre ci-dessous restent des preuves datées.
+
+Les compteurs médias désignent des notions distinctes : 523 identifiants médias uniques dans tout le JSON, 558 rattachements de visuels aux fiches et 440 fichiers originaux uniques dans le paquet de référence du 18 octobre. Le champ historique « mediaAssociationCount » du manifeste désigne des IDs, pas le nombre de rattachements.
+
+Le bilan des correctifs locaux et l’audit initial sont conservés dans l’espace
+de travail source ; ces documents internes ne sont pas copiés dans ce dépôt public.
+
+## Référence de préparation du 18 octobre 2026
 
 Complément validé le 18 octobre 2026 : six films historiques ajoutent onze
 liens sur huit fiches. Le catalogue atteint 160 liens d’exploration sur
@@ -68,9 +79,10 @@ et filtres, des fiches de projets, des photographies, perspectives et plans,
 des documents, une chronologie et des actualités avec leurs sources disponibles.
 Chaque fiche dispose également d'une page HTML dédiée.
 
-Le contenu préparé constitue la **V1.3.2 prête pour préparation via PREPARER_DIST_GITHUB.bat,
-non publiée**. Les contrôles locaux restent distincts des vérifications du site
-en ligne et ne constituent pas une publication.
+La **V1.3.2 a été observée en ligne le 18 octobre 2026**. Les correctifs locaux
+du 19 octobre restent en attente d'une nouvelle préparation par
+`PREPARER_DIST_GITHUB.bat` et d'une publication par le propriétaire. Les contrôles
+locaux restent distincts des vérifications du site en ligne.
 
 Cette version intègre la nouvelle carte sur ordinateur et mobile : recherche,
 filtres, repères, fonds de carte, aperçus et accès aux fiches interactives.

@@ -411,6 +411,9 @@ img { display: block; max-width: 100%; }
 #lightbox-count { flex-shrink: 0; color: white; font-weight: 700; }
 
 .image-missing img { display: none; }
+.carousel-pause { position: absolute; z-index: 5; left: 18px; bottom: 14px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid rgba(255,255,255,.7); border-radius: 6px; background: rgba(18,60,52,.94); color: white; cursor: pointer; }
+.carousel-pause:hover { background: white; color: var(--green); }
+.carousel-pause svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
 .image-missing { background: linear-gradient(145deg, #dfe5de, #bdc9c2); }
 .loading-screen { position: fixed; z-index: 999; inset: 0; display: grid; place-content: center; justify-items: center; gap: 12px; color: white; background: var(--green); transition: opacity .4s, visibility .4s; }
 .loading-screen.is-hidden { opacity: 0; visibility: hidden; }
@@ -1128,6 +1131,8 @@ img { display: block; max-width: 100%; }
   .project-header > .back-link { top: 22px; left: 20px; }
   .hero-caption, .territory-door-caption, .territory-hero-caption { left: auto; right: 12px; max-width: min(82vw, 360px); font-size: 10px; text-align: right; }
   .territory-hero-caption { overflow-wrap: anywhere; }
+  .carousel-pause { left: 12px; bottom: 12px; }
+  .has-carousel-playback :is(.hero-caption, .territory-hero-caption) { max-width: calc(100% - 88px); }
   .site-footer { align-items: center; text-align: center; }
   .site-footer > div { justify-items: center; }
   .footer-links { justify-content: center; }
