@@ -1,4 +1,18 @@
 /* Ajustements du second essai : vocabulaire, légende et disposition bureau. */
+.projection-controls { position: absolute; z-index: 510; top: 116px; right: 12px; width: min(310px, calc(100% - 24px)); max-height: 42%; overflow: auto; background: #fffefa; color: #123c34; border-radius: 9px; box-shadow: 0 2px 12px #173b2b33; font-size: 12px; }
+.projection-controls[hidden] { display: none!important; }
+.projection-controls summary { cursor: pointer; padding: 12px; font-weight: 700; }
+.projection-controls > div { padding: 0 12px 10px; }
+.projection-controls fieldset { min-width: 0; margin: 10px 0; padding: 8px; border: 1px solid #cad8d0; border-radius: 6px; }
+.projection-controls label { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+.projection-controls input[type=range] { flex: 1; min-width: 40px; }
+.projection-controls input[type=checkbox] { flex: none; }
+.projection-controls small { display: block; overflow-wrap: anywhere; }
+.projection-controls a { color: inherit; }
+.projection-controls p:empty { display: none; }
+@media (max-width: 599px) {
+  .projection-controls { max-height: 35%; }
+}
 .desktop-site-header, .desktop-copy, .desktop-sector-label, .desktop-map-divider, .desktop-site-footer { display: none; }
 .results-heading h2 { margin: 4px 0; font: 400 27px Georgia, serif; }
 .reset-filters-desktop { min-height: 38px; padding: 8px 12px; border: 1px solid #b6c8c0; border-radius: 9px; background: #fffefa; color: #123c34; font-size: 11px; font-weight: 700; }
@@ -305,3 +319,17 @@ button, input, select { font-family: inherit; }
 
 .pin-marker.is-delivered i, .cluster-marker.is-delivered { color: #123c34; }
 .legend-pin.is-delivered em { color: #123c34; }
+
+.projection-toggle { position: absolute; z-index: 510; top: 116px; right: 12px; min-height: 44px; padding: 8px 12px; border: 1px solid #becdc5; border-radius: 9px; background: #fffefa; color: #123c34; box-shadow: 0 2px 12px #173b2b33; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.projection-toggle.active { background: #123c34; color: white; border-color: #123c34; }
+.projection-toggle:focus-visible { outline: 3px solid #e0643a; outline-offset: 3px; }
+.projection-controls { top: 168px; }
+@media (min-width: 900px) {
+  .projection-toggle { top: 70px; right: 72px; }
+  .projection-controls { top: 122px; right: 18px; }
+}
+@media (max-width: 899px) {
+  .projection-toggle { position: static; grid-column: 1 / -1; grid-row: 3; justify-self: start; box-shadow: none; }
+  :host([data-mode="map"]) .projection-toggle { grid-row: 2; }
+  .projection-controls { position: static; order: -1; width: auto; max-height: 280px; margin: 0 16px 12px; box-shadow: none; border: 1px solid #becdc5; }
+}

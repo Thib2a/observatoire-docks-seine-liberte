@@ -284,7 +284,7 @@
       <template id="map-v13-template">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
         <link rel="stylesheet" href="/assets/map-v13-base.css?v=774f1b0cd9f9">
-        <link rel="stylesheet" href="/assets/map-v13.css?v=774f1b0cd9f9">
+        <link rel="stylesheet" href="/assets/map-v13.css?v=projection-2">
         <div class="app">
     <header class="page-intro">
       <p class="eyebrow">Carte & projets</p>
@@ -318,7 +318,7 @@
       <div id="map" class="map"></div>
       <div id="mapUnavailable" class="map-unavailable" hidden>Le fond de carte est indisponible. La liste des opérations reste accessible.</div>
       <div class="map-toolbar"><div class="map-top"><span id="mapCount">…</span><button id="resetMap" type="button">Recentrer</button></div>
-      <div class="base-switch" role="group" aria-label="Fond de carte"><button type="button" id="planBase" class="active" aria-pressed="true">Plan</button><button type="button" id="aerialBase" aria-pressed="false">Vue aérienne</button></div><button id="resetFiltersMobile" class="reset-filters-mobile" type="button" hidden>Réinitialiser les filtres</button></div>
+      <div class="base-switch" role="group" aria-label="Fond de carte"><button type="button" id="planBase" class="active" aria-pressed="true">Plan</button><button type="button" id="aerialBase" aria-pressed="false">Vue aérienne</button></div><button type="button" id="projectionToggle" class="projection-toggle" aria-pressed="false" aria-controls="projectionSettings">Projection quartier</button><button id="resetFiltersMobile" class="reset-filters-mobile" type="button" hidden>Réinitialiser les filtres</button></div>
       <details id="legend" class="legend" open><summary>Légende des statuts</summary><div id="legendItems" class="legend-items"></div><p class="territory-key"><i class="territory-dot" aria-hidden="true">⌖</i> Repère de quartier</p><p class="mobile-cluster-key"><i class="mixed-dot">2</i> Groupe de projets proches</p><p class="mobile-precision-note">Chaque emplacement a été vérifié. Un point ne délimite pas nécessairement l’emprise exacte d’un projet.</p></details>
       <article id="selected" class="selected" hidden></article>
       <p id="mapHint" class="map-hint">Sélectionnez un point ou un groupe pour explorer.</p>
@@ -657,6 +657,6 @@
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "89b7f0d07c1344818cfa73b0e58144d9"}'></script>
   <!-- End Cloudflare Web Analytics -->
-  <script type="module" src="app.js?v=774f1b0cd9f9"></script>
+  <script type="module" src="app.js?v=projection-2"></script>
 </body>
 </html>

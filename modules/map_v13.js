@@ -1,4 +1,5 @@
 import {matchesSearch} from "./data.js?v=774f1b0cd9f9";
+import {createProjectionControls} from "./projection_controls.js?v=projection-3";
 
 export function mountExplorer(host, data) {
   "use strict";
@@ -104,6 +105,8 @@ export function mountExplorer(host, data) {
     $("legend").hidden = true;
     $("selected").querySelector(".close").addEventListener("click", clearSelection);
   };
+  let projectionControls;
+  let projectionEnabled = false;
   const initMap = () => {
     if (state.map || !window.L) return;
     state.map = L.map($("map"), { zoomControl: false, scrollWheelZoom: desktopQuery.matches, touchZoom: true, preferCanvas: true }).setView([48.914, 2.323], 13);
@@ -117,6 +120,9 @@ export function mountExplorer(host, data) {
     state.aerialLayer = L.tileLayer("https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg&TILEMATRIXSET=PM_0_19&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}", { maxZoom: 19, tileSize: 256, attribution: '&copy; <a href="https://www.ign.fr/">IGN</a>' });
     L.control.zoom({ position: "topright" }).addTo(state.map);
     state.markers = L.layerGroup().addTo(state.map);
+    projectionControls = createProjectionControls(L, state.map, $("mapView"));
+    setBase(state.base);
+    projectionControls.setActive(projectionEnabled);
     state.map.on("zoomend moveend", renderMapMarkers);
   };
   const setBase = (base) => {
@@ -127,8 +133,14 @@ export function mountExplorer(host, data) {
       button.setAttribute("aria-pressed", String(name === base));
     }
     if (!state.map) return;
-    state.map.removeLayer(base === "aerial" ? state.planLayer : state.aerialLayer);
-    (base === "aerial" ? state.aerialLayer : state.planLayer).addTo(state.map);
+    state.map.removeLayer(base === "plan" ? state.aerialLayer : state.planLayer);
+    (base === "plan" ? state.planLayer : state.aerialLayer).addTo(state.map);
+  };
+  const toggleProjection = () => {
+    projectionEnabled = !projectionEnabled;
+    $("projectionToggle").classList.toggle("active", projectionEnabled);
+    $("projectionToggle").setAttribute("aria-pressed", String(projectionEnabled));
+    projectionControls?.setActive(projectionEnabled);
   };
   const renderMapMarkers = () => {
     if (!state.map || !state.markers || (state.mode !== "map" && !desktopQuery.matches)) return;
@@ -243,6 +255,7 @@ export function mountExplorer(host, data) {
   $("mobileFiltersToggle").addEventListener("click", () => setMobileFiltersOpen($("mobileFiltersToggle").getAttribute("aria-expanded") !== "true"));
   $("planBase").addEventListener("click", () => setBase("plan"));
   $("aerialBase").addEventListener("click", () => setBase("aerial"));
+  $("projectionToggle").addEventListener("click", toggleProjection);
   desktopQuery.addEventListener("change", () => { if (state.map) { if (desktopQuery.matches) { state.map.scrollWheelZoom.enable(); state.map.dragging.enable(); } else { state.map.scrollWheelZoom.disable(); state.map.dragging.disable(); state.map.touchZoom.enable(); } } $("advancedFilters").open = desktopQuery.matches; syncSearchCopy(); state.limit = 5; $("legend").open = desktopQuery.matches; clearSelection(); if (state.projects.length) renderList(); setMode(state.mode); });
   $("resetMap").addEventListener("click", () => { clearSelection(); fitProjects(); });
   syncSearchCopy();

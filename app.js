@@ -5,7 +5,7 @@ import {
 import {mapFilterHref} from "./modules/map_filters.js?v=774f1b0cd9f9";
 import {syncPageHeading} from "./modules/headings.js?v=774f1b0cd9f9";
 import {resolveRoute, routeHref} from "./modules/routes.js?v=774f1b0cd9f9";
-import {mountExplorer} from "./modules/map_v13.js?v=774f1b0cd9f9";
+import {mountExplorer} from "./modules/map_v13.js?v=projection-2";
 import {cardVisual, projectCard, renderConfidenceCards, renderProject, renderTerritory, timelineEvent, updateRow} from "./modules/views.js?v=774f1b0cd9f9";
 
 
